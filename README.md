@@ -12,9 +12,9 @@ Please follow the steps to setup a local demo on your system
 - IDE : VS Code (https://code.visualstudio.com/download)
 - Server is responsible for fetching results from enovia using DS webservices
 - Setup Server-
-  - Setup SQL Server (Optional)
+  - Setup SQL Server
     - Download MySQL - https://dev.mysql.com/downloads/installer/
-    - Add MySQl path to env variables
+    - Add MySQl path to env variable PATH (C:\Program Files\MySQL\MySQL Server 8.0\bin)
     - After installtion Create a user called m1 with passowrd as enoviaV6
     - Execute Command = mysql -u m1 -p
     - After this enter password
