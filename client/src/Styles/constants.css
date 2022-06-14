@@ -1,0 +1,18 @@
+:root {
+	/* theme */
+  --mode: 'light'
+  --primary-light: #73ddf6;
+  --primary-main: #37abc3;
+  --primary-dark: #007c93;
+
+  /* table */
+  --table-bg-color: #d3d3d3;
+  --table-text-color: #1e1e1e;
+
+  /* size */
+  --xs: 0px;
+  --sm: 600;
+  --md: 960;
+  --lg: 1200;
+  --xl: 1536;
+}

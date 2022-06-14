@@ -1,0 +1,83 @@
+@import "./constants.css";
+@import "~@progress/kendo-theme-default/dist/all.css";
+
+/* Home css */
+.roll-up-home {
+  height: calc(100vh - 65px);
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 5px;
+}
+
+/* login css */
+.login-form {
+  position: relative;
+  max-height: 50% !important;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  padding-top: 5em;
+  padding-bottom: 10em;
+  font-size: 0.7em;
+  display: grid;
+  max-width: initial;
+  max-height: initial;
+}
+
+/* table css */
+.link {
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  color: var(--primary-main);
+}
+.link:hover {
+  color: var(--primary-light);
+}
+
+thead[class*="k-grid-header"] th {
+  background-color: var(--table-bg-color) !important;
+  color: var(--primary-main);
+  font-weight: bold;
+}
+
+.table-column {
+  background-color: var(--table-bg-color) !important;
+  color: var(--table-text-color) !important;
+}
+
+/* table toolbar css */
+.table-toolbar {
+  color: var(--primary-main);
+  margin-bottom: 0;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  grid-template-columns: 2fr 7fr 2fr;
+}
+
+/* kendo css changes */
+
+.k-grid {
+  background-color: inherit !important;
+}
+
+.k-grid td.k-state-selected,
+.k-grid td.k-selected,
+.k-grid tr.k-state-selected > td,
+.k-grid tr.k-selected > td {
+  background-color: var(--primary-dark);
+}
+
+.k-checkbox:checked,
+.k-checkbox.k-checked {
+  border-color: var(--primary-main);
+  color: white;
+  background-color: var(--primary-main);
+}
+
+.k-grid-header .k-i-sort-asc-sm,
+.k-grid-header .k-i-sort-desc-sm,
+.k-grid-header .k-sort-order {
+  color: var(--primary-main);
+}

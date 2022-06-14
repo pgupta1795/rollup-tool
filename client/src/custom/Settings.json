@@ -1,0 +1,58 @@
+{
+  "Tenant": "OnPremise",
+  "LOGIN_TICKET_ENDPOINT": "/login?action=get_auth_params",
+  "CAS_AUTH_ENDPOINT": "/login?service={}",
+  "CAS_AUTHENICATION_BODY": "lt={}&username={}&password={}&rememberMe=YES",
+  "CSRF_ENDPOINT": "/resources/v1/application/CSRF",
+  "COLLABSPACE_ENDPOINT": "/resources/modeler/pno/person?current=true&select=preferredcredentials&select=collabspaces&select=firstname&select=lastname",
+  "TYPES_INFO": [
+    {
+      "Type": "VPMReference",
+      "CUSTOM_COLUMNS": [
+        {
+          "Attribute": "Cost",
+          "Label": "Cost"
+        },
+        {
+          "Attribute": "Weight",
+          "Label": "CAD Mass"
+        }
+      ],
+      "Attribute_PREFIX": "XP_VPMReference_Ext",
+      "GET_ENDPOINT": "/resources/v1/modeler/dseng/dseng:EngItem/{}?$mask=dsmveng:EngItemMask.Details",
+      "CHILD_ENDPOINT": "/resources/v1/modeler/dseng/dseng:EngItem/{}/dseng:EngInstance?$mask=dsmveng:EngInstanceMask.Details",
+      "SEARCH_ENDPOINT": "/resources/v1/modeler/dseng/dseng:EngItem/search?$mask=dsmveng:EngItemMask.Details&$searchStr={}&$top={}&$skip={}",
+      "POST_ENDPOINT": "/resources/v1/modeler/dseng/dseng:EngItem/{}"
+    },
+
+    {
+      "Type": "Documents",
+      "CUSTOM_COLUMNS": [],
+      "Attribute_PREFIX": "",
+      "GET_ENDPOINT": "",
+      "CHILD_ENDPOINT": "",
+      "SEARCH_ENDPOINT": "",
+      "POST_ENDPOINT": ""
+    },
+
+    {
+      "Type": "Change Action",
+      "CUSTOM_COLUMNS": [],
+      "Attribute_PREFIX": "",
+      "GET_ENDPOINT": "",
+      "CHILD_ENDPOINT": "",
+      "SEARCH_ENDPOINT": "",
+      "POST_ENDPOINT": ""
+    },
+
+    {
+      "Type": "Issue",
+      "CUSTOM_COLUMNS": [],
+      "Attribute_PREFIX": "",
+      "GET_ENDPOINT": "",
+      "CHILD_ENDPOINT": "",
+      "SEARCH_ENDPOINT": "",
+      "POST_ENDPOINT": ""
+    }
+  ]
+}
