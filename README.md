@@ -6,6 +6,7 @@ Please follow the steps to setup a local demo on your system
 
 - Creating a POC related to rollup of attributes for a PhysicalProduct
 - Manipulate data on 3dexperience Cloud
+- POC uses react and material-ui components
 
 ### How do I get set up?
 
