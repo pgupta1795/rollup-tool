@@ -5,7 +5,7 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import * as ServiceUtils from '../helper/ServiceUtils';
 import TypesCard from '../components/Card/typesCard';
-import Actions from '../components/Muitable/Actions';
+import ActionsTable from '../components/TableContainer/ActionsTableContainer';
 
 const HomePage = () => {
   const [value, setValue] = React.useState('actions');
@@ -29,7 +29,7 @@ const HomePage = () => {
         </TabList>
         <TabPanel value="actions" className="full-width-height">
           <Box className="full-width-height">
-            <Actions />
+            <ActionsTable type={null} />
           </Box>
         </TabPanel>
         <TabPanel value="types" className="full-width-height">

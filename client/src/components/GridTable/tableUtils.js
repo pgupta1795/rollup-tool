@@ -1,24 +1,12 @@
 import { extendDataItem, mapTree } from '@progress/kendo-react-treelist';
 import * as Props from './props';
-import StorageConstants from '../../helper/StorageConstants';
 import * as ServiceUtils from '../../helper/ServiceUtils';
-// eslint-disable-next-line import/no-cycle
+import { isEqual, authenticateTableData } from '../../helper/CommonUtils';
 import * as Api from '../../helper/Api';
 
 export const subItemsField = 'children';
 
 export const DATA_ITEM_KEY = 'id';
-
-export const authenticateTableData = (response) => {
-  if (JSON.stringify(response).includes('<html>')) {
-    const err = 'Please login again';
-    throw err;
-  }
-  return (
-    (response && response.member && response.nlsLabel) ||
-    (response && response.data && response.children)
-  );
-};
 
 const addCustomAttributesData = (singleRow, objectDetail, customHeaderKeys) => {
   customHeaderKeys.forEach((customHeaderKey) => {
@@ -96,6 +84,7 @@ export const getChildById = async (type, spaceUrl, id) => {
     throw error;
   }
 };
+
 export const getHeaders = (response, headerKeys) => {
   const headers = [];
   const { id, ...labels } = response.nlsLabel;
@@ -118,54 +107,6 @@ export const getHeaders = (response, headerKeys) => {
   return headers;
 };
 
-export const getSearchBody = (type, spaceUrl, top, skip, name) => {
-  let data = null;
-  const { SEARCH_ENDPOINT } = ServiceUtils.getTypeSettings(type);
-
-  if (SEARCH_ENDPOINT && spaceUrl) {
-    const splitted = SEARCH_ENDPOINT.split('?');
-    const endpoint =
-      splitted < 1
-        ? SEARCH_ENDPOINT
-        : SEARCH_ENDPOINT.replace('{}', name || '')
-            .replace('{}', top || '')
-            .replace('{}', skip);
-    data = {
-      BASE_URL: spaceUrl,
-      GET_ENDPOINT: endpoint,
-      headers: {
-        'Content-type': 'application/json',
-        Accept: 'application/json',
-        Cookie: localStorage.getItem(StorageConstants.Cookies),
-        ENO_CSRF_TOKEN: localStorage.getItem(StorageConstants.CSRF_TOKEN),
-        SecurityContext: localStorage.getItem(StorageConstants.Preferred),
-      },
-    };
-  }
-  return data;
-};
-
-export const getChildrenBody = (type, spaceUrl, id) => {
-  let data = null;
-  const { GET_ENDPOINT, CHILD_ENDPOINT } = ServiceUtils.getTypeSettings(type);
-  if (GET_ENDPOINT && CHILD_ENDPOINT && spaceUrl && id) {
-    data = {
-      ID: id,
-      BASE_URL: spaceUrl,
-      GET_ENDPOINT,
-      CHILD_ENDPOINT,
-      headers: {
-        'Content-type': 'application/json',
-        Accept: 'application/json',
-        Cookie: localStorage.getItem(StorageConstants.Cookies),
-        ENO_CSRF_TOKEN: localStorage.getItem(StorageConstants.CSRF_TOKEN),
-        SecurityContext: localStorage.getItem(StorageConstants.Preferred),
-      },
-    };
-  }
-  return data;
-};
-
 /**
  * returns the row after matching id with all the rows ids
  * @param {} rows
@@ -179,7 +120,7 @@ export const findRowById = (rows, id) => {
     const row = rows[index];
     if (row?.id === id) {
       validRow = row;
-      break;
+      return validRow;
     }
     if (row?.children) validRow = findRowById(row?.children, id);
   }
@@ -215,60 +156,30 @@ export const flatten = (root, flat = []) => {
 export const isNotEditable = (dataItem) =>
   dataItem.children || dataItem.state === 'RELEASED';
 
-const getVPMReferencePayload = (type, selectedRow) => {
-  const customAttributesIdentifier = Props.KEY_IDENTIFIER;
-  const customAttributes = { [customAttributesIdentifier]: {} };
-  const { cestamp, title, description } = selectedRow;
-
-  ServiceUtils.getCustomAttributeNames(type)?.forEach((attr) => {
-    const attrName = ServiceUtils.getCustomAttributeDBName(type, attr);
-    customAttributes[customAttributesIdentifier][attrName] = selectedRow[attr];
-  });
-  return {
-    cestamp,
-    title,
-    description,
-    [customAttributesIdentifier]: customAttributes[customAttributesIdentifier],
-  };
+const createAction = async (newRow, oldRows) => {
+  const { id } = newRow;
+  const oldRow = findRowById(oldRows, id);
+  if (oldRow && !isEqual(oldRow, newRow))
+    await Api.createAction(id, newRow, oldRow);
 };
 
-// call PATCH for row object to update enovia attributes
-// use response of patch to update cestamp and updated attribute values to pass to table
-// RECUSRISVER(parent)
-// call PATCH for parent of row object to update enovia attributes and check if cell is numeric rollup values from child
-// ex- COST = Parent cost - prev cost of row object + new cost of row object
-// OR take cost of all the child rows and sum it up
-// call RECUSRISVER again(parent.parent)
-
-export const getUpdateObjectBody = (type, { id, ...selectedRow }) => {
-  let data = null;
-  let payload;
-  const { POST_ENDPOINT } = ServiceUtils.getTypeSettings(type);
-  if (type === 'VPMReference') {
-    payload = getVPMReferencePayload(type, selectedRow);
-  }
-
-  if (POST_ENDPOINT && id && payload) {
-    const BASE_URL = localStorage.getItem(StorageConstants.SPACE3d);
-    const url = BASE_URL + POST_ENDPOINT.replace('{}', id);
-    data = {
-      URL: url,
-      headers: {
-        'Content-type': 'application/json',
-        Accept: 'application/json',
-        Cookie: localStorage.getItem(StorageConstants.Cookies),
-        ENO_CSRF_TOKEN: localStorage.getItem(StorageConstants.CSRF_TOKEN),
-        SecurityContext: localStorage.getItem(StorageConstants.Preferred),
-      },
-      payload,
-    };
-  }
-  return data;
-};
-
-export const updateAttributes = async (type, selectedRow, newRows) => {
+/**
+ * 1.) Creates object in mongodb database if not already present
+ * 2.) Updates attribute values in enovia using webservice
+ * 3.) Creates action if above things are success
+ * 4.) Updates cestamp with a new value for the object after updation in enovia
+ *
+ * @param {type} type
+ * @param {selectedRow} selectedRow
+ * @param {newRows} newRows
+ * @param {oldRows} oldRows
+ * @returns
+ */
+export const updateAttributes = async (type, selectedRow, newRows, oldRows) => {
+  await Api.createTypeObject(type, selectedRow);
   const response = await Api.updateObject(type, selectedRow);
   if (authenticateTableData(response)) {
+    await createAction(selectedRow, oldRows);
     const id = response?.member[0].id;
     const newCEStamp = response?.member[0].cestamp;
     if (id && newCEStamp) {
@@ -276,7 +187,7 @@ export const updateAttributes = async (type, selectedRow, newRows) => {
     }
     const parentRow = findRowById(newRows, selectedRow?.parent);
     if (parentRow) {
-      newRows = await updateAttributes(type, parentRow, newRows);
+      newRows = await updateAttributes(type, parentRow, newRows, oldRows);
     }
     return newRows;
   }

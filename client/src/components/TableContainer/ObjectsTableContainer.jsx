@@ -12,31 +12,14 @@ import Details from '../Form/Details';
 import ObjectTable from '../GridTable/ObjectTable';
 import * as Props from '../GridTable/props';
 import * as TableUtils from '../GridTable/tableUtils';
-import Toolbar from '../GridTable/toolbar/toolbar';
-import ToolbarSkeleton from '../GridTable/toolbar/toolbarSkeleton';
+import { authenticateTableData } from '../../helper/CommonUtils';
+import useTable from '../../hooks/useTable';
 
 const ObjectsTableContainer = ({ type, id }) => {
   const auth = useAuth();
-  const [toolbar, setToolbar] = React.useState(<ToolbarSkeleton />);
-  const [state, setState] = React.useState({
-    data: [],
-    dataState: {
-      sort: [
-        {
-          field: 'name',
-          dir: 'asc',
-        },
-      ],
-      filter: [],
-    },
-    expanded: [1, 2, 32],
-    inEdit: [],
-  });
-  const [details, setDetails] = React.useState({});
-  const [loading, setLoading] = React.useState(false);
-  const [oldRows, setOldRows] = React.useState([]);
-  const [reRender, setRerender] = React.useState(false);
-
+  const [toolbar, state, details, oldRows, reRender, loading, setters] =
+    useTable();
+  const [setLoading, setState, setProps] = setters;
   const formattedData = React.useCallback(
     (response) => {
       const headerKeys = Props.DEFAULT_COLUMN_KEYS.slice(0, -2);
@@ -73,31 +56,16 @@ const ObjectsTableContainer = ({ type, id }) => {
       const spaceUrl = localStorage.getItem(StorageConstants.SPACE3d);
       setLoading(true);
       const response = await Api.getAllChildren(type, spaceUrl, id);
-      if (!TableUtils.authenticateTableData(response)) {
+      if (!authenticateTableData(response)) {
         return;
       }
       const { rows, objDetails } = formattedData(response);
-      setDetails(objDetails);
-      setState({
-        ...state,
-        data: rows,
-      });
-      setOldRows(rows);
-      setRerender(false);
-      setToolbar(
-        <Toolbar
-          setRerender={setRerender}
-          setLoading={setLoading}
-          columns={[...columns]}
-          rows={rows}
-        />
-      );
-      setLoading(false);
+      setProps(rows, [...columns], objDetails, null);
     } catch (error) {
       auth.logout();
       <Navigate to={Paths.LOGIN} />;
     }
-  }, [id, type, formattedData, auth]);
+  }, [formattedData, auth]);
 
   React.useEffect(() => {
     fetchData();

@@ -10,7 +10,6 @@ const ToolbarSkeleton = () => (
   >
     <Skeleton variant="circular" width={30} height={30} />
     <Skeleton variant="circular" width={30} height={30} />
-    <Skeleton variant="circular" width={30} height={30} />
   </Box>
 );
 

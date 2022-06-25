@@ -1,24 +1,9 @@
-/* eslint-disable import/no-cycle */
-import * as TableUtils from '../components/GridTable/tableUtils';
+import { fetchResponse } from './fetchUtils';
 import { BODY, ENDPOINT } from './ServiceUtils';
+import { getSearchBody, getChildrenBody, getUpdateObjectBody } from './payload';
+import StorageConstants from './StorageConstants';
 
 const baseURL = process.env.REACT_APP_SERVER_URL;
-
-const cache = {};
-
-const fetchResponse = async (url, options, cacheKey) => {
-  let resBody;
-  if (cacheKey && cache[cacheKey]) {
-    resBody = cache[cacheKey];
-  } else {
-    const response = await fetch(url, options);
-    resBody = await response.json();
-    if (cacheKey && TableUtils.authenticateTableData(resBody?.data))
-      cache[cacheKey] = resBody;
-  }
-
-  return resBody;
-};
 
 export const login = async (credentials) => {
   const data = {
@@ -61,7 +46,7 @@ export const login = async (credentials) => {
  * @returns
  */
 export const searchObjects = async (type, spaceUrl, top, skip, name) => {
-  const data = TableUtils.getSearchBody(type, spaceUrl, top, skip, name);
+  const data = getSearchBody(type, spaceUrl, top, skip, name);
   if (data) {
     const url = `${baseURL}/enovia/searchobjects`;
     const cacheKey = data.GET_ENDPOINT;
@@ -89,7 +74,7 @@ export const searchObjects = async (type, spaceUrl, top, skip, name) => {
 };
 
 export const updateObject = async (type, object) => {
-  const data = TableUtils.getUpdateObjectBody(type, object);
+  const data = getUpdateObjectBody(type, object);
   if (data) {
     const url = `${baseURL}/enovia/updateObject`;
     const response = await fetchResponse(url, {
@@ -116,22 +101,17 @@ export const updateObject = async (type, object) => {
 };
 
 export const getAllChildren = async (type, spaceUrl, id) => {
-  const data = TableUtils.getChildrenBody(type, spaceUrl, id);
+  const data = getChildrenBody(type, spaceUrl, id);
   if (data) {
     const url = `${baseURL}/enovia/getAllChildren`;
-    const cacheKey = id;
-    const response = await fetchResponse(
-      url,
-      {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json',
-          Accept: '*/*',
-        },
-        body: JSON.stringify(data),
+    const response = await fetchResponse(url, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+        Accept: '*/*',
       },
-      cacheKey
-    );
+      body: JSON.stringify(data),
+    });
 
     if (response.status !== 200) {
       console.error(`${response.message} : Unable to fetch Objects !!`);
@@ -143,28 +123,74 @@ export const getAllChildren = async (type, spaceUrl, id) => {
   return [];
 };
 
-/**
- * Execute a function given a delay time
- *
- * @param {type} func
- * @param {type} wait
- * @param {type} immediate
- * @returns {Function}
- */
-export const debounce = function (func, wait, immediate) {
-  let timeout;
-  return function () {
-    // eslint-disable-next-line one-var
-    const context = this,
-      // eslint-disable-next-line prefer-rest-params
-      args = arguments;
-    const later = function () {
-      timeout = null;
-      if (!immediate) func.apply(context, args);
+export const createTypeObject = async (type, object) => {
+  const data = getUpdateObjectBody(type, object);
+  if (data) {
+    const url = `${baseURL}/store/createTypeObject`;
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+        Accept: '*/*',
+      },
+      body: JSON.stringify(data),
     };
-    const callNow = immediate && !timeout;
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-    if (callNow) func.apply(context, args);
+    const response = await fetchResponse(url, options);
+
+    if (response.status !== 200) {
+      const err =
+        'Unable to update the selected row in db as it may already exists';
+      console.warn(err);
+      return [];
+    }
+    return response?.data;
+  }
+  return [];
+};
+
+export const createAction = async (id, newRow, oldRow) => {
+  const data = {
+    spaceUrl: localStorage.getItem(StorageConstants.SPACE3d),
+    userName: `${localStorage.getItem(
+      StorageConstants.FirstName
+    )} ${localStorage.getItem(StorageConstants.LastName)}`,
+    objectId: id,
+    oldObject: JSON.stringify(oldRow),
+    newObject: JSON.stringify(newRow),
   };
+  const url = `${baseURL}/store/createAction`;
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-type': 'application/json',
+      Accept: '*/*',
+    },
+    body: JSON.stringify(data),
+  };
+  const response = await fetchResponse(url, options);
+
+  if (response.status !== 200) {
+    const err = 'Unable to create action';
+    console.error(err);
+    return [];
+  }
+  return response?.data;
+};
+
+export const getActions = async () => {
+  const url = `${baseURL}/store/getActions`;
+  const response = await fetchResponse(url, {
+    method: 'GET',
+    headers: {
+      'Content-type': 'application/json',
+      Accept: '*/*',
+    },
+  });
+
+  if (response.status !== 200) {
+    console.error(`${response.message} : Unable to get actions`);
+    alert(`${response.message} : Unable to get actions`);
+    return [];
+  }
+  return response?.data;
 };

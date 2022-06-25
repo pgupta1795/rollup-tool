@@ -1,29 +1,15 @@
-const mysql = require('mysql2')
+const mongoose = require('mongoose');
 
-const mySQLHost = process.env.MYSQL_HOST || 'localhost'
-const mySQLPort = process.env.MYSQL_PORT || '3306'
-const mySQLUser = process.env.MYSQL_USER || 'root'
-const mySQLPass = process.env.MYSQL_PASS || 'enoviaV6'
-const mySQLDB = process.env.MYSQL_DB || 'rollup'
+//rollup at end of url represents database name we will use for our application
+const url = process.env.DB_URL || 'mongodb://localhost:27017/rollup';
+const options = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+};
+mongoose.connect(url, options).catch((err) => console.log(err));
 
-const dbConnectOptions = {
-  host: mySQLHost,
-  port: mySQLPort,
-  user: mySQLUser,
-  password: mySQLPass,
-  database: mySQLDB,
-  multipleStatements: true,
-}
-console.log('MySQL Connection Config :')
-console.log(dbConnectOptions)
+const connection = mongoose.connection;
+connection.on('open', () => console.log('Database Connection Successfull'));
+connection.on('error', (err) => console.log(err));
 
-const mySQLConnection = mysql.createConnection(dbConnectOptions)
-mySQLConnection.connect((err) => {
-  if (err) {
-    console.log('Database Connection Failed')
-    throw err
-  }
-  console.log('Database Connection Successfull')
-})
-
-module.exports = mySQLConnection
+module.exports = connection;

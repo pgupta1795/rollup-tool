@@ -14,7 +14,7 @@ import * as TableUtils from '../GridTable/tableUtils';
 import { authenticateTableData } from '../../helper/CommonUtils';
 import useTable from '../../hooks/useTable';
 
-const TypesTableContainer = ({ type }) => {
+const ActionsTable = ({ type }) => {
   const auth = useAuth();
   const [current, setCurrent] = React.useState(1);
   const [toolbar, state, , oldRows, reRender, loading, setters] = useTable();
@@ -70,7 +70,7 @@ const TypesTableContainer = ({ type }) => {
   );
 };
 
-TypesTableContainer.propTypes = {
+ActionsTable.propTypes = {
   type: PropTypes.string.isRequired,
 };
-export default TypesTableContainer;
+export default ActionsTable;

@@ -86,12 +86,13 @@ const ObjectTable = ({ type, state, setState, columns, oldRows, loading }) => {
     const newRows = await TableUtils.updateAttributes(
       type,
       dataItem,
-      state.data
+      state.data,
+      oldRows
     );
     const { inEdit, ...itemToSave } = dataItem;
     setState({
       ...state,
-      data: newRows || oldRows,
+      data: newRows,
       inEdit: state.inEdit.filter((i) => i.id !== itemToSave.id),
     });
   };

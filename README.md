@@ -13,12 +13,11 @@ Please follow the steps to setup a local demo on your system
 - IDE : VS Code (https://code.visualstudio.com/download)
 - Server is responsible for fetching results from enovia using DS webservices
   - Setup Server-
-    - Download MySQL - https://dev.mysql.com/downloads/installer/
-    - Add MySQl path to env variable PATH (C:\Program Files\MySQL\MySQL Server 8.0\bin)
-    - After installtion for user root add passowrd as enoviaV6
-    - Execute Command in cmd= mysql -u root -p
-    - After this enter password
-    - Execute Command in cmd (change path accordingly) = source C:/rollup-tool/server/src/sql/initTables.sql;
+    - Database Setup-
+      - Download Mongodb and Compass to view database and interact using command line (https://www.mongodb.com/try/download/community)
+      - Configure log and data store paths in <install directory>\bin\mongod.cfg.
+      - Edit env variables to add installation/bin path (C:\Program Files\MongoDB\Server\5.0\bin), so that mongod can be used in command line or shell
+    - Validate and configure .env according to environment
     - In cmd/vscode cd to rollup-tool/server
     - execute #npm install#
     - execute #npm start#

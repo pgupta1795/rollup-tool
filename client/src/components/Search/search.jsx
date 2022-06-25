@@ -11,6 +11,8 @@ import { SearchDiv, SearchIconDiv } from '../../Styles/StyledDiv';
 import StyledInputBase from '../../Styles/StyledInputBase';
 import Paths from '../../helper/Paths';
 import Options from './options';
+import { debounce } from '../../helper/fetchUtils';
+import { authenticateTableData } from '../../helper/CommonUtils';
 
 const type = 'VPMReference';
 
@@ -35,7 +37,7 @@ const TechniaSearch = () => {
 
   const fetch = React.useMemo(
     () =>
-      Api.debounce(
+      debounce(
         throttle(async ({ spaceUrl, input }, callback) => {
           setLoading(true);
           const response = await Api.searchObjects(
@@ -62,8 +64,8 @@ const TechniaSearch = () => {
     }
     const spaceUrl = localStorage.getItem(StorageConstants.SPACE3d);
 
-    fetch({ spaceUrl: spaceUrl, input: inputValue }, (response) => {
-      if (active && TableUtils.authenticateTableData(response)) {
+    fetch({ spaceUrl, input: inputValue }, (response) => {
+      if (active && authenticateTableData(response)) {
         const allRows = TableUtils.getRows(response, headerKeys);
         setOptions(allRows);
       }

@@ -3,26 +3,16 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
-import AddIcon from '@mui/icons-material/Add';
 import { ExcelExport } from '@progress/kendo-react-excel-export';
 import { TreeList } from '@progress/kendo-react-treelist';
 import * as TableUtils from '../tableUtils';
 
 const Toolbar = ({ setRerender, setLoading, columns, rows, pagination }) => {
-  const createObject = (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    setLoading(false);
-  };
-
   const refresh = (e) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
-      setRerender(true);
-      setLoading(false);
-    }, 1000);
+    setRerender(true);
+    setLoading(false);
   };
 
   let exportResult;
@@ -75,21 +65,6 @@ const Toolbar = ({ setRerender, setLoading, columns, rows, pagination }) => {
           columnGap: '10px',
         }}
       >
-        <Fab
-          style={{
-            maxHeight: '30px',
-            minHeight: '30px',
-            minWidth: '30px',
-            maxWidth: '30px',
-          }}
-          aria-label="create object"
-          onClick={createObject}
-          size="small"
-          color="primary"
-          title="Create Object"
-        >
-          <AddIcon color="inherit" />
-        </Fab>
         <Fab
           style={{
             maxHeight: '30px',

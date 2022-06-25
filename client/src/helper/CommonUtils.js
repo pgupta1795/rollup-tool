@@ -54,3 +54,14 @@ export const stringAvatar = (name) => {
     };
   return null;
 };
+
+export const authenticateTableData = (response) => {
+  if (JSON.stringify(response).includes('<html>')) {
+    const err = 'Please login again';
+    throw err;
+  }
+  return (
+    (response && response.member && response.nlsLabel) ||
+    (response && response.data && response.children)
+  );
+};
