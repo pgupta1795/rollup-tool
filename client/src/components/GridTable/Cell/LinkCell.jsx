@@ -1,12 +1,11 @@
-import { Link } from "react-router-dom";
-import Paths from "../../../utils/Paths";
+import { Link } from 'react-router-dom';
+import React from 'react';
+import PropTypes from 'prop-types';
+import Paths from '../../../helper/Paths';
 
-const LinkCell = (props) => {
-  const { dataItem } = props;
-  const field = props.field || "";
+const LinkCell = ({ dataItem, field }) => {
   const cellData = dataItem[field];
-  const id = dataItem.id;
-  const type = dataItem.type;
+  const { id, type } = dataItem;
   const path = `${Paths.HOME}/${type}/${id}`;
   return (
     <td
@@ -18,7 +17,7 @@ const LinkCell = (props) => {
       className="table-column"
     >
       <div className="link">
-        <Link className="link" to={"../" + path}>
+        <Link className="link" to={`../${path}`}>
           {cellData}
         </Link>
       </div>
@@ -26,4 +25,8 @@ const LinkCell = (props) => {
   );
 };
 
+LinkCell.propTypes = {
+  dataItem: PropTypes.object.isRequired,
+  field: PropTypes.string.isRequired,
+};
 export default LinkCell;

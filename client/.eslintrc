@@ -1,0 +1,40 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": ["airbnb", "prettier"],
+  "plugins": ["react", "prettier"],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto",
+        "semi": true
+      }
+    ],
+    "no-unused-vars": "warn",
+    "no-bitwise": "off",
+    "no-console": "off",
+    "no-alert": "off",
+    "func-names": "off",
+    "object-shorthand": "warn",
+    "no-param-reassign": 0,
+    "react/function-component-definition": [
+      2,
+      { "namedComponents": "arrow-function" }
+    ],
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/forbid-prop-types": 0,
+    "react/jsx-props-no-spreading": 0,
+    "react/prefer-stateless-function": 0,
+    "react/jsx-no-constructed-context-values": 0
+  }
+}

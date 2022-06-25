@@ -16,6 +16,18 @@
         {
           "Attribute": "Weight",
           "Label": "CAD Mass"
+        },
+        {
+          "Attribute": "Estimated Mass",
+          "Label": "Estimated Mass"
+        },
+        {
+          "Attribute": "Measured Mass",
+          "Label": "Measured Mass"
+        },
+        {
+          "Attribute": "Target Mass",
+          "Label": "Target Mass"
         }
       ],
       "Attribute_PREFIX": "XP_VPMReference_Ext",

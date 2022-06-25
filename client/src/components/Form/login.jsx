@@ -1,9 +1,10 @@
-import { AccountCircle, Link as Http, Send } from "@mui/icons-material";
-import { Box, Button, Grid } from "@mui/material";
-import React from "react";
-import PasswordField from "./Fields/passwordField";
-import TextField from "./Fields/textField";
-import useStyles from "../../Styles/styles.js";
+import { AccountCircle, Link as Http, Send } from '@mui/icons-material';
+import { Box, Button, Grid } from '@mui/material';
+import PropTypes from 'prop-types';
+import React from 'react';
+import PasswordField from './Fields/passwordField';
+import TextField from './Fields/textField';
+import useStyles from '../../Styles/styles';
 
 const Login = ({ userLogin, credentials, setCredentials }) => {
   const classes = useStyles();
@@ -16,7 +17,7 @@ const Login = ({ userLogin, credentials, setCredentials }) => {
       className="login-form"
       onSubmit={userLogin}
       autoComplete="on"
-      component={"form"}
+      component="form"
     >
       <Grid
         container
@@ -40,7 +41,6 @@ const Login = ({ userLogin, credentials, setCredentials }) => {
         <Grid item>
           <PasswordField
             credentials={credentials}
-            setCredentials={setCredentials}
             handleChange={handleChange}
           />
         </Grid>
@@ -51,6 +51,7 @@ const Login = ({ userLogin, credentials, setCredentials }) => {
             icon={<Http color="primary" />}
             fieldName="3dspace"
             placeholder="https://example.com/3dspace"
+            autoComplete=""
           />
         </Grid>
         <Grid item>
@@ -60,6 +61,7 @@ const Login = ({ userLogin, credentials, setCredentials }) => {
             icon={<Http color="primary" />}
             fieldName="3dpassport"
             placeholder="https://example.com/3dpassport"
+            autoComplete=""
           />
         </Grid>
         <Grid item>
@@ -79,4 +81,9 @@ const Login = ({ userLogin, credentials, setCredentials }) => {
   );
 };
 
+Login.propTypes = {
+  credentials: PropTypes.object.isRequired,
+  setCredentials: PropTypes.func.isRequired,
+  userLogin: PropTypes.func.isRequired,
+};
 export default Login;

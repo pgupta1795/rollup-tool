@@ -1,10 +1,10 @@
-import { Button, Tooltip, Avatar } from "@mui/material";
-import { ArrowRight } from "@mui/icons-material";
-import React from "react";
-import { useAuth } from "../../authentication/auth";
-import StorageConstants from "../../utils/StorageConstants";
-import { stringAvatar } from "../../utils/CommonUtils";
-import AccountMenu from "./profileMenu";
+import { Button, Tooltip, Avatar } from '@mui/material';
+import { ArrowRight } from '@mui/icons-material';
+import React from 'react';
+import { useAuth } from '../../authentication/auth';
+import StorageConstants from '../../helper/StorageConstants';
+import { stringAvatar } from '../../helper/CommonUtils';
+import AccountMenu from './profileMenu';
 
 const Profile = () => {
   const auth = useAuth();
@@ -12,8 +12,8 @@ const Profile = () => {
 
   const handleClick = (event) => {
     if (
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
+      event.type === 'keydown' &&
+      (event.key === 'Tab' || event.key === 'Shift')
     ) {
       return;
     }
@@ -29,9 +29,9 @@ const Profile = () => {
           size="small"
           edge="end"
           aria-label="account of current user"
-          aria-controls={""}
+          aria-controls=""
           aria-haspopup="true"
-          sx={{ pointerEvents: "auto", cursor: "not-allowed" }}
+          sx={{ pointerEvents: 'auto', cursor: 'not-allowed' }}
         >
           <Avatar
             {...stringAvatar(
@@ -40,7 +40,7 @@ const Profile = () => {
               )} ${localStorage.getItem(StorageConstants.LastName)}`
             )}
           />
-          <ArrowRight style={{ pointerEvents: "auto" }} />
+          <ArrowRight style={{ pointerEvents: 'auto' }} />
         </Button>
       </Tooltip>
       <AccountMenu anchorEl={anchorEl} setAnchorEl={setAnchorEl} />

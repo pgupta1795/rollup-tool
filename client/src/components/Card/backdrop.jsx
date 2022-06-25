@@ -1,13 +1,15 @@
-import { Backdrop, CircularProgress } from "@mui/material";
-import { StyledDiv } from "../../Styles/StyledDiv";
+import React from 'react';
+import { Backdrop, CircularProgress } from '@mui/material';
+import PropTypes from 'prop-types';
+import { StyledDiv } from '../../Styles/StyledDiv';
 
-const CustomBackdrop = ({ loading, children }) => {
-  return loading ? (
+const CustomBackdrop = ({ loading, children }) =>
+  loading ? (
     <StyledDiv>
       <Backdrop
         className="bgColor"
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        invisible={true}
+        invisible
         open
       >
         <CircularProgress color="inherit" />
@@ -16,6 +18,9 @@ const CustomBackdrop = ({ loading, children }) => {
   ) : (
     children
   );
-};
 
+CustomBackdrop.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  children: PropTypes.element.isRequired,
+};
 export default CustomBackdrop;

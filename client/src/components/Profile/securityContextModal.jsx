@@ -1,5 +1,5 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
+import * as React from 'react';
+import Box from '@mui/material/Box';
 import {
   Button,
   Dialog,
@@ -9,15 +9,16 @@ import {
   DialogTitle,
   FormControl,
   NativeSelect,
-} from "@mui/material";
-import StorageConstants from "../../utils/StorageConstants";
+} from '@mui/material';
+import PropTypes from 'prop-types';
+import StorageConstants from '../../helper/StorageConstants';
 
 const style = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "10px",
-  m: "auto",
-  justifyContent: "center",
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '10px',
+  m: 'auto',
+  justifyContent: 'center',
 };
 
 const SecurityContextModal = ({ open, setOpen }) => {
@@ -28,7 +29,7 @@ const SecurityContextModal = ({ open, setOpen }) => {
     StorageConstants.SecurityContexts
   );
   const allmenuContexts = [];
-  securityContexts?.split(",").forEach((securityContext) => {
+  securityContexts?.split(',').forEach((securityContext) => {
     allmenuContexts.push(
       <option key={securityContext} value={securityContext}>
         {securityContext}
@@ -43,12 +44,7 @@ const SecurityContextModal = ({ open, setOpen }) => {
   };
 
   return (
-    <Dialog
-      fullWidth={true}
-      maxWidth="sm"
-      open={open}
-      onClose={() => setOpen(false)}
-    >
+    <Dialog fullWidth maxWidth="sm" open={open} onClose={() => setOpen(false)}>
       <DialogTitle>Security Context</DialogTitle>
       <DialogContent>
         <DialogContentText>Choose preferred Security Context</DialogContentText>
@@ -60,8 +56,8 @@ const SecurityContextModal = ({ open, setOpen }) => {
               onChange={handleChange}
               label="Security Contexts"
               inputProps={{
-                name: "Security Contexts",
-                id: "Security Contexts",
+                name: 'Security Contexts',
+                id: 'Security Contexts',
               }}
             >
               {allmenuContexts}
@@ -76,4 +72,8 @@ const SecurityContextModal = ({ open, setOpen }) => {
   );
 };
 
+SecurityContextModal.propTypes = {
+  open: PropTypes.bool.isRequired,
+  setOpen: PropTypes.func.isRequired,
+};
 export default SecurityContextModal;

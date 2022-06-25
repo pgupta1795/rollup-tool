@@ -1,10 +1,10 @@
-import { Grid } from "@mui/material";
-import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../authentication/auth";
-import CustomBackdrop from "../components/Card/backdrop";
-import Footer from "../components/Footer/footer";
-import Login from "../components/Form/login";
+import { Grid } from '@mui/material';
+import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../authentication/auth';
+import CustomBackdrop from '../components/Card/backdrop';
+import Footer from '../components/Footer/footer';
+import Login from '../components/Form/login';
 
 const LoginPage = () => {
   const auth = useAuth();
@@ -12,12 +12,12 @@ const LoginPage = () => {
   const location = useLocation();
 
   const [credentials, setCredentials] = React.useState({
-    username: "",
-    password: "",
-    "3dspace": auth.cookies["3dspace"] || "",
-    CSRF_TOKEN: "",
-    Cookies: "",
-    "3dpassport": auth.cookies["3dpassport"] || "",
+    username: '',
+    password: '',
+    '3dspace': auth.cookies['3dspace'] || '',
+    CSRF_TOKEN: '',
+    Cookies: '',
+    '3dpassport': auth.cookies['3dpassport'] || '',
   });
 
   return (

@@ -1,9 +1,10 @@
-import * as React from "react";
-import EditIcon from "@mui/icons-material/Edit";
-import EditOffIcon from "@mui/icons-material/EditOff";
-import CancelIcon from "@mui/icons-material/Cancel";
-import { IconButton, Skeleton } from "@mui/material";
-import FileUploadIcon from "@mui/icons-material/FileUpload";
+/* eslint-disable react/prop-types */
+import * as React from 'react';
+import EditIcon from '@mui/icons-material/Edit';
+import EditOffIcon from '@mui/icons-material/EditOff';
+import CancelIcon from '@mui/icons-material/Cancel';
+import { IconButton, Skeleton } from '@mui/material';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 export default function MyCommandCell(
   enterEdit,

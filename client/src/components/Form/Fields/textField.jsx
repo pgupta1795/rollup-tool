@@ -4,9 +4,10 @@ import {
   Input,
   InputAdornment,
   InputLabel,
-} from "@mui/material";
-import React from "react";
-import useStyles from "../../../Styles/styles.js";
+} from '@mui/material';
+import PropTypes from 'prop-types';
+import React from 'react';
+import useStyles from '../../../Styles/styles';
 
 const TextField = ({
   credentials,
@@ -23,7 +24,7 @@ const TextField = ({
       margin="dense"
       variant="standard"
       className={classes.resize}
-      required={true}
+      required
     >
       <InputLabel
         color="primary"
@@ -34,12 +35,12 @@ const TextField = ({
       </InputLabel>
       <Input
         id={fieldName}
-        type={"text"}
+        type="text"
         value={credentials[fieldName]}
         autoComplete={autoComplete}
         onChange={handleChange(fieldName)}
         inputProps={{
-          spellCheck: "false",
+          spellCheck: 'false',
           focused: classes.formFontSize,
         }}
         className={classes.formFontSize}
@@ -54,4 +55,12 @@ const TextField = ({
   );
 };
 
+TextField.propTypes = {
+  credentials: PropTypes.object.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  icon: PropTypes.element.isRequired,
+  fieldName: PropTypes.string.isRequired,
+  placeholder: PropTypes.string.isRequired,
+  autoComplete: PropTypes.string.isRequired,
+};
 export default TextField;

@@ -1,24 +1,24 @@
-import React from "react";
-import LoginPage from "./pages/LoginPage";
-import TypesPage from "./pages/TypesPage";
-import ErrorPage from "./pages/ErrorPage";
-import ObjectPage from "./pages/ObjectPage";
-import HomePage from "./pages/HomePage";
-import { CssBaseline, Box } from "@mui/material";
-import Header from "./components/Header/header";
-import { AuthProvider } from "./authentication/auth";
-import { RequireAuth, IsLogin } from "./components/Auth/RequireAuth";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Paths from "./utils/Paths";
-import { ThemeProvider } from "@mui/material/styles";
-import { lightTheme, darkTheme } from "./theme";
-import "./Styles/App.css";
+import { Box, CssBaseline } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { AuthProvider } from './authentication/auth';
+import { IsLogin, RequireAuth } from './components/Auth/RequireAuth';
+import Header from './components/Header/header';
+import Paths from './helper/Paths';
+import ErrorPage from './pages/ErrorPage';
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
+import ObjectPage from './pages/ObjectPage';
+import TypesPage from './pages/TypesPage';
+import './Styles/App.css';
+import { darkTheme, lightTheme } from './theme';
 
 const App = () => {
   const [checked, setChecked] = React.useState(false);
   return (
     <AuthProvider>
-      <Box sx={{ flexGrow: 1, width: "100%", height: "100%" }}>
+      <Box sx={{ flexGrow: 1, width: '100%', height: '100%' }}>
         <ThemeProvider theme={checked ? darkTheme : lightTheme}>
           <Router>
             <CssBaseline />
@@ -41,7 +41,7 @@ const App = () => {
                 }
               />
               <Route
-                path={Paths.HOME + "/:type"}
+                path={`${Paths.HOME}/:type`}
                 element={
                   <RequireAuth>
                     <TypesPage />
@@ -49,7 +49,7 @@ const App = () => {
                 }
               />
               <Route
-                path={Paths.HOME + "/:type/:id"}
+                path={`${Paths.HOME}/:type/:id`}
                 element={
                   <RequireAuth>
                     <ObjectPage />

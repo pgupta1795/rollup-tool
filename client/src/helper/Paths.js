@@ -1,7 +1,7 @@
 const Paths = Object.freeze({
-  LOGIN: "/",
-  HOME: "/home",
-  ERROR: "/*",
+  LOGIN: '/',
+  HOME: '/home',
+  ERROR: '/*',
 });
 
 export default Paths;

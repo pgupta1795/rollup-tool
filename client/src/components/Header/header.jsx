@@ -1,14 +1,15 @@
-import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
-import * as React from "react";
-import { useAuth } from "../../authentication/auth";
-import { ReactComponent as TT } from "../../custom/TT.svg";
-import Paths from "../../utils/Paths";
-import Profile from "../Profile/profile";
-import TechniaSearch from "../Search/search";
-import StyledSwitch from "../../Styles/StyledSwitch";
-import * as TableStyle from "../../Styles/tableStyle";
+import { AppBar, Box, IconButton, Toolbar, Typography } from '@mui/material';
+import PropTypes from 'prop-types';
+import * as React from 'react';
+import { ReactComponent as TT } from '../../assets/TT.svg';
+import { useAuth } from '../../authentication/auth';
+import Paths from '../../helper/Paths';
+import StyledSwitch from '../../Styles/StyledSwitch';
+import * as TableStyle from '../../Styles/tableStyle';
+import Profile from '../Profile/profile';
+import TechniaSearch from '../Search/search';
 
-export default function Header({ checked, setChecked }) {
+const Header = ({ checked, setChecked }) => {
   const auth = useAuth();
   const hasCookies = auth.cookies?.Cookies;
 
@@ -31,8 +32,8 @@ export default function Header({ checked, setChecked }) {
       color="white"
       sx={{
         display: {
-          xs: "none",
-          sm: "block",
+          xs: 'none',
+          sm: 'block',
         },
       }}
     >
@@ -54,22 +55,28 @@ export default function Header({ checked, setChecked }) {
         <Toolbar variant="dense">
           {myLogo}
           <Box sx={{ flexGrow: 1 }} />
-          {hasCookies ? mySearch : ""}
+          {hasCookies ? mySearch : ''}
           <Box sx={{ flexGrow: 1 }} />
           <Box
-            sx={{ display: { xs: "flex", md: "flex" } }}
-            alignItems={"center"}
-            justifyContent={"space-around"}
+            sx={{ display: { xs: 'flex', md: 'flex' } }}
+            alignItems="center"
+            justifyContent="space-around"
           >
             {!hasCookies ? myTool : <Profile />}
             <StyledSwitch
               checked={checked}
               onChange={themeChange}
-              inputProps={{ "aria-label": "controlled" }}
+              inputProps={{ 'aria-label': 'controlled' }}
             />
           </Box>
         </Toolbar>
       </AppBar>
     </Box>
   );
-}
+};
+
+Header.propTypes = {
+  checked: PropTypes.bool.isRequired,
+  setChecked: PropTypes.func.isRequired,
+};
+export default Header;

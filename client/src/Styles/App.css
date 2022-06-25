@@ -1,12 +1,31 @@
-@import "./constants.css";
-@import "~@progress/kendo-theme-default/dist/all.css";
+@import './constants.css';
+@import '~@progress/kendo-theme-default/dist/all.css';
+
+/* Error page */
+.error-page {
+  display: flex;
+  font-size: 2em;
+  justify-content: center;
+}
 
 /* Home css */
 .roll-up-home {
-  height: calc(100vh - 65px);
+  width: 100%;
+  height: calc(100vh - 108px);
+  padding: 5px;
+  padding-bottom: 10px;
+  flex-grow: 1;
+  background-color: inherit;
+}
+
+.full-width-height {
+  width: 100%;
+  height: 100%;
+}
+
+.roll-up-types {
   display: grid;
   grid-template-columns: auto auto;
-  gap: 5px;
 }
 
 /* login css */
@@ -35,7 +54,7 @@
   color: var(--primary-light);
 }
 
-thead[class*="k-grid-header"] th {
+thead[class*='k-grid-header'] th {
   background-color: var(--table-bg-color) !important;
   color: var(--primary-main);
   font-weight: bold;
@@ -53,11 +72,11 @@ thead[class*="k-grid-header"] th {
   display: grid;
   justify-content: center;
   align-items: center;
-  grid-template-columns: 2fr 7fr 2fr;
+  grid-template-columns: auto 10fr auto;
+  width: -webkit-fill-available;
 }
 
 /* kendo css changes */
-
 .k-grid {
   background-color: inherit !important;
 }

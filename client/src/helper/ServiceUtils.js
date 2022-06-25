@@ -1,8 +1,6 @@
-import data from "../custom/Settings.json";
+import data from '../Settings.json';
 
-const Settings = () => {
-  return data;
-};
+const Settings = () => data;
 
 export const ENDPOINT = {
   PASSPORT_URL: Settings().Passport,
@@ -18,27 +16,22 @@ export const BODY = {
 
 export const TYPES = Settings().TYPES_INFO.map(({ Type }) => Type);
 
-export const getTypeSettings = (type) => {
-  return Settings().TYPES_INFO.find((typeInfo) => typeInfo?.Type === type);
-};
+export const getTypeSettings = (type) =>
+  Settings().TYPES_INFO.find((typeInfo) => typeInfo?.Type === type);
 
-export const getAttributeInterface = (type) => {
-  return getTypeSettings(type)?.Attribute_PREFIX || "XP_VPMReference_Ext";
-};
+export const getAttributeInterface = (type) =>
+  getTypeSettings(type)?.Attribute_PREFIX || 'XP_VPMReference_Ext';
 
 export const getCustomAttributeNames = (type) => {
   if (type) {
     const customAttributes = getTypeSettings(type)?.CUSTOM_COLUMNS;
-    return customAttributes.map(
-      (customAttribute) => customAttribute["Attribute"]
-    );
+    return customAttributes.map((customAttribute) => customAttribute.Attribute);
   }
   return null;
 };
 
-export const getCustomAttributeKeys = (type) => {
-  return type ? getTypeSettings(type)?.CUSTOM_COLUMNS : null;
-};
+export const getCustomAttributeKeys = (type) =>
+  type ? getTypeSettings(type)?.CUSTOM_COLUMNS : null;
 
 export const getCustomAttributeDBName = (type, name) =>
-  getAttributeInterface(type) + "." + name;
+  `${getAttributeInterface(type)}.${name}`;

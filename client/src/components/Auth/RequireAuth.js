@@ -1,6 +1,8 @@
-import { useAuth } from "../../authentication/auth";
-import { Navigate, useLocation } from "react-router-dom";
-import Paths from "../../utils/Paths";
+import { Navigate, useLocation } from 'react-router-dom';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { useAuth } from '../../authentication/auth';
+import Paths from '../../helper/Paths';
 
 export const RequireAuth = ({ children }) => {
   const auth = useAuth();
@@ -23,13 +25,10 @@ export const IsLogin = ({ children }) => {
   return children;
 };
 
-export const authenticateTableData = (response) => {
-  if (JSON.stringify(response).includes("<html>")) {
-    const err = "Please login again";
-    throw err;
-  }
-  return (
-    (response && response.member && response.nlsLabel) ||
-    (response && response.data && response.children)
-  );
+RequireAuth.propTypes = {
+  children: PropTypes.element.isRequired,
+};
+
+IsLogin.propTypes = {
+  children: PropTypes.element.isRequired,
 };
