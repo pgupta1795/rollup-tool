@@ -12,17 +12,17 @@ Please follow the steps to setup a local demo on your system
 
 - IDE : VS Code (https://code.visualstudio.com/download)
 - Server is responsible for fetching results from enovia using DS webservices
-  - Setup Server-
-    - Database Setup-
-      - Download Mongodb and Compass to view database and interact using command line (https://www.mongodb.com/try/download/community)
-      - Configure log and data store paths in <install directory>\bin\mongod.cfg.
-      - Edit env variables to add installation/bin path (C:\Program Files\MongoDB\Server\5.0\bin), so that mongod can be used in command line or shell
+  - Setup Database :
+    - Download Mongodb and Compass to view database and interact using command line (https://www.mongodb.com/try/download/community)
+    - Configure log and data store paths in <install directory>\bin\mongod.cfg.
+    - Edit env variables to add installation/bin path (C:\Program Files\MongoDB\Server\5.0\bin), so that mongod can be used in command line or shell
+  - Setup Server :
     - Validate and configure .env according to environment
     - In cmd/vscode cd to rollup-tool/server
     - execute #npm install#
     - execute #npm start#
 - Client is responsible for prettifying the results given by server
-  - Setup Client-
+  - Setup Client :
     - In cmd/vscode cd to rollup-tool/client
     - execute #npm install#
     - execute #npm start#
