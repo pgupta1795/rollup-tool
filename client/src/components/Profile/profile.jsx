@@ -3,7 +3,7 @@ import { ArrowRight } from '@mui/icons-material';
 import React from 'react';
 import { useAuth } from '../../authentication/auth';
 import StorageConstants from '../../helper/StorageConstants';
-import { stringAvatar } from '../../helper/CommonUtils';
+import { stringAvatar } from '../../utils/CommonUtils';
 import AccountMenu from './profileMenu';
 
 const Profile = () => {

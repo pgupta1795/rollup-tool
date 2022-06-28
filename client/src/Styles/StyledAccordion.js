@@ -39,6 +39,6 @@ export const AccordionSummary = styled(({ toggle, ...restProps }) => (
 }));
 
 export const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
-  padding: theme.spacing(2),
+  padding: theme.spacing(1),
   borderTop: '1px solid rgba(0, 0, 0, .125)',
 }));

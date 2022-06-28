@@ -1,3 +1,4 @@
+import toast from '../helper/toast';
 import data from '../Settings.json';
 
 const Settings = () => data;
@@ -28,6 +29,20 @@ export const getCustomAttributeNames = (type) => {
     return customAttributes.map((customAttribute) => customAttribute.Attribute);
   }
   return null;
+};
+
+export const getAttributeLabel = (attribute, type) => {
+  try {
+    if (!attribute) return null;
+    if (!type) type = 'VPMReference';
+    const customAttributes = getTypeSettings(type)?.CUSTOM_COLUMNS;
+    return customAttributes?.find((attr) => attr?.Attribute === attribute)
+      ?.Label;
+  } catch (error) {
+    console.error(error);
+    toast.error(error);
+    throw error;
+  }
 };
 
 export const getCustomAttributeKeys = (type) =>

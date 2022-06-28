@@ -8,8 +8,7 @@ const CustomPaper = ({ children }) => (
     sx={{
       flexGrow: 1,
       width: '100%',
-      padding: '10px',
-      marginRight: '15px',
+      mb: 1,
     }}
   >
     <Paper

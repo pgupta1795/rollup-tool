@@ -1,4 +1,4 @@
-import { AppBar, Box, IconButton, Toolbar, Typography } from '@mui/material';
+import { Box, IconButton, Toolbar, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import { ReactComponent as TT } from '../../assets/TT.svg';
@@ -8,6 +8,7 @@ import StyledSwitch from '../../Styles/StyledSwitch';
 import * as TableStyle from '../../Styles/tableStyle';
 import Profile from '../Profile/profile';
 import TechniaSearch from '../Search/search';
+import { TopBar } from './customAppBar';
 
 const Header = ({ checked, setChecked }) => {
   const auth = useAuth();
@@ -51,7 +52,7 @@ const Header = ({ checked, setChecked }) => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <TopBar>
         <Toolbar variant="dense">
           {myLogo}
           <Box sx={{ flexGrow: 1 }} />
@@ -70,7 +71,7 @@ const Header = ({ checked, setChecked }) => {
             />
           </Box>
         </Toolbar>
-      </AppBar>
+      </TopBar>
     </Box>
   );
 };

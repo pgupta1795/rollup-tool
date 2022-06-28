@@ -2,10 +2,10 @@ import { Divider, Stack, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
 // import Button from "@mui/material/Button";
 import Grid from '@mui/material/Grid';
 import ExpandablePanel from '../Card/expandablePanel';
+import ChipField from '../Common/ChipField';
 
 const Details = ({ data }) => {
   const header = (
@@ -38,30 +38,10 @@ const Details = ({ data }) => {
             {data?.title || ''}
           </Typography>
           <Stack direction="row" spacing={1}>
-            <div>
-              <Chip label="Description" color="primary" />
-              <Typography component="span" color="text.secondary">
-                {data?.description || ''}
-              </Typography>
-            </div>
-            <div>
-              <Chip label="Owner" color="primary" />
-              <Typography component="span" color="text.secondary">
-                {data?.owner || ''}
-              </Typography>
-            </div>
-            <div>
-              <Chip label="Created" color="primary" />
-              <Typography component="span" color="text.secondary">
-                {data?.created || ''}
-              </Typography>
-            </div>
-            <div>
-              <Chip label="Modified" color="primary" />
-              <Typography component="span" color="text.secondary">
-                {data?.modified || ''}
-              </Typography>
-            </div>
+            <ChipField label="Description" value={data?.description} />
+            <ChipField label="Owner" value={data?.owner} />
+            <ChipField label="Created" value={data?.created} />
+            <ChipField label="Modified" value={data?.modified} />
           </Stack>
         </Box>
         {/* <BOX SX={{ MT: 3, ML: 1, MB: 1 }}>

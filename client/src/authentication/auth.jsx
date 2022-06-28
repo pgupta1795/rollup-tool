@@ -1,12 +1,13 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
+import toast from '../helper/toast';
 import Paths from '../helper/Paths';
 import * as Api from '../helper/Api';
-import { removeStorage, setStorage } from '../helper/CommonUtils';
+import { removeStorage, setStorage } from '../utils/CommonUtils';
 import { COOKIE_OPTIONS, initialAuthDetail } from './props';
-
-const AuthContext = createContext(null);
+import { AuthContext } from '../hooks/contexts';
+import Constants from '../helper/Constants';
 
 export const AuthProvider = ({ children }) => {
   const [progress, setProgress] = useState(false);
@@ -55,10 +56,10 @@ export const AuthProvider = ({ children }) => {
       });
       const path = Paths.HOME;
       navigate(location?.state?.path || path, { replace: true });
+      toast.success(Constants.LOGIN_SUCESS);
     } catch (error) {
-      const message = 'Invalid Credentials or Settings';
-      console.error(`${message} : ${error}`);
-      alert(message);
+      console.error(error);
+      toast.error(Constants.LOGIN_ERROR);
     } finally {
       setProgress(false);
     }
@@ -75,6 +76,7 @@ export const AuthProvider = ({ children }) => {
       '3dpassport': cookies['3dpassport'],
     });
     removeStorage();
+    toast.success(Constants.LOGOUT_SUCESS);
   };
 
   return (

@@ -1,9 +1,10 @@
-import { AppBar, Box, Toolbar } from '@mui/material';
+import { Box, Toolbar } from '@mui/material';
 import { LinkedIn, Twitter, YouTube } from '@mui/icons-material';
 import React from 'react';
+import { BottomBar } from '../Header/customAppBar';
 
 const Footer = () => (
-  <AppBar position="fixed" sx={{ top: 'auto', bottom: 0 }}>
+  <BottomBar>
     <Toolbar>
       <Box sx={{ my: 1 }}>
         <a href="https://www.technia.com">
@@ -53,7 +54,7 @@ const Footer = () => (
         </a>
       </Box>
     </Toolbar>
-  </AppBar>
+  </BottomBar>
 );
 
 export default Footer;

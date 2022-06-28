@@ -12,10 +12,20 @@ import {
 import * as React from 'react';
 import ActionsCell from './Cell/ActionsCell';
 import * as TableUtils from './tableUtils';
+import toast from '../../helper/toast';
+import Constants from '../../helper/Constants';
 
 const idGetter = getter(TableUtils.DATA_ITEM_KEY);
 
-const ObjectTable = ({ type, state, setState, columns, oldRows, loading }) => {
+const ObjectTable = ({
+  type,
+  state,
+  setState,
+  columns,
+  oldRows,
+  loading,
+  rowActionsRequired,
+}) => {
   const [selectedState, setSelectedState] = React.useState({});
 
   const onSelectionChange = React.useCallback(
@@ -44,7 +54,7 @@ const ObjectTable = ({ type, state, setState, columns, oldRows, loading }) => {
     const { expanded } = state;
     return mapTree(dataTree, TableUtils.subItemsField, (item) =>
       extendDataItem(item, TableUtils.subItemsField, {
-        expanded: expanded.includes(item.id),
+        expanded: expanded.push(item.id),
         selected: selectedState[idGetter(item)],
         inEdit: Boolean(state.inEdit.find((i) => i.id === item.id)),
       })
@@ -68,7 +78,8 @@ const ObjectTable = ({ type, state, setState, columns, oldRows, loading }) => {
 
   const enterEdit = (dataItem) => {
     if (TableUtils.isNotEditable(dataItem)) {
-      console.warn('Can only edit leaf level elements');
+      console.warn(Constants.PARENT_EDIT_WARNING);
+      toast.warning(Constants.PARENT_EDIT_WARNING);
       return;
     }
     setState({
@@ -105,6 +116,7 @@ const ObjectTable = ({ type, state, setState, columns, oldRows, loading }) => {
       inEdit: inEdit.filter((i) => i.id !== editedItem.id),
     });
   };
+
   const CommandCell = ActionsCell(
     enterEdit,
     save,
@@ -129,6 +141,16 @@ const ObjectTable = ({ type, state, setState, columns, oldRows, loading }) => {
       td.props.children
     );
   };
+
+  const actionColumn = {
+    title: 'Object Actions',
+    width: '20%',
+    cell: CommandCell,
+  };
+
+  const allColumns = rowActionsRequired
+    ? [...columns.slice(0, 2), actionColumn, ...columns.slice(2, -2)]
+    : columns;
 
   return (
     <div>
@@ -161,26 +183,25 @@ const ObjectTable = ({ type, state, setState, columns, oldRows, loading }) => {
             setState({ ...state, dataState: event.dataState });
           }}
           onItemChange={onItemChange}
-          columns={[
-            ...columns,
-            {
-              title: 'Object Actions',
-              width: '20%',
-              cell: CommandCell,
-            },
-          ]}
+          columns={allColumns}
         />
       )}
     </div>
   );
 };
 
+ObjectTable.defaultProps = {
+  type: null,
+  rowActionsRequired: true,
+};
+
 ObjectTable.propTypes = {
-  type: PropTypes.string.isRequired,
+  type: PropTypes.string,
   state: PropTypes.any.isRequired,
   setState: PropTypes.func.isRequired,
   columns: PropTypes.array.isRequired,
   oldRows: PropTypes.array.isRequired,
   loading: PropTypes.bool.isRequired,
+  rowActionsRequired: PropTypes.bool,
 };
 export default ObjectTable;

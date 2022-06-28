@@ -2,7 +2,7 @@ import { Autocomplete, CircularProgress } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import throttle from 'lodash/throttle';
+import _ from 'lodash';
 import * as Api from '../../helper/Api';
 import StorageConstants from '../../helper/StorageConstants';
 import * as Props from '../GridTable/props';
@@ -11,8 +11,10 @@ import { SearchDiv, SearchIconDiv } from '../../Styles/StyledDiv';
 import StyledInputBase from '../../Styles/StyledInputBase';
 import Paths from '../../helper/Paths';
 import Options from './options';
-import { debounce } from '../../helper/fetchUtils';
-import { authenticateTableData } from '../../helper/CommonUtils';
+import { debounce } from '../../utils/fetchUtils';
+import { authenticateTableData } from '../../utils/CommonUtils';
+import { useAuth } from '../../authentication/auth';
+import toast from '../../helper/toast';
 
 const type = 'VPMReference';
 
@@ -34,22 +36,31 @@ const TechniaSearch = () => {
   const [value, setValue] = React.useState(null);
   const [inputValue, setInputValue] = React.useState('');
   const navigate = useNavigate();
+  const auth = useAuth();
 
   const fetch = React.useMemo(
     () =>
       debounce(
-        throttle(async ({ spaceUrl, input }, callback) => {
-          setLoading(true);
-          const response = await Api.searchObjects(
-            type,
-            spaceUrl,
-            30,
-            0,
-            input
-          );
-          callback(response);
-          setLoading(false);
-          return response;
+        _.throttle(async ({ spaceUrl, input }, callback) => {
+          try {
+            setLoading(true);
+            const response = await Api.searchObjects(
+              type,
+              spaceUrl,
+              30,
+              0,
+              input
+            );
+            callback(response);
+            setLoading(false);
+            return response;
+          } catch (error) {
+            console.error(error);
+            toast.error(error);
+            auth.logout();
+            navigate(Paths.LOGIN);
+          }
+          return null;
         }, 800),
         500
       ),

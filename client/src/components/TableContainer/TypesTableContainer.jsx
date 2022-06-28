@@ -11,8 +11,9 @@ import ObjectTable from '../GridTable/ObjectTable';
 import MyPagination from '../GridTable/toolbar/pagination';
 import * as Props from '../GridTable/props';
 import * as TableUtils from '../GridTable/tableUtils';
-import { authenticateTableData } from '../../helper/CommonUtils';
+import { authenticateTableData } from '../../utils/CommonUtils';
 import useTable from '../../hooks/useTable';
+import toast from '../../helper/toast';
 
 const TypesTableContainer = ({ type }) => {
   const auth = useAuth();
@@ -45,6 +46,8 @@ const TypesTableContainer = ({ type }) => {
       );
       setProps(rows, [...columns], null, pagination);
     } catch (error) {
+      console.error(error);
+      toast.error(error);
       auth.logout();
       <Navigate to={Paths.LOGIN} />;
     }

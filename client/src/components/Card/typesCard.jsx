@@ -4,15 +4,11 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { stringToColor } from '../../helper/CommonUtils';
+import { stringToColor } from '../../utils/CommonUtils';
 
 const TypesCard = ({ type }) => {
-  const typeRef = React.useRef();
   const navigate = useNavigate();
-  const handleCardClick = () => {
-    const typeClicked = typeRef.current?.innerText;
-    if (typeClicked) navigate(typeClicked);
-  };
+  const handleCardClick = () => navigate(type);
 
   return (
     <Card
@@ -23,15 +19,27 @@ const TypesCard = ({ type }) => {
         justifyContent: 'center',
         alignItems: 'center',
         cursor: 'pointer',
-        margin: '2px',
+        mb: 1,
+        width: 'inherit',
+        height: '10vh',
       }}
       onClick={handleCardClick}
     >
-      <CardContent>
+      <CardContent
+        sx={{
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+        }}
+      >
         <Typography
-          sx={{ typography: { sm: 'h3', xs: 'h6' } }}
+          align="inherit"
+          sx={{
+            typography: 'button',
+            padding: '2px',
+            wordWrap: 'break-word',
+          }}
           component="span"
-          ref={typeRef}
+          display={{ xs: 'none', sm: 'block', md: 'block' }}
         >
           {type}
         </Typography>

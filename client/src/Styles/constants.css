@@ -1,9 +1,9 @@
 :root {
 	/* theme */
   --mode: 'light'
-  --primary-light: #73ddf6;
-  --primary-main: #37abc3;
-  --primary-dark: #007c93;
+  --primary-light: #c5cae9;
+  --primary-main: #9575cd;
+  --primary-dark: #ba68c8;
 
   /* table */
   --table-bg-color: #d3d3d3;
@@ -15,4 +15,9 @@
   --md: 960;
   --lg: 1200;
   --xl: 1536;
+
+  --toastify-color-success: #2b7a2e;
+  --toastify-color-info: #2574aa;
+  --toastify-color-warning: #f1c40f;
+  --toastify-color-error: #9f2a1d;
 }

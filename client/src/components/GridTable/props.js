@@ -1,9 +1,10 @@
 import {
   TreeListTextFilter,
   TreeListTextEditor,
+  TreeListNumericEditor,
 } from '@progress/kendo-react-treelist';
 import LinkCell from './Cell/LinkCell';
-import * as ServiceUtils from '../../helper/ServiceUtils';
+import * as ServiceUtils from '../../utils/ServiceUtils';
 
 export const DEFAULT_COLUMN_KEYS = [
   'type',
@@ -25,6 +26,14 @@ export const DEFAULT_COLUMNS = [
     expandable: true,
   },
   {
+    field: 'title',
+    title: 'Title',
+    width: '15%',
+    filter: TreeListTextFilter,
+    editCell: TreeListTextEditor,
+    cell: LinkCell,
+  },
+  {
     field: 'type',
     title: 'Type',
     width: '7%',
@@ -38,14 +47,6 @@ export const DEFAULT_COLUMNS = [
     field: 'state',
     title: 'State',
     width: '5%',
-  },
-  {
-    field: 'title',
-    title: 'Title',
-    width: '15%',
-    filter: TreeListTextFilter,
-    editCell: TreeListTextEditor,
-    cell: LinkCell,
   },
   {
     field: 'description',
@@ -82,9 +83,13 @@ export const OBJECT_COLUMNS = (type) => {
     return {
       field: attribute,
       title: displayTitle,
-      width: '15%',
-      editCell: TreeListTextEditor,
+      width: '20%',
+      editCell: TreeListNumericEditor,
     };
   });
-  return [...DEFAULT_COLUMNS.slice(0, -2), ...customColumns];
+  return [
+    ...DEFAULT_COLUMNS.slice(0, 2),
+    ...customColumns,
+    ...DEFAULT_COLUMNS.slice(2, -2),
+  ];
 };

@@ -1,11 +1,13 @@
 import { createTheme } from '@mui/material/styles';
 
-const TechniaColor = '#37ABC3';
+const light = '#c5cae9';
+const main = '#9575cd';
+const dark = '#ba68c8';
 
 const primary = {
-  light: '#73ddf6',
-  main: TechniaColor,
-  dark: '#007c93',
+  light,
+  main,
+  dark,
   contrastText: '#fff',
 };
 
@@ -13,7 +15,10 @@ export const lightTheme = createTheme({
   palette: {
     mode: 'light',
     primary,
-    alternateTextColor: TechniaColor,
+    alternateTextColor: main,
+    background: {
+      default: '#f5f5f5',
+    },
   },
 });
 
@@ -21,6 +26,9 @@ export const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     primary,
-    alternateTextColor: TechniaColor,
+    alternateTextColor: main,
+    background: {
+      default: '#424242',
+    },
   },
 });

@@ -2,18 +2,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Navigate } from 'react-router-dom';
 import { TableContainer } from '@mui/material';
+import { Dashboard, Info } from '@mui/icons-material';
 import { useAuth } from '../../authentication/auth';
 import * as Api from '../../helper/Api';
 import Paths from '../../helper/Paths';
-import * as ServiceUtils from '../../helper/ServiceUtils';
+import * as ServiceUtils from '../../utils/ServiceUtils';
 import StorageConstants from '../../helper/StorageConstants';
 import ExpandablePanel from '../Card/expandablePanel';
 import Details from '../Form/Details';
 import ObjectTable from '../GridTable/ObjectTable';
 import * as Props from '../GridTable/props';
 import * as TableUtils from '../GridTable/tableUtils';
-import { authenticateTableData } from '../../helper/CommonUtils';
+import { authenticateTableData } from '../../utils/CommonUtils';
 import useTable from '../../hooks/useTable';
+import { ObjectContext } from '../../hooks/contexts';
+import ObjectGraphs from '../Graphs/objectGraphs';
+import CustomTab from '../Card/customTab';
+import toast from '../../helper/toast';
 
 const ObjectsTableContainer = ({ type, id }) => {
   const auth = useAuth();
@@ -62,6 +67,8 @@ const ObjectsTableContainer = ({ type, id }) => {
       const { rows, objDetails } = formattedData(response);
       setProps(rows, [...columns], objDetails, null);
     } catch (error) {
+      console.log(error);
+      toast.error(error);
       auth.logout();
       <Navigate to={Paths.LOGIN} />;
     }
@@ -71,7 +78,7 @@ const ObjectsTableContainer = ({ type, id }) => {
     fetchData();
   }, [reRender, fetchData]);
 
-  return (
+  const table = (
     <>
       <Details data={details} />
       <ExpandablePanel summary={toolbar}>
@@ -87,6 +94,26 @@ const ObjectsTableContainer = ({ type, id }) => {
         </TableContainer>
       </ExpandablePanel>
     </>
+  );
+
+  return (
+    <ObjectContext.Provider value={{ state }}>
+      <CustomTab
+        defaultTab="Object"
+        tabsArray={[
+          {
+            label: 'Object',
+            element: table,
+            icon: <Info />,
+          },
+          {
+            label: 'Dashboard',
+            element: <ObjectGraphs />,
+            icon: <Dashboard />,
+          },
+        ]}
+      />
+    </ObjectContext.Provider>
   );
 };
 

@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { useParams, Navigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import TypesTableContainer from '../components/TableContainer/TypesTableContainer';
-import * as ServiceUtils from '../helper/ServiceUtils';
-import Paths from '../helper/Paths';
+import * as ServiceUtils from '../utils/ServiceUtils';
+import toast from '../helper/toast';
+import Constants from '../helper/Constants';
 
 const TypesPage = () => {
   const { type } = useParams();
@@ -10,10 +11,7 @@ const TypesPage = () => {
   return ServiceUtils.TYPES.includes(type) ? (
     <TypesTableContainer type={type} />
   ) : (
-    <>
-      {alert(`${type} is not configured or valid enovia type`)}
-      <Navigate to={Paths.HOME} />
-    </>
+    toast.warning(Constants.TYPE_NOT_CONFIGURED_WARNING)
   );
 };
 

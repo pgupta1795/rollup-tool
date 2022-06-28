@@ -61,7 +61,14 @@ const createAction = async (req, res) => {
 
 const getActions = async (req, res) => {
   try {
-    const actions = await Action.find({});
+    const { limit, skip, spaceUrl, userName } = req.query;
+    const actions = await Action.find({
+      spaceUrl,
+      userName,
+    })
+      .limit(limit)
+      .skip(skip)
+      .exec();
     res.json({ status: 200, data: actions });
   } catch (err) {
     console.error(err);

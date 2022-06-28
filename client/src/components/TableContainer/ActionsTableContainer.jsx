@@ -1,42 +1,39 @@
-import { TableContainer } from '@mui/material';
+import { Box, TableContainer } from '@mui/material';
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Navigate } from 'react-router-dom';
+import { Dashboard } from '@mui/icons-material';
 import { useAuth } from '../../authentication/auth';
 import * as Api from '../../helper/Api';
 import Paths from '../../helper/Paths';
-import StorageConstants from '../../helper/StorageConstants';
 import ExpandablePanel from '../Card/expandablePanel';
 import ObjectTable from '../GridTable/ObjectTable';
 import MyPagination from '../GridTable/toolbar/pagination';
-import * as Props from '../GridTable/props';
-import * as TableUtils from '../GridTable/tableUtils';
-import { authenticateTableData } from '../../helper/CommonUtils';
+import * as ActionProps from '../GridTable/actionProps';
 import useTable from '../../hooks/useTable';
+import * as TableUtils from '../GridTable/tableUtils';
+import ActionGraphs from '../Graphs/actionGraphs';
+import { ActionsContext } from '../../hooks/contexts';
+import toast from '../../helper/toast';
 
-const ActionsTable = ({ type }) => {
+const ActionsTable = () => {
   const auth = useAuth();
   const [current, setCurrent] = React.useState(1);
-  const [toolbar, state, , oldRows, reRender, loading, setters] = useTable();
+  const [toolbar, state, , oldRows, reRender, loading, setters] = useTable({
+    field: 'createdAt',
+    dir: 'desc',
+  });
   const [setLoading, setState, setProps] = setters;
+  const columns = ActionProps.ACTION_COLUMNS;
 
   const fetchData = React.useCallback(async () => {
     try {
       const pageSize = 30;
-      const columns = Props.DEFAULT_COLUMNS;
-      const spaceUrl = localStorage.getItem(StorageConstants.SPACE3d);
       setLoading(true);
-      const response = await Api.searchObjects(
-        type,
-        spaceUrl,
-        pageSize,
-        (current - 1) * pageSize
-      );
-      if (!authenticateTableData(response)) {
+      const results = await Api.getActions(pageSize, (current - 1) * pageSize);
+      if (!results) {
         return;
       }
-      const headerKeys = Props.DEFAULT_COLUMN_KEYS;
-      const rows = TableUtils.getRows(response, headerKeys);
+      const rows = TableUtils.formatActionRows(results);
       const pagination = (
         <MyPagination
           current={current}
@@ -45,32 +42,38 @@ const ActionsTable = ({ type }) => {
       );
       setProps(rows, [...columns], null, pagination);
     } catch (error) {
+      console.error(error);
+      toast.error(error);
       auth.logout();
       <Navigate to={Paths.LOGIN} />;
     }
-  }, [type, current, auth]);
+  }, [current, auth]);
 
   React.useEffect(() => {
     fetchData();
   }, [reRender, fetchData]);
 
   return (
-    <ExpandablePanel summary={toolbar}>
-      <TableContainer component="div">
-        <ObjectTable
-          type={type}
-          state={state}
-          setState={setState}
-          oldRows={oldRows}
-          loading={loading}
-          columns={Props.DEFAULT_COLUMNS}
-        />
-      </TableContainer>
-    </ExpandablePanel>
+    <ActionsContext.Provider value={{ state }}>
+      <Box m={1}>
+        <ExpandablePanel summary={<Dashboard color="primary" />}>
+          <ActionGraphs />
+        </ExpandablePanel>
+        <ExpandablePanel summary={toolbar}>
+          <TableContainer component="div">
+            <ObjectTable
+              state={state}
+              setState={setState}
+              oldRows={oldRows}
+              loading={loading}
+              columns={columns}
+              rowActionsRequired={false}
+            />
+          </TableContainer>
+        </ExpandablePanel>
+      </Box>
+    </ActionsContext.Provider>
   );
 };
 
-ActionsTable.propTypes = {
-  type: PropTypes.string.isRequired,
-};
 export default ActionsTable;

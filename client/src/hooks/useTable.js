@@ -2,13 +2,13 @@ import React from 'react';
 import Toolbar from '../components/GridTable/toolbar/toolbar';
 import ToolbarSkeleton from '../components/GridTable/toolbar/toolbarSkeleton';
 
-export default () => {
+export default (sortField) => {
   const [toolbar, setToolbar] = React.useState(<ToolbarSkeleton />);
   const [state, setState] = React.useState({
     data: [],
     dataState: {
       sort: [
-        {
+        sortField || {
           field: 'name',
           dir: 'asc',
         },

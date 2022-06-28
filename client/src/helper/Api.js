@@ -1,7 +1,9 @@
-import { fetchResponse } from './fetchUtils';
-import { BODY, ENDPOINT } from './ServiceUtils';
+import { fetchResponse } from '../utils/fetchUtils';
+import { BODY, ENDPOINT } from '../utils/ServiceUtils';
+import Constants from './Constants';
 import { getSearchBody, getChildrenBody, getUpdateObjectBody } from './payload';
 import StorageConstants from './StorageConstants';
+import toast from './toast';
 
 const baseURL = process.env.REACT_APP_SERVER_URL;
 
@@ -28,7 +30,8 @@ export const login = async (credentials) => {
   });
   const response = await result.json();
   if (response.status !== 200) {
-    console.error(`${response.message} : Unable to Login`);
+    console.error(response.message, Constants.LOGIN_ERROR);
+    toast.error(Constants.LOGIN_ERROR);
     throw response.message;
   }
   return response;
@@ -64,8 +67,8 @@ export const searchObjects = async (type, spaceUrl, top, skip, name) => {
     );
 
     if (response.status !== 200) {
-      console.error(`${response.message} : Unable to fetch Objects !!`);
-      alert(`${response.message} : Unable to fetch Objects !!`);
+      console.error(response.message, Constants.FETCH_ERROR);
+      toast.error(Constants.FETCH_ERROR);
       return [];
     }
     return response?.data;
@@ -87,12 +90,8 @@ export const updateObject = async (type, object) => {
     });
 
     if (response.status !== 200) {
-      console.error(
-        `${response.message} : Unable to Update Objects , Please refresh page and try again`
-      );
-      alert(
-        `${response.message} : Unable to Update Objects , Please refresh page and try again`
-      );
+      console.error(response.message, Constants.EDIT_OBJECT_ERROR);
+      toast.error(Constants.EDIT_OBJECT_ERROR);
       return [];
     }
     return response?.data;
@@ -114,8 +113,8 @@ export const getAllChildren = async (type, spaceUrl, id) => {
     });
 
     if (response.status !== 200) {
-      console.error(`${response.message} : Unable to fetch Objects !!`);
-      alert(`${response.message} : Unable to fetch Objects !!`);
+      console.error(response.message, Constants.FETCH_ERROR);
+      toast.error(Constants.FETCH_ERROR);
       return [];
     }
     return response?.data;
@@ -138,9 +137,7 @@ export const createTypeObject = async (type, object) => {
     const response = await fetchResponse(url, options);
 
     if (response.status !== 200) {
-      const err =
-        'Unable to update the selected row in db as it may already exists';
-      console.warn(err);
+      console.warn(Constants.ACTIONS_EXISTS_WARNING);
       return [];
     }
     return response?.data;
@@ -170,15 +167,29 @@ export const createAction = async (id, newRow, oldRow) => {
   const response = await fetchResponse(url, options);
 
   if (response.status !== 200) {
-    const err = 'Unable to create action';
-    console.error(err);
+    console.warn(Constants.CREATE_ACTION_ERROR);
+    toast.warning(Constants.CREATE_ACTION_ERROR);
     return [];
   }
   return response?.data;
 };
 
-export const getActions = async () => {
-  const url = `${baseURL}/store/getActions`;
+export const getActions = async (limit, skip) => {
+  const params = {
+    limit,
+    skip,
+    spaceUrl: localStorage.getItem(StorageConstants.SPACE3d),
+    userName: `${localStorage.getItem(
+      StorageConstants.FirstName
+    )} ${localStorage.getItem(StorageConstants.LastName)}`,
+  };
+
+  const query = Object.keys(params)
+    .map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`)
+    .join('&');
+
+  const url = `${baseURL}/store/getActions?${query}`;
+
   const response = await fetchResponse(url, {
     method: 'GET',
     headers: {
@@ -188,8 +199,8 @@ export const getActions = async () => {
   });
 
   if (response.status !== 200) {
-    console.error(`${response.message} : Unable to get actions`);
-    alert(`${response.message} : Unable to get actions`);
+    console.error(response.message);
+    toast.error(Constants.GET_ACTIONS_ERROR);
     return [];
   }
   return response?.data;

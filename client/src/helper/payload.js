@@ -1,5 +1,5 @@
 import StorageConstants from './StorageConstants';
-import * as ServiceUtils from './ServiceUtils';
+import * as ServiceUtils from '../utils/ServiceUtils';
 import * as Props from '../components/GridTable/props';
 
 export const getSearchBody = (type, spaceUrl, top, skip, name) => {

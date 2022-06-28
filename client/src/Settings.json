@@ -11,11 +11,23 @@
       "CUSTOM_COLUMNS": [
         {
           "Attribute": "Cost",
-          "Label": "Cost"
+          "Label": "Total Cost"
         },
         {
           "Attribute": "Weight",
           "Label": "CAD Mass"
+        },
+        {
+          "Attribute": "Estimated_Weight",
+          "Label": "Estimated Mass"
+        },
+        {
+          "Attribute": "Actual_Weight",
+          "Label": "Actual Mass"
+        },
+        {
+          "Attribute": "Other_Weight",
+          "Label": "Other Mass"
         }
       ],
       "Attribute_PREFIX": "XP_VPMReference_Ext",

@@ -1,4 +1,4 @@
-import StorageConstants from './StorageConstants';
+import StorageConstants from '../helper/StorageConstants';
 
 export const setStorage = (storageItems) => {
   const {

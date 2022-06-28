@@ -1,8 +1,9 @@
 import { extendDataItem, mapTree } from '@progress/kendo-react-treelist';
 import * as Props from './props';
-import * as ServiceUtils from '../../helper/ServiceUtils';
-import { isEqual, authenticateTableData } from '../../helper/CommonUtils';
+import * as ServiceUtils from '../../utils/ServiceUtils';
+import { isEqual, authenticateTableData } from '../../utils/CommonUtils';
 import * as Api from '../../helper/Api';
+import toast from '../../helper/toast';
 
 export const subItemsField = 'children';
 
@@ -52,22 +53,28 @@ export const formatChildData = (
   customHeaderKeys,
   parentId
 ) => {
-  const allChildren = [];
-  children.forEach(({ data, children: grandChildren }) => {
-    const rowsData = getRows(data, headerKeys, customHeaderKeys);
-    if (rowsData) {
-      const childData = rowsData[0];
-      childData.parent = parentId;
-      childData.children = formatChildData(
-        grandChildren,
-        headerKeys,
-        customHeaderKeys,
-        childData.id
-      );
-      allChildren.push(childData);
-    }
-  });
-  return allChildren;
+  try {
+    const allChildren = [];
+    children.forEach(({ data, children: grandChildren }) => {
+      const rowsData = getRows(data, headerKeys, customHeaderKeys);
+      if (rowsData) {
+        const childData = rowsData[0];
+        childData.parent = parentId;
+        childData.children = formatChildData(
+          grandChildren,
+          headerKeys,
+          customHeaderKeys,
+          childData.id
+        );
+        allChildren.push(childData);
+      }
+    });
+    return allChildren;
+  } catch (error) {
+    console.error(error);
+    toast.error(error);
+    throw error;
+  }
 };
 
 export const getChildById = async (type, spaceUrl, id) => {
@@ -81,30 +88,37 @@ export const getChildById = async (type, spaceUrl, id) => {
     return allChildren;
   } catch (error) {
     console.error(error);
+    toast.error(error);
     throw error;
   }
 };
 
 export const getHeaders = (response, headerKeys) => {
-  const headers = [];
-  const { id, ...labels } = response.nlsLabel;
-  Object.keys(labels).forEach((key) => {
-    if (
-      Object.prototype.hasOwnProperty.call(labels, key) &&
-      !headerKeys.includes(key)
-    ) {
-      const label = labels[key];
-      if (label) {
-        headers.push({
-          title: label,
-          dataIndex: key,
-          key,
-        });
-        headerKeys.push(key);
+  try {
+    const headers = [];
+    const { id, ...labels } = response.nlsLabel;
+    Object.keys(labels).forEach((key) => {
+      if (
+        Object.prototype.hasOwnProperty.call(labels, key) &&
+        !headerKeys.includes(key)
+      ) {
+        const label = labels[key];
+        if (label) {
+          headers.push({
+            title: label,
+            dataIndex: key,
+            key,
+          });
+          headerKeys.push(key);
+        }
       }
-    }
-  });
-  return headers;
+    });
+    return headers;
+  } catch (error) {
+    console.error(error);
+    toast.error(error);
+    throw error;
+  }
 };
 
 /**
@@ -114,17 +128,22 @@ export const getHeaders = (response, headerKeys) => {
  * @returns
  */
 export const findRowById = (rows, id) => {
-  let validRow;
-
-  for (let index = 0; index < rows?.length; index += 1) {
-    const row = rows[index];
-    if (row?.id === id) {
-      validRow = row;
-      return validRow;
+  try {
+    let validRow;
+    for (let index = 0; index < rows?.length; index += 1) {
+      const row = rows[index];
+      if (row?.id === id) {
+        validRow = row;
+        return validRow;
+      }
+      if (row?.children) validRow = findRowById(row?.children, id);
     }
-    if (row?.children) validRow = findRowById(row?.children, id);
+    return validRow;
+  } catch (error) {
+    console.error(error);
+    toast.error(error);
+    throw error;
   }
-  return validRow;
 };
 
 /**
@@ -145,11 +164,17 @@ export const updateCellValue = (rows, id, field, newValue) =>
   );
 
 export const flatten = (root, flat = []) => {
-  const { children, ...restElements } = root;
-  flat.push(restElements);
+  try {
+    const { children, ...restElements } = root;
+    flat.push(restElements);
 
-  if (Array.isArray(children)) {
-    children.forEach((child) => flatten(child, flat));
+    if (Array.isArray(children)) {
+      children.forEach((child) => flatten(child, flat));
+    }
+  } catch (error) {
+    console.error(error);
+    toast.error(error);
+    throw error;
   }
 };
 
@@ -157,10 +182,16 @@ export const isNotEditable = (dataItem) =>
   dataItem.children || dataItem.state === 'RELEASED';
 
 const createAction = async (newRow, oldRows) => {
-  const { id } = newRow;
-  const oldRow = findRowById(oldRows, id);
-  if (oldRow && !isEqual(oldRow, newRow))
-    await Api.createAction(id, newRow, oldRow);
+  try {
+    const { id } = newRow;
+    const oldRow = findRowById(oldRows, id);
+    if (oldRow && !isEqual(oldRow, newRow))
+      await Api.createAction(id, newRow, oldRow);
+  } catch (error) {
+    console.error(error);
+    toast.error(error);
+    throw error;
+  }
 };
 
 /**
@@ -176,22 +207,28 @@ const createAction = async (newRow, oldRows) => {
  * @returns
  */
 export const updateAttributes = async (type, selectedRow, newRows, oldRows) => {
-  await Api.createTypeObject(type, selectedRow);
-  const response = await Api.updateObject(type, selectedRow);
-  if (authenticateTableData(response)) {
-    await createAction(selectedRow, oldRows);
-    const id = response?.member[0].id;
-    const newCEStamp = response?.member[0].cestamp;
-    if (id && newCEStamp) {
-      newRows = updateCellValue(newRows, id, 'cestamp', newCEStamp);
-    }
-    const parentRow = findRowById(newRows, selectedRow?.parent);
-    if (parentRow) {
-      newRows = await updateAttributes(type, parentRow, newRows, oldRows);
+  try {
+    await Api.createTypeObject(type, selectedRow);
+    const response = await Api.updateObject(type, selectedRow);
+    if (authenticateTableData(response)) {
+      await createAction(selectedRow, oldRows);
+      const id = response?.member[0].id;
+      const newCEStamp = response?.member[0].cestamp;
+      if (id && newCEStamp) {
+        newRows = updateCellValue(newRows, id, 'cestamp', newCEStamp);
+      }
+      const parentRow = findRowById(newRows, selectedRow?.parent);
+      if (parentRow) {
+        newRows = await updateAttributes(type, parentRow, newRows, oldRows);
+      }
+      return newRows;
     }
     return newRows;
+  } catch (error) {
+    console.error(error);
+    toast.error(error);
+    throw error;
   }
-  return newRows;
 };
 
 /**
@@ -202,19 +239,25 @@ export const updateAttributes = async (type, selectedRow, newRows, oldRows) => {
  * @returns
  */
 export const rollUpAttribute = (id, newRows, field) => {
-  const row = id ? findRowById(newRows, id) : '';
-  if (row) {
-    let newValueParent = 0;
-    if (row[subItemsField]) {
-      row[subItemsField].forEach((children) => {
-        const childval = Number(children[field]);
-        newValueParent += Number.isNaN(childval) ? 0 : childval;
-      });
-      newRows = updateCellValue(newRows, id, field, newValueParent);
+  try {
+    const row = id ? findRowById(newRows, id) : '';
+    if (row) {
+      let newValueParent = 0;
+      if (row[subItemsField]) {
+        row[subItemsField].forEach((children) => {
+          const childval = Number(children[field]);
+          newValueParent += Number.isNaN(childval) ? 0 : childval;
+        });
+        newRows = updateCellValue(newRows, id, field, newValueParent);
+      }
+      newRows = rollUpAttribute(row?.parent, newRows, field);
     }
-    newRows = rollUpAttribute(row?.parent, newRows, field);
+    return newRows;
+  } catch (error) {
+    console.error(error);
+    toast.error(error);
+    throw error;
   }
-  return newRows;
 };
 
 export const getUpdatedRows = (event, state) => {
@@ -226,3 +269,66 @@ export const getUpdatedRows = (event, state) => {
   }
   return newRows;
 };
+
+const getObject = (objectDetails) => {
+  try {
+    const {
+      type,
+      title,
+      state,
+      description,
+      cestamp,
+      name,
+      revision,
+      owner,
+      ...attributes
+    } = objectDetails;
+    return {
+      type,
+      title,
+      state,
+      description,
+      ...attributes,
+    };
+  } catch (error) {
+    console.error(error);
+    toast.error(error);
+    throw error;
+  }
+};
+
+export const getObjectAttributes = (objectDetails) => {
+  try {
+    const {
+      type,
+      title,
+      state,
+      description,
+      cestamp,
+      name,
+      revision,
+      owner,
+      ...attributes
+    } = JSON.parse(objectDetails);
+    return attributes;
+  } catch (error) {
+    console.error(error);
+    toast.error(error);
+    throw error;
+  }
+};
+
+export const formatActionRows = (results) =>
+  results.map((action) => {
+    const { _id, createdAt, objectOldDetails, objectNewDetails } = action;
+    const { name, state } = objectNewDetails;
+    return {
+      key: _id,
+      _id,
+      createdAt: new Date(createdAt),
+      name,
+      state,
+      objectOldDetails: JSON.stringify(getObject(objectOldDetails)),
+      objectNewDetails: JSON.stringify(getObject(objectNewDetails)),
+    };
+  });

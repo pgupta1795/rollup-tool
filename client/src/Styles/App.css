@@ -1,12 +1,6 @@
 @import './constants.css';
 @import '~@progress/kendo-theme-default/dist/all.css';
-
-/* Error page */
-.error-page {
-  display: flex;
-  font-size: 2em;
-  justify-content: center;
-}
+@import '~react-toastify/dist/ReactToastify.css';
 
 /* Home css */
 .roll-up-home {
@@ -54,15 +48,27 @@
   color: var(--primary-light);
 }
 
+.k-grid-header {
+  background: linear-gradient(0.25turn, #9575cd, #ba68c8);
+  background-color: inherit !important;
+}
+
 thead[class*='k-grid-header'] th {
-  background-color: var(--table-bg-color) !important;
-  color: var(--primary-main);
+  color: var(--table-bg-color);
   font-weight: bold;
 }
 
 .table-column {
   background-color: var(--table-bg-color) !important;
   color: var(--table-text-color) !important;
+  border-color: var(--primary-main);
+  width: inherit;
+}
+
+th,
+td {
+  border: 1px solid white !important;
+  border-collapse: collapse;
 }
 
 /* table toolbar css */
@@ -98,5 +104,23 @@ thead[class*='k-grid-header'] th {
 .k-grid-header .k-i-sort-asc-sm,
 .k-grid-header .k-i-sort-desc-sm,
 .k-grid-header .k-sort-order {
-  color: var(--primary-main);
+  color: whitesmoke;
+}
+
+/* Charts */
+.apexcharts-tooltip {
+  font-weight: bold;
+  color: rgb(83, 76, 76);
+}
+
+.apexcharts-menu-item {
+  background-color: var(--primary-dark) !important;
+}
+
+.apexcharts-menu-item :hover {
+  background-color: var(--primary-light) !important;
+}
+
+.action-detail-column {
+  width: fit-content !important;
 }

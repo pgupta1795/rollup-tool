@@ -1,35 +1,35 @@
-const https = require('https')
-const axios = require('axios')
+const https = require('https');
+const axios = require('axios');
 
 const api = axios.create({
   withCredentials: true,
   httpsAgent: new https.Agent({
     rejectUnauthorized: false,
   }),
-})
+});
 
 const fetchLoginTicket = async (body) => {
   try {
-    const { passportUrl, loginTicketURL } = body
+    const { passportUrl, loginTicketURL } = body;
     const response = await api.get(passportUrl + loginTicketURL, {
       headers: {
         Accept: 'application/json',
       },
-    })
-    return response
+    });
+    return response;
   } catch (error) {
-    console.error(error)
-    throw error
+    console.error(error);
+    throw error;
   }
-}
+};
 
 const casAuthentication = async (ltResponse, body, passportCookie) => {
   try {
-    const { username, password, passportUrl, spaceUrl, casAuthUrl } = body
+    const { username, password, passportUrl, spaceUrl, casAuthUrl } = body;
     const casAuthBody = body.casAuthBody
       .replace('{}', ltResponse.lt)
       .replace('{}', username)
-      .replace('{}', password)
+      .replace('{}', password);
     const casResponse = await api({
       url: passportUrl + casAuthUrl.replace('{}', spaceUrl),
       method: 'post',
@@ -38,31 +38,31 @@ const casAuthentication = async (ltResponse, body, passportCookie) => {
         Cookie: passportCookie,
       },
       data: casAuthBody,
-    })
-    return casResponse
+    });
+    return casResponse;
   } catch (error) {
-    console.error(error)
-    throw error
+    console.error(error);
+    throw error;
   }
-}
+};
 
 const fetchCSRF = async (body, spaceCookie) => {
   try {
-    console.log(`spaceCookie : ${spaceCookie}`)
-    const { spaceUrl, csrfTokenUrl } = body
+    console.log(`spaceCookie : ${spaceCookie}`);
+    const { spaceUrl, csrfTokenUrl } = body;
     const response = await api({
       url: spaceUrl + csrfTokenUrl,
       method: 'get',
       headers: {
         Cookie: spaceCookie,
       },
-    })
-    return response
+    });
+    return response;
   } catch (error) {
-    console.error(error)
-    throw error
+    console.error(error);
+    throw error;
   }
-}
+};
 
 const fetchCollabspaces = async (body, spaceCookie) => {
   try {
@@ -72,15 +72,15 @@ const fetchCollabspaces = async (body, spaceCookie) => {
       headers: {
         Cookie: spaceCookie,
       },
-    })
-    const responseData = response.data
+    });
+    const responseData = response.data;
     if (!responseData?.firstname) {
       return {
         firstname: '',
         lastname: '',
         preferred: '',
         all: [],
-      }
+      };
     }
     const {
       lastname,
@@ -91,32 +91,32 @@ const fetchCollabspaces = async (body, spaceCookie) => {
         role: { name: pRole } = {},
       } = {},
       collabspaces,
-    } = responseData
+    } = responseData;
 
     // Role.Company.Collabspace
-    const securityContexts = []
+    const securityContexts = [];
     collabspaces.forEach(({ name: aCollabspace, couples }) => {
       couples.forEach(
         ({
           organization: { name: aOrganization } = {},
           role: { name: aRole } = {},
         }) => {
-          securityContexts.push([aRole, aOrganization, aCollabspace].join('.'))
+          securityContexts.push([aRole, aOrganization, aCollabspace].join('.'));
         }
-      )
-    })
+      );
+    });
 
     return {
       firstname,
       lastname,
       preferred: [pRole, pOrganization, pCollabspace].join('.'),
       securityContexts,
-    }
+    };
   } catch (error) {
-    console.error(error)
-    throw error
+    console.error(error);
+    throw error;
   }
-}
+};
 
 /**
  * generate login ticket, perform cas authentication, generate csrf-token and then generate all security contexts related to the logged in person
@@ -125,25 +125,25 @@ const fetchCollabspaces = async (body, spaceCookie) => {
  */
 const login = async (req, res) => {
   try {
-    const loginResponse = await fetchLoginTicket(req.body)
-    const ltResponse = loginResponse.data
+    const loginResponse = await fetchLoginTicket(req.body);
+    const ltResponse = loginResponse.data;
     if (!ltResponse && !ltResponse?.lt) {
-      const err = 'Unable to generate login ticket'
-      throw err
+      const err = 'Unable to generate login ticket';
+      throw err;
     }
 
-    const passportCookie = loginResponse.headers['set-cookie']
+    const passportCookie = loginResponse.headers['set-cookie'];
     const casResponse = await casAuthentication(
       ltResponse,
       req.body,
       passportCookie
-    )
+    );
 
-    const spaceCookie = casResponse.headers['set-cookie']
-    const csrfResponse = await fetchCSRF(req.body, spaceCookie)
+    const spaceCookie = casResponse.headers['set-cookie'];
+    const csrfResponse = await fetchCSRF(req.body, spaceCookie);
 
     const { firstname, lastname, preferred, securityContexts } =
-      await fetchCollabspaces(req.body, spaceCookie)
+      await fetchCollabspaces(req.body, spaceCookie);
 
     res.json({
       status: csrfResponse.status,
@@ -155,11 +155,11 @@ const login = async (req, res) => {
       lastname,
       preferred,
       securityContexts,
-    })
+    });
   } catch (err) {
-    console.error(err)
-    res.json({ status: 500 })
+    console.error(err);
+    res.json({ status: 500 });
   }
-}
+};
 
-module.exports = { login }
+module.exports = { login };
