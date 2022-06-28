@@ -1,0 +1,27 @@
+@import './Constants.css';
+@import '~@progress/kendo-theme-default/dist/all.css';
+@import '~react-toastify/dist/ReactToastify.css';
+@import './Table.css';
+@import './Charts.css';
+
+.roll-up-home {
+  width: 100%;
+  padding: 5px;
+  padding-bottom: 10px;
+  flex-grow: 1;
+  background-color: inherit;
+}
+
+.content-height-without-topbar {
+  height: calc(100vh - 108px);
+}
+
+.full-width-height {
+  width: 100%;
+  height: 100%;
+}
+
+.roll-up-types {
+  display: grid;
+  grid-template-columns: auto auto;
+}

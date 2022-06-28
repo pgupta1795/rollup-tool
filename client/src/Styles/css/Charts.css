@@ -1,0 +1,12 @@
+.apexcharts-tooltip {
+  font-weight: bold;
+  color: rgb(83, 76, 76);
+}
+
+.apexcharts-menu-item {
+  background-color: var(--primary-dark) !important;
+}
+
+.apexcharts-menu-item :hover {
+  background-color: var(--primary-light) !important;
+}

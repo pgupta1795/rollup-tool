@@ -2,10 +2,10 @@ import { alpha, styled } from '@mui/material/styles';
 
 export const StyledDiv = styled('div')(({ theme }) => ({
   '.bgColor ': {
-    backgroundColor:
+    background:
       theme.palette.mode === 'dark'
         ? theme.palette.common.black
-        : theme.palette.primary.main,
+        : `linear-gradient(to right bottom,${theme.palette.primary.light},${theme.palette.primary.main},${theme.palette.primary.dark} )`,
   },
 }));
 

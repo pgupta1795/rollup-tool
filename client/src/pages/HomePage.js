@@ -10,7 +10,7 @@ const HomePage = () => {
   ));
 
   return (
-    <Box component="div" className="roll-up-home">
+    <Box component="div" className="roll-up-home content-height-without-topbar">
       <Grid container sx={{ justifyContent: 'center' }}>
         <Grid item container>
           <Grid item xs={11}>

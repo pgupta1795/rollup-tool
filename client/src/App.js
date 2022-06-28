@@ -12,7 +12,7 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import ObjectPage from './pages/ObjectPage';
 import TypesPage from './pages/TypesPage';
-import './Styles/App.css';
+import './Styles/css/App.css';
 import { darkTheme, lightTheme } from './theme';
 
 const App = () => {
