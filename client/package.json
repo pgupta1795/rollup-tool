@@ -4,9 +4,6 @@
   "private": true,
   "homepage": ".",
   "proxy": "http://127.0.0.1:5000/",
-  "allowedHosts": [
-    "127.0.0.1"
-  ],
   "overrides": {
     "react": "^18.1.0",
     "@svgr/webpack": "$@svgr/webpack",
