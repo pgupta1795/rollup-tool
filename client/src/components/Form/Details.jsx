@@ -38,10 +38,10 @@ const Details = ({ data }) => {
             {data?.title || ''}
           </Typography>
           <Stack direction="row" spacing={1}>
-            <ChipField label="Description" value={data?.description} />
-            <ChipField label="Owner" value={data?.owner} />
-            <ChipField label="Created" value={data?.created} />
-            <ChipField label="Modified" value={data?.modified} />
+            <ChipField label="Description" value={data?.description || ''} />
+            <ChipField label="Owner" value={data?.owner || ''} />
+            <ChipField label="Created" value={data?.created || ''} />
+            <ChipField label="Modified" value={data?.modified || ''} />
           </Stack>
         </Box>
         {/* <BOX SX={{ MT: 3, ML: 1, MB: 1 }}>

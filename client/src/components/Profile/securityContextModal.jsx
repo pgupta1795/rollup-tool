@@ -13,14 +13,6 @@ import {
 import PropTypes from 'prop-types';
 import StorageConstants from '../../helper/StorageConstants';
 
-const style = {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '10px',
-  m: 'auto',
-  justifyContent: 'center',
-};
-
 const SecurityContextModal = ({ open, setOpen }) => {
   const [preferred, setPreferred] = React.useState(
     localStorage.getItem(StorageConstants.Preferred)
@@ -48,7 +40,17 @@ const SecurityContextModal = ({ open, setOpen }) => {
       <DialogTitle>Security Context</DialogTitle>
       <DialogContent>
         <DialogContentText>Choose preferred Security Context</DialogContentText>
-        <Box sx={style} noValidate component="form">
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px',
+            m: 'auto',
+            justifyContent: 'center',
+          }}
+          noValidate
+          component="form"
+        >
           <FormControl sx={{ mt: 2, minWidth: 120 }}>
             <NativeSelect
               autoFocus

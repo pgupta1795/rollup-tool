@@ -24,11 +24,9 @@ export const getAttributeInterface = (type) =>
   getTypeSettings(type)?.Attribute_PREFIX || 'XP_VPMReference_Ext';
 
 export const getCustomAttributeNames = (type) => {
-  if (type) {
-    const customAttributes = getTypeSettings(type)?.CUSTOM_COLUMNS;
-    return customAttributes.map((customAttribute) => customAttribute.Attribute);
-  }
-  return null;
+  if (!type) type = 'VPMReference';
+  const customAttributes = getTypeSettings(type)?.CUSTOM_COLUMNS;
+  return customAttributes.map((customAttribute) => customAttribute.Attribute);
 };
 
 export const getAttributeLabel = (attribute, type) => {
@@ -46,7 +44,9 @@ export const getAttributeLabel = (attribute, type) => {
 };
 
 export const getCustomAttributeKeys = (type) =>
-  type ? getTypeSettings(type)?.CUSTOM_COLUMNS : null;
+  type
+    ? getTypeSettings(type)?.CUSTOM_COLUMNS
+    : getTypeSettings('VPMReference')?.CUSTOM_COLUMNS;
 
 export const getCustomAttributeDBName = (type, name) =>
   `${getAttributeInterface(type)}.${name}`;

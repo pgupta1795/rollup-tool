@@ -1,11 +1,18 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { useParams } from 'react-router-dom';
-import ObjectsTableContainer from '../components/TableContainer/ObjectsTableContainer';
+
+const ObjectsTableContainer = lazy(() =>
+  import('../components/TableContainer/ObjectsTableContainer')
+);
 
 const ObjectPage = () => {
   const { id, type } = useParams();
 
-  return <ObjectsTableContainer type={type} id={id} key={id} />;
+  return (
+    <Suspense>
+      <ObjectsTableContainer type={type} id={id} key={id} />
+    </Suspense>
+  );
 };
 
 export default ObjectPage;

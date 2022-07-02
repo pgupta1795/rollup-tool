@@ -8,6 +8,10 @@
   /* table */
   --table-bg-color: #d3d3d3;
   --table-text-color: #1e1e1e;
+  --table-child-color: #2b7a2e;
+  --table-parent-text-color: #adb0a9;
+  --table-parent-color: #cbdeb3;
+  --table-error-color: #9f2a1d;
 
   /* size */
   --xs: 0px;

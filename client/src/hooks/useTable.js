@@ -17,13 +17,14 @@ export default (sortField) => {
     },
     expanded: [1, 2, 32],
     inEdit: [],
+    rollup: [],
   });
   const [details, setDetails] = React.useState({});
   const [oldRows, setOldRows] = React.useState([]);
   const [reRender, setRerender] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
-  const setProps = (rows, columns, objDetails, pagination) => {
+  const setProps = (rows, columns, objDetails, pagination, menuItems) => {
     setDetails(objDetails);
     setState({
       ...state,
@@ -37,6 +38,7 @@ export default (sortField) => {
         columns={[...columns]}
         rows={rows}
         pagination={pagination}
+        otherMenuItems={menuItems || null}
       />
     );
     setRerender(false);
@@ -50,6 +52,6 @@ export default (sortField) => {
     oldRows,
     reRender,
     loading,
-    [setLoading, setState, setProps],
+    [setLoading, setState, setProps, setOldRows],
   ];
 };

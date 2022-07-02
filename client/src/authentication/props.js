@@ -1,7 +1,6 @@
 export const COOKIE_OPTIONS = {
   path: '/',
-  secure: true,
-  sameSite: 'none',
+  sameSite: false,
 };
 
 export const initialAuthDetail = {

@@ -10,7 +10,7 @@ Please follow the steps to setup a local demo on your system
 - Backend : POC uses Express, Node as supported library
 - Database : Mongodb database is used in POC
 
-### How do I get set up?
+### How do I get development set up?
 
 - IDE : VS Code (https://code.visualstudio.com/download)
 - Server is responsible for fetching results from enovia using DS webservices
@@ -28,8 +28,11 @@ Please follow the steps to setup a local demo on your system
     - In cmd/vscode cd to rollup-tool/client
     - execute #npm install#
     - execute #npm start#
+- Create .env file in server and client folders (similar to .env.example file)
+- Add entry of HOST variable from .env file to hosts file
+- Restart server and access from url - http://rollup.com/
 
-### How to modify?
+### How to modify properties?
 
 - Settings.json is property file for this POC
 - Add custom attributes and label to see it in UI

@@ -13,6 +13,7 @@ import { TopBar } from './customAppBar';
 const Header = ({ checked, setChecked }) => {
   const auth = useAuth();
   const hasCookies = auth.cookies?.Cookies;
+  TableStyle.setRowStyle(!checked);
 
   const myLogo = (
     <IconButton

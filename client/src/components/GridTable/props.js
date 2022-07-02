@@ -5,6 +5,7 @@ import {
 } from '@progress/kendo-react-treelist';
 import LinkCell from './Cell/LinkCell';
 import * as ServiceUtils from '../../utils/ServiceUtils';
+import RollupCell from './Cell/RollupCell';
 
 export const DEFAULT_COLUMN_KEYS = [
   'type',
@@ -85,6 +86,7 @@ export const OBJECT_COLUMNS = (type) => {
       title: displayTitle,
       width: '20%',
       editCell: TreeListNumericEditor,
+      cell: RollupCell,
     };
   });
   return [

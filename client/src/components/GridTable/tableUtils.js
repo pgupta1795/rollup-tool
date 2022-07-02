@@ -1,6 +1,5 @@
 import { extendDataItem, mapTree } from '@progress/kendo-react-treelist';
 import * as Props from './props';
-import * as ServiceUtils from '../../utils/ServiceUtils';
 import { isEqual, authenticateTableData } from '../../utils/CommonUtils';
 import * as Api from '../../helper/Api';
 import toast from '../../helper/toast';
@@ -181,7 +180,7 @@ export const flatten = (root, flat = []) => {
 export const isNotEditable = (dataItem) =>
   dataItem.children || dataItem.state === 'RELEASED';
 
-const createAction = async (newRow, oldRows) => {
+export const createAction = async (newRow, oldRows) => {
   try {
     const { id } = newRow;
     const oldRow = findRowById(oldRows, id);
@@ -217,10 +216,6 @@ export const updateAttributes = async (type, selectedRow, newRows, oldRows) => {
       if (id && newCEStamp) {
         newRows = updateCellValue(newRows, id, 'cestamp', newCEStamp);
       }
-      const parentRow = findRowById(newRows, selectedRow?.parent);
-      if (parentRow) {
-        newRows = await updateAttributes(type, parentRow, newRows, oldRows);
-      }
       return newRows;
     }
     return newRows;
@@ -229,45 +224,6 @@ export const updateAttributes = async (type, selectedRow, newRows, oldRows) => {
     toast.error(error);
     throw error;
   }
-};
-
-/**
- * updates the newValue to itself and summating it till parent level
- * @param {*} id
- * @param {*} newRows
- * @param {*} field
- * @returns
- */
-export const rollUpAttribute = (id, newRows, field) => {
-  try {
-    const row = id ? findRowById(newRows, id) : '';
-    if (row) {
-      let newValueParent = 0;
-      if (row[subItemsField]) {
-        row[subItemsField].forEach((children) => {
-          const childval = Number(children[field]);
-          newValueParent += Number.isNaN(childval) ? 0 : childval;
-        });
-        newRows = updateCellValue(newRows, id, field, newValueParent);
-      }
-      newRows = rollUpAttribute(row?.parent, newRows, field);
-    }
-    return newRows;
-  } catch (error) {
-    console.error(error);
-    toast.error(error);
-    throw error;
-  }
-};
-
-export const getUpdatedRows = (event, state) => {
-  const { field, value, dataItem } = event;
-  let newRows = updateCellValue(state.data, dataItem.id, field, value);
-  const customKeys = ServiceUtils.getCustomAttributeNames(dataItem?.type);
-  if (customKeys?.includes(field)) {
-    newRows = rollUpAttribute(dataItem?.parent, newRows, field);
-  }
-  return newRows;
 };
 
 const getObject = (objectDetails) => {

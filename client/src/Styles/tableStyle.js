@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 const PROPERTY_BG_COLOR = '--table-bg-color';
 
 const PROPERTY_TEXT_COLOR = '--table-text-color';
@@ -17,3 +16,10 @@ export const setRowStyle = (previous) => {
     !previous ? GRAY_LIGHT : BLACK_LIGHT
   );
 };
+
+export const rowEditColor = Object.freeze({
+  DEFAULT: 'table-column table-column-default-color',
+  PARENT: 'table-column edit-table-column-parent-color',
+  CHILDREN: 'table-column edit-table-column-child-color',
+  ERROR: 'table-column edit-table-column-error-color',
+});

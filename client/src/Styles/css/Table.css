@@ -25,6 +25,23 @@ thead[class*='k-grid-header'] th {
   width: inherit;
 }
 
+.table-column-default-color {
+  background-color: var(--table-bg-color) !important;
+}
+
+.edit-table-column-child-color {
+  background-color: var(--table-child-color) !important;
+}
+
+.edit-table-column-parent-color {
+  color: var(--table-parent-text-color) !important;
+  background-color: var(--table-parent-color) !important;
+}
+
+.edit-table-column-error-color {
+  background-color: var(--table-error-color) !important;
+}
+
 th,
 td {
   border: 1px solid white !important;

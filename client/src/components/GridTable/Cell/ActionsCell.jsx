@@ -5,6 +5,7 @@ import EditOffIcon from '@mui/icons-material/EditOff';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { IconButton, Skeleton } from '@mui/material';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { rowEditColor } from '../../../Styles/tableStyle';
 
 export default function MyCommandCell(
   enterEdit,
@@ -25,7 +26,7 @@ export default function MyCommandCell(
           aria-selected="false"
           role="gridcell"
           data-grid-col-index="9"
-          className="table-column"
+          className={rowEditColor.DEFAULT}
         >
           {editMode ? (
             <Skeleton />
@@ -63,7 +64,7 @@ export default function MyCommandCell(
           aria-selected="false"
           role="gridcell"
           data-grid-col-index="9"
-          className="table-column"
+          className={rowEditColor.DEFAULT}
         >
           <IconButton
             aria-label="table edit"

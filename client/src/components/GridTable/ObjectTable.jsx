@@ -12,8 +12,8 @@ import {
 import * as React from 'react';
 import ActionsCell from './Cell/ActionsCell';
 import * as TableUtils from './tableUtils';
-import toast from '../../helper/toast';
-import Constants from '../../helper/Constants';
+import { rowEditColor } from '../../Styles/tableStyle';
+import { ObjectContext } from '../../hooks/contexts';
 
 const idGetter = getter(TableUtils.DATA_ITEM_KEY);
 
@@ -26,6 +26,7 @@ const ObjectTable = ({
   loading,
   rowActionsRequired,
 }) => {
+  const object = React.useContext(ObjectContext);
   const [selectedState, setSelectedState] = React.useState({});
 
   const onSelectionChange = React.useCallback(
@@ -54,7 +55,7 @@ const ObjectTable = ({
     const { expanded } = state;
     return mapTree(dataTree, TableUtils.subItemsField, (item) =>
       extendDataItem(item, TableUtils.subItemsField, {
-        expanded: expanded.push(item.id),
+        expanded: expanded.includes(item.id),
         selected: selectedState[idGetter(item)],
         inEdit: Boolean(state.inEdit.find((i) => i.id === item.id)),
       })
@@ -77,11 +78,11 @@ const ObjectTable = ({
   };
 
   const enterEdit = (dataItem) => {
-    if (TableUtils.isNotEditable(dataItem)) {
-      console.warn(Constants.PARENT_EDIT_WARNING);
-      toast.warning(Constants.PARENT_EDIT_WARNING);
-      return;
-    }
+    // if (TableUtils.isNotEditable(dataItem)) {
+    //   console.warn(Constants.PARENT_EDIT_WARNING);
+    //   toast.warning(Constants.PARENT_EDIT_WARNING);
+    //   return;
+    // }
     setState({
       ...state,
       inEdit: [
@@ -106,6 +107,7 @@ const ObjectTable = ({
       data: newRows,
       inEdit: state.inEdit.filter((i) => i.id !== itemToSave.id),
     });
+    object?.setOldRows(newRows);
   };
 
   const cancel = (editedItem) => {
@@ -126,7 +128,13 @@ const ObjectTable = ({
   );
 
   const onItemChange = (event) => {
-    const newRows = TableUtils.getUpdatedRows(event, state);
+    const { field, value, dataItem } = event;
+    const newRows = TableUtils.updateCellValue(
+      state.data,
+      dataItem.id,
+      field,
+      value
+    );
     setState({
       ...state,
       data: newRows,
@@ -134,7 +142,9 @@ const ObjectTable = ({
   };
 
   const cellRender = (td) => {
-    const extraProps = { className: `${td.props.className} table-column` };
+    const extraProps = {
+      className: `${td.props.className} ${rowEditColor.DEFAULT}`,
+    };
     return React.cloneElement(
       td,
       { ...td.props, ...extraProps },
@@ -149,7 +159,7 @@ const ObjectTable = ({
   };
 
   const allColumns = rowActionsRequired
-    ? [...columns.slice(0, 2), actionColumn, ...columns.slice(2, -2)]
+    ? [...columns.slice(0, 2), actionColumn, ...columns.slice(2)]
     : columns;
 
   return (

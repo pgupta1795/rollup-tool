@@ -7,7 +7,14 @@ import { ExcelExport } from '@progress/kendo-react-excel-export';
 import { TreeList } from '@progress/kendo-react-treelist';
 import * as TableUtils from '../tableUtils';
 
-const Toolbar = ({ setRerender, setLoading, columns, rows, pagination }) => {
+const Toolbar = ({
+  setRerender,
+  setLoading,
+  columns,
+  rows,
+  pagination,
+  otherMenuItems,
+}) => {
   const refresh = (e) => {
     e.preventDefault();
     setLoading(true);
@@ -65,6 +72,7 @@ const Toolbar = ({ setRerender, setLoading, columns, rows, pagination }) => {
           columnGap: '10px',
         }}
       >
+        {otherMenuItems}
         <Fab
           style={{
             maxHeight: '30px',
@@ -105,6 +113,7 @@ const Toolbar = ({ setRerender, setLoading, columns, rows, pagination }) => {
 
 Toolbar.defaultProps = {
   pagination: '',
+  otherMenuItems: [],
 };
 
 Toolbar.propTypes = {
@@ -113,5 +122,6 @@ Toolbar.propTypes = {
   columns: PropTypes.array.isRequired,
   rows: PropTypes.array.isRequired,
   pagination: PropTypes.any,
+  otherMenuItems: PropTypes.array,
 };
 export default Toolbar;

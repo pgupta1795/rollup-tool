@@ -19,12 +19,13 @@ import { ObjectContext } from '../../hooks/contexts';
 import ObjectGraphs from '../Graphs/objectGraphs';
 import CustomTab from '../Card/customTab';
 import toast from '../../helper/toast';
+import RollupMenu from '../GridTable/toolbar/rollupMenu';
 
 const ObjectsTableContainer = ({ type, id }) => {
   const auth = useAuth();
   const [toolbar, state, details, oldRows, reRender, loading, setters] =
     useTable();
-  const [setLoading, setState, setProps] = setters;
+  const [setLoading, setState, setProps, setOldRows] = setters;
   const formattedData = React.useCallback(
     (response) => {
       const headerKeys = Props.DEFAULT_COLUMN_KEYS.slice(0, -2);
@@ -65,7 +66,9 @@ const ObjectsTableContainer = ({ type, id }) => {
         return;
       }
       const { rows, objDetails } = formattedData(response);
-      setProps(rows, [...columns], objDetails, null);
+      setProps(rows, [...columns], objDetails, null, [
+        <RollupMenu key="rollupCommand" />,
+      ]);
     } catch (error) {
       console.log(error);
       toast.error(error);
@@ -97,7 +100,7 @@ const ObjectsTableContainer = ({ type, id }) => {
   );
 
   return (
-    <ObjectContext.Provider value={{ state }}>
+    <ObjectContext.Provider value={{ state, setState, oldRows, setOldRows }}>
       <CustomTab
         defaultTab="Object"
         tabsArray={[

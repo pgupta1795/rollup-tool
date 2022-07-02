@@ -4,6 +4,7 @@ import { Divider, Stack } from '@mui/material';
 import ChipField from '../../Common/ChipField';
 import FlexBox from '../../Common/FlexBox';
 import { getAttributeLabel } from '../../../utils/ServiceUtils';
+import { rowEditColor } from '../../../Styles/tableStyle';
 
 const DetailCell = ({ dataItem, field }) => {
   const cellData = dataItem[field];
@@ -35,7 +36,7 @@ const DetailCell = ({ dataItem, field }) => {
       colSpan="1"
       aria-selected="false"
       role="gridcell"
-      className="table-column action-detail-column"
+      className={rowEditColor.DEFAULT}
     >
       {element}
     </td>

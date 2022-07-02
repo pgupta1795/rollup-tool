@@ -5,7 +5,7 @@ import { getSearchBody, getChildrenBody, getUpdateObjectBody } from './payload';
 import StorageConstants from './StorageConstants';
 import toast from './toast';
 
-const baseURL = process.env.REACT_APP_SERVER_URL;
+const baseURL = `/api`;
 
 export const login = async (credentials) => {
   const data = {

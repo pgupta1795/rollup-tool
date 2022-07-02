@@ -10,26 +10,27 @@
       "Type": "VPMReference",
       "CUSTOM_COLUMNS": [
         {
-          "Attribute": "Cost",
-          "Label": "Total Cost"
-        },
-        {
-          "Attribute": "Weight",
-          "Label": "CAD Mass"
+          "Attribute": "Actual_Weight",
+          "Label": "Actual Mass"
         },
         {
           "Attribute": "Estimated_Weight",
           "Label": "Estimated Mass"
         },
         {
-          "Attribute": "Actual_Weight",
-          "Label": "Actual Mass"
+          "Attribute": "Other_Weight",
+          "Label": "Calculated Mass"
         },
         {
-          "Attribute": "Other_Weight",
-          "Label": "Other Mass"
+          "Attribute": "Weight",
+          "Label": "CAD Mass"
+        },
+        {
+          "Attribute": "Cost",
+          "Label": "Total Cost"
         }
       ],
+      "ROLLUP_ORDER": "Actual_Weight>Estimated_Weight>Other_Weight",
       "Attribute_PREFIX": "XP_VPMReference_Ext",
       "GET_ENDPOINT": "/resources/v1/modeler/dseng/dseng:EngItem/{}?$mask=dsmveng:EngItemMask.Details",
       "CHILD_ENDPOINT": "/resources/v1/modeler/dseng/dseng:EngItem/{}/dseng:EngInstance?$mask=dsmveng:EngInstanceMask.Details",

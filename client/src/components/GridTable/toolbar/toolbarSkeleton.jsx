@@ -8,6 +8,7 @@ const ToolbarSkeleton = () => (
       columnGap: '10px',
     }}
   >
+    <Skeleton width={100} />
     <Skeleton variant="circular" width={30} height={30} />
     <Skeleton variant="circular" width={30} height={30} />
   </Box>

@@ -65,11 +65,12 @@ const Login = ({ userLogin, credentials, setCredentials }) => {
               size="large"
               endIcon={<Send />}
               sx={{
-                p: 1.5,
                 mt: 3,
               }}
             >
-              <Typography component="span">Connect to 3DX</Typography>
+              <Typography component="span" variant="button">
+                Connect to 3DX
+              </Typography>
             </Button>
           </Stack>
         </FlexBox>
