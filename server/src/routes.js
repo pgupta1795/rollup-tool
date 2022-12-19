@@ -6,7 +6,7 @@ const mySQLConnection = require('./connection');
 
 const Router = express.Router();
 
-Router.get('/', (req, res) => {
+Router.get('/api', (req, res) => {
   if (mySQLConnection) {
     console.log(mySQLConnection);
     res.json({

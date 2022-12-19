@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkrollup_tool=self.webpackChunkrollup_tool||[]).push([[954],{3954:function(r,e,l){l.r(e),l.d(e,{default:function(){return u}});l(2791);var n=l(184),u=function(){return(0,n.jsx)("div",{className:"error-page",children:(0,n.jsx)("h1",{children:"ERROR ! PAGE 404 NOT FOUND"})})}}}]);
+//# sourceMappingURL=954.b367ad9e.chunk.js.map

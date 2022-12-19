@@ -6,7 +6,7 @@ import Paths from '../../helper/Paths';
 
 const IsLogin = ({ children }) => {
   const auth = useAuth();
-  if (auth.cookies.username) return <Navigate to={Paths.DASHBOARD} />;
+  if (auth.cookies.username) return <Navigate to={Paths.HOME} />;
   return children;
 };
 

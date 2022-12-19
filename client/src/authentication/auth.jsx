@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }) => {
         Cookies,
         '3dpassport': credentials['3dpassport'],
       });
-      const path = Paths.DASHBOARD;
+      const path = Paths.HOME;
       navigate(location?.state?.path || path, { replace: true });
       toast.success(Constants.LOGIN_SUCESS);
     } catch (error) {

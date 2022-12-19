@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const path = require('path');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
 const cors = require('cors');
@@ -22,4 +23,6 @@ app.get('*', (_, res) => {
 });
 
 const port = process.env.PORT || 5000;
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.listen(port, () =>
+  console.log(`\u{1F525}\u{1F680} Listening on port ${port} \u{1F525}\u{1F680}`)
+);

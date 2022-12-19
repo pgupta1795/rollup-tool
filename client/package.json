@@ -2,7 +2,6 @@
   "name": "rollup-tool",
   "version": "0.1.0",
   "private": true,
-  "homepage": ".",
   "proxy": "http://127.0.0.1:5001/",
   "overrides": {
     "react": "^18.1.0",
