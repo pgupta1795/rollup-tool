@@ -9,7 +9,7 @@ const GradientBox = styled((props) => <Box {...props} />)(
       background:
         theme.palette.mode === 'dark'
           ? theme.palette.background.default
-          : `linear-gradient(to right bottom, ${colors.join(',')})`,
+          : `linear-gradient(to right, ${colors.join(',')})`,
     }),
   })
 );

@@ -1,5 +1,5 @@
 import { Box, TableContainer } from '@mui/material';
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Dashboard } from '@mui/icons-material';
 import { useAuth } from '../../authentication/auth';
@@ -17,15 +17,15 @@ import toast from '../../helper/toast';
 
 const ActionsTable = () => {
   const auth = useAuth();
-  const [current, setCurrent] = React.useState(1);
-  const [toolbar, state, , oldRows, reRender, loading, setters] = useTable({
+  const [current, setCurrent] = useState(1);
+  const [toolbar, state, oldRows, reRender, loading, setters] = useTable({
     field: 'createdAt',
-    dir: 'desc',
+    dir: 'asc',
   });
   const [setLoading, setState, setProps] = setters;
   const columns = ActionProps.ACTION_COLUMNS;
 
-  const fetchData = React.useCallback(async () => {
+  const fetchData = useCallback(async () => {
     try {
       const pageSize = 30;
       setLoading(true);
@@ -40,7 +40,7 @@ const ActionsTable = () => {
           onChange={(e, page) => setCurrent(page)}
         />
       );
-      setProps(rows, [...columns], null, pagination);
+      setProps(rows, [...columns], pagination);
     } catch (error) {
       console.error(error);
       toast.error(error);
@@ -49,7 +49,7 @@ const ActionsTable = () => {
     }
   }, [current, auth]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchData();
   }, [reRender, fetchData]);
 

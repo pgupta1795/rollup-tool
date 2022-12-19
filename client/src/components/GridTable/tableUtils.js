@@ -1,12 +1,17 @@
 import { extendDataItem, mapTree } from '@progress/kendo-react-treelist';
-import * as Props from './props';
-import { isEqual, authenticateTableData } from '../../utils/CommonUtils';
+import _ from 'lodash';
 import * as Api from '../../helper/Api';
 import toast from '../../helper/toast';
+import { updateTypeObjectById } from '../../helper/TypeObjectApi';
+import { authenticateTableData, isEqual } from '../../utils/CommonUtils';
+import * as Props from './props';
 
 export const subItemsField = 'children';
 
 export const DATA_ITEM_KEY = 'id';
+
+export const hasChildren = (row) =>
+  row[subItemsField] && row[subItemsField]?.length > 0;
 
 const addCustomAttributesData = (singleRow, objectDetail, customHeaderKeys) => {
   customHeaderKeys.forEach((customHeaderKey) => {
@@ -18,7 +23,7 @@ const addCustomAttributesData = (singleRow, objectDetail, customHeaderKeys) => {
         customHeaderKey
       )
         ? identifier[customHeaderKey]
-        : null;
+        : objectDetail[customHeaderKey];
     });
   });
 };
@@ -177,6 +182,20 @@ export const flatten = (root, flat = []) => {
   }
 };
 
+export const flattenWithLevel = (root, flat, level) => {
+  try {
+    const { children, ...restElements } = root;
+    flat.push({ ...restElements, level });
+    if (Array.isArray(children)) {
+      children.forEach((child) => flattenWithLevel(child, flat, level + 1));
+    }
+  } catch (error) {
+    console.error(error);
+    toast.error(error);
+    throw error;
+  }
+};
+
 export const isNotEditable = (dataItem) =>
   dataItem.children || dataItem.state === 'RELEASED';
 
@@ -221,7 +240,6 @@ export const updateAttributes = async (type, selectedRow, newRows, oldRows) => {
     return newRows;
   } catch (error) {
     console.error(error);
-    toast.error(error);
     throw error;
   }
 };
@@ -276,11 +294,13 @@ export const getObjectAttributes = (objectDetails) => {
 
 export const formatActionRows = (results) =>
   results.map((action) => {
-    const { _id, createdAt, objectOldDetails, objectNewDetails } = action;
+    const { _id, createdAt, objectOldDetails, objectNewDetails, objectId } =
+      action;
     const { name, state } = objectNewDetails;
     return {
       key: _id,
-      _id,
+      type: 'VPMReference',
+      id: objectId,
       createdAt: new Date(createdAt),
       name,
       state,
@@ -288,3 +308,134 @@ export const formatActionRows = (results) =>
       objectNewDetails: JSON.stringify(getObject(objectNewDetails)),
     };
   });
+
+export const formatDBColumns = (row, newRows) => {
+  try {
+    if (!row) return newRows;
+
+    row?.children?.forEach((child) => {
+      newRows = formatDBColumns(child, newRows);
+    });
+    const usageValue = hasChildren(row) ? 'Assembly' : '3DPart';
+    const endItemValue = usageValue === '3DPart';
+    newRows = updateCellValue(newRows, row.id, 'usage', usageValue);
+    newRows = updateCellValue(newRows, row.id, 'endItem', endItemValue);
+    return newRows;
+  } catch (error) {
+    console.error(error);
+    toast.error(error);
+    throw error;
+  }
+};
+
+/**
+ *  If the End Item is set to "TRUE" on an assembly level (where Usage column = Assembly),
+ *  then the child objects should automatically have  End Item set to "FALSE"
+ *  ............
+ *  If any 3DParts of an Assembly have End Item set to “TRUE” then the parent assembly should automatically have End Item set to “FALSE”
+ * @param {*} newRows
+ * @param {*} id
+ * @param {*} field
+ * @param {*} rowEndItem
+ * @returns
+ */
+export const updateRelatedEndItem = (newRows, id, field, rowEndItem) => {
+  try {
+    const row = id ? findRowById(newRows, id) : '';
+    if (!row) return newRows;
+    if (
+      _.isUndefined(row[subItemsField]) ||
+      (row[subItemsField] && row[subItemsField].length === 0)
+    ) {
+      if (!rowEndItem) return newRows;
+      const parentEndItem = false;
+      newRows = updateCellValue(newRows, row?.parent, field, parentEndItem);
+      return newRows;
+    }
+    row[subItemsField].forEach((children) => {
+      if (rowEndItem) {
+        const childEndItem = false;
+        newRows = updateCellValue(newRows, children.id, field, childEndItem);
+        newRows = updateRelatedEndItem(
+          newRows,
+          children.id,
+          field,
+          childEndItem
+        );
+      }
+    });
+    return newRows;
+  } catch (error) {
+    console.error(error);
+    toast.error(error);
+    throw error;
+  }
+};
+
+export const saveRelatedEndItem = async (newRows, id, field) => {
+  try {
+    const row = id ? findRowById(newRows, id) : '';
+    if (!row) return;
+    if (
+      _.isUndefined(row[subItemsField]) ||
+      (row[subItemsField] && row[subItemsField].length === 0)
+    ) {
+      if (!row.parent) return;
+      const parentResponse = await updateTypeObjectById(
+        row.parent,
+        'endItem',
+        false
+      );
+      console.log({ parentResponse });
+      return;
+    }
+
+    await Promise.all(
+      row[subItemsField].map(async (children) => {
+        const response = await updateTypeObjectById(
+          children.id,
+          'endItem',
+          children.endItem
+        );
+        console.log({ response });
+        newRows = saveRelatedEndItem(newRows, children.id, field);
+      })
+    );
+  } catch (error) {
+    console.error(error);
+    toast.error(error);
+    throw error;
+  }
+};
+
+export const filterHiddenColumns = (columns) => {
+  const filteredCols = columns.filter((col) => {
+    if (_.isUndefined(col.show)) return true;
+    return col.show;
+  });
+  return filteredCols;
+};
+
+export const getExcelColumns = (columns, themeColor) => {
+  const cellOptions = {
+    background: themeColor,
+    borderTop: '1px solid black',
+    borderBottom: '1px solid black',
+    textAlign: 'center',
+  };
+  const filteredCols = filterHiddenColumns(columns);
+  const allCols = [
+    ...filteredCols.slice(0, 1),
+    {
+      field: 'level',
+      title: 'Level',
+      width: '20%',
+      cellOptions,
+    },
+    ...filteredCols.slice(1).map((element) => ({
+      ...element,
+      cellOptions,
+    })),
+  ];
+  return allCols;
+};

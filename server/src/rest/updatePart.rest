@@ -1,0 +1,27 @@
+#variables
+@TENANT = R123412341234
+@MY_TOKEN = 
+@MY_COOKIE = 
+
+###
+POST http://localhost/api/enovia/updateObject
+Content-Type: application/json
+
+{
+    "URL": "https://{{TENANT}}-eu1-space.3dexperience.3ds.com/enovia/resources/v1/modeler/dseng/dseng:EngItem/EBCBDD3D000013B05B20CEE10000B6E0?&tenant={{TENANT}}&$mask=dsmveng:EngItemMask.Details",
+    "headers": {
+        "Content-type": "application/json",
+        "Accept": "application/json",
+        "Cookie": "{{MY_COOKIE}}",
+        "ENO_CSRF_TOKEN": "{{MY_TOKEN}}",
+        "SecurityContext": "VPLMProjectLeader.Company Name.Generic Utilities"
+    },
+    "payload": {
+        "cestamp": "AE00F99AAA430000EDCE205B63A70800",
+        "title": "Compressor_Housing",
+        "description": "TEST",
+        "dseno:EnterpriseAttributes": {
+            "XP_VPMReference_Ext.Weight": 3
+        }
+    }
+}

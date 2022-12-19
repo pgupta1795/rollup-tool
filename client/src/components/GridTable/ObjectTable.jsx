@@ -1,21 +1,14 @@
 import { Skeleton } from '@mui/material';
+import { extendDataItem, TreeList } from '@progress/kendo-react-treelist';
 import PropTypes from 'prop-types';
-import { getter } from '@progress/kendo-react-common';
-import {
-  extendDataItem,
-  filterBy,
-  getSelectedState,
-  mapTree,
-  orderBy,
-  TreeList,
-} from '@progress/kendo-react-treelist';
 import * as React from 'react';
+import toast from '../../helper/toast';
+import { updateTypeObjectById } from '../../helper/TypeObjectApi';
+import { ObjectContext } from '../../hooks/contexts';
+import useKendoFunctions from '../../hooks/useKendoFunctions';
+import { rowEditColor } from '../../Styles/tableStyle';
 import ActionsCell from './Cell/ActionsCell';
 import * as TableUtils from './tableUtils';
-import { rowEditColor } from '../../Styles/tableStyle';
-import { ObjectContext } from '../../hooks/contexts';
-
-const idGetter = getter(TableUtils.DATA_ITEM_KEY);
 
 const ObjectTable = ({
   type,
@@ -27,62 +20,11 @@ const ObjectTable = ({
   rowActionsRequired,
 }) => {
   const object = React.useContext(ObjectContext);
-  const [selectedState, setSelectedState] = React.useState({});
 
-  const onSelectionChange = React.useCallback(
-    (event) => {
-      const newSelectedState = getSelectedState({
-        event,
-        selectedState,
-        dataItemKey: TableUtils.DATA_ITEM_KEY,
-      });
-      setSelectedState(newSelectedState);
-    },
-    [selectedState]
-  );
-
-  const onHeaderSelectionChange = React.useCallback((event) => {
-    const checkboxElement = event.syntheticEvent.target;
-    const { checked } = checkboxElement;
-    const newSelectedState = {};
-    event.dataItems.forEach((item) => {
-      newSelectedState[idGetter(item)] = checked;
-    });
-    setSelectedState(newSelectedState);
-  }, []);
-
-  const addExpandField = (dataTree) => {
-    const { expanded } = state;
-    return mapTree(dataTree, TableUtils.subItemsField, (item) =>
-      extendDataItem(item, TableUtils.subItemsField, {
-        expanded: expanded.includes(item.id),
-        selected: selectedState[idGetter(item)],
-        inEdit: Boolean(state.inEdit.find((i) => i.id === item.id)),
-      })
-    );
-  };
-
-  const processData = () => {
-    const { data, dataState } = state;
-    const filteredData = filterBy(
-      data,
-      dataState.filter,
-      TableUtils.subItemsField
-    );
-    const sortedData = orderBy(
-      filteredData,
-      dataState.sort,
-      TableUtils.subItemsField
-    );
-    return addExpandField(sortedData);
-  };
+  const { onSelectionChange, onHeaderSelectionChange, processData } =
+    useKendoFunctions(state);
 
   const enterEdit = (dataItem) => {
-    // if (TableUtils.isNotEditable(dataItem)) {
-    //   console.warn(Constants.PARENT_EDIT_WARNING);
-    //   toast.warning(Constants.PARENT_EDIT_WARNING);
-    //   return;
-    // }
     setState({
       ...state,
       inEdit: [
@@ -93,7 +35,6 @@ const ObjectTable = ({
   };
 
   const uploadSpecification = () => {};
-
   const save = async (dataItem) => {
     const newRows = await TableUtils.updateAttributes(
       type,
@@ -101,6 +42,10 @@ const ObjectTable = ({
       state.data,
       oldRows
     );
+
+    await TableUtils.saveRelatedEndItem(newRows, dataItem.id, 'endItem');
+    await updateTypeObjectById(dataItem.id, 'endItem', dataItem.endItem);
+
     const { inEdit, ...itemToSave } = dataItem;
     setState({
       ...state,
@@ -129,12 +74,24 @@ const ObjectTable = ({
 
   const onItemChange = (event) => {
     const { field, value, dataItem } = event;
-    const newRows = TableUtils.updateCellValue(
+    let newRows = TableUtils.updateCellValue(
       state.data,
       dataItem.id,
       field,
       value
     );
+    if (field === 'endItem') {
+      newRows = TableUtils.updateRelatedEndItem(
+        newRows,
+        dataItem.id,
+        field,
+        value
+      );
+      toast.info(
+        `All Children and parent (if) of ${dataItem.title} will be marked as End Item FALSE`
+      );
+    }
+
     setState({
       ...state,
       data: newRows,
@@ -158,9 +115,19 @@ const ObjectTable = ({
     cell: CommandCell,
   };
 
-  const allColumns = rowActionsRequired
-    ? [...columns.slice(0, 2), actionColumn, ...columns.slice(2)]
-    : columns;
+  const [allColumns, setAllColumns] = React.useState([]);
+
+  React.useEffect(() => {
+    const cols = rowActionsRequired
+      ? [...columns.slice(0, 3), actionColumn, ...columns.slice(3)]
+      : columns;
+    const filterCols = TableUtils.filterHiddenColumns(cols);
+    setAllColumns(filterCols);
+
+    return () => {
+      setAllColumns([]);
+    };
+  }, [columns]);
 
   return (
     <div>
@@ -194,6 +161,10 @@ const ObjectTable = ({
           }}
           onItemChange={onItemChange}
           columns={allColumns}
+          reorderable
+          onColumnReorder={(e) => {
+            setAllColumns(e.columns);
+          }}
         />
       )}
     </div>

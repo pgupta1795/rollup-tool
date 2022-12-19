@@ -23,13 +23,16 @@ import RollupMenu from '../GridTable/toolbar/rollupMenu';
 
 const ObjectsTableContainer = ({ type, id }) => {
   const auth = useAuth();
-  const [toolbar, state, details, oldRows, reRender, loading, setters] =
-    useTable();
+  const [toolbar, state, oldRows, reRender, loading, setters] = useTable();
   const [setLoading, setState, setProps, setOldRows] = setters;
+
   const formattedData = React.useCallback(
     (response) => {
       const headerKeys = Props.DEFAULT_COLUMN_KEYS.slice(0, -2);
-      const customHeaderKeys = ServiceUtils.getCustomAttributeNames(type);
+      const customHeaderKeys = [
+        ...ServiceUtils.getCustomAttributeNames(type),
+        ...Props.DB_COLUMN_KEYS,
+      ];
       const rows = TableUtils.getRows(
         response.data,
         headerKeys,
@@ -42,15 +45,7 @@ const ObjectsTableContainer = ({ type, id }) => {
         id
       );
       rows[0].children = children;
-      const objDetails = TableUtils.getRows(
-        response.data,
-        Props.DEFAULT_COLUMN_KEYS,
-        customHeaderKeys
-      )[0];
-      return {
-        rows,
-        objDetails,
-      };
+      return rows;
     },
     [id, type]
   );
@@ -65,10 +60,8 @@ const ObjectsTableContainer = ({ type, id }) => {
       if (!authenticateTableData(response)) {
         return;
       }
-      const { rows, objDetails } = formattedData(response);
-      setProps(rows, [...columns], objDetails, null, [
-        <RollupMenu key="rollupCommand" />,
-      ]);
+      const rows = formattedData(response);
+      setProps(rows, [...columns], null, [<RollupMenu key="rollupCommand" />]);
     } catch (error) {
       console.log(error);
       toast.error(error);
@@ -83,7 +76,7 @@ const ObjectsTableContainer = ({ type, id }) => {
 
   const table = (
     <>
-      <Details data={details} />
+      <Details />
       <ExpandablePanel summary={toolbar}>
         <TableContainer component="div">
           <ObjectTable
@@ -100,7 +93,9 @@ const ObjectsTableContainer = ({ type, id }) => {
   );
 
   return (
-    <ObjectContext.Provider value={{ state, setState, oldRows, setOldRows }}>
+    <ObjectContext.Provider
+      value={{ state, setState, oldRows, setOldRows, loading }}
+    >
       <CustomTab
         defaultTab="Object"
         tabsArray={[

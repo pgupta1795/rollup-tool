@@ -1,10 +1,13 @@
-import { Box, Fab } from '@mui/material';
-import PropTypes from 'prop-types';
-import React from 'react';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
+import { Box, Fab, useTheme } from '@mui/material';
 import { ExcelExport } from '@progress/kendo-react-excel-export';
 import { TreeList } from '@progress/kendo-react-treelist';
+import PropTypes from 'prop-types';
+import React, { useContext } from 'react';
+import toast from '../../../helper/toast';
+import { ObjectContext } from '../../../hooks/contexts';
+import useKendoFunctions from '../../../hooks/useKendoFunctions';
 import * as TableUtils from '../tableUtils';
 
 const Toolbar = ({
@@ -15,6 +18,10 @@ const Toolbar = ({
   pagination,
   otherMenuItems,
 }) => {
+  const theme = useTheme();
+  const object = useContext(ObjectContext);
+  const { processData } = useKendoFunctions(object?.state);
+
   const refresh = (e) => {
     e.preventDefault();
     setLoading(true);
@@ -23,27 +30,31 @@ const Toolbar = ({
   };
 
   let exportResult;
+
   const exportToExcel = () => {
     const data = [];
-    rows.forEach((row) => {
-      TableUtils.flatten(row, data);
+    const sortedRows = processData();
+    if (!sortedRows) {
+      toast.warning('Table cannot be Exported');
+      return;
+    }
+    console.log('SORTED ROWS');
+    sortedRows.forEach((row) => {
+      TableUtils.flattenWithLevel(row, data, 0);
     });
-    const options = exportResult.workbookOptions(data, columns);
-    let altIdx = 0;
-    options.sheets[0].rows.forEach((row) => {
-      if (row.type === 'data') {
-        if (altIdx % 2 !== 0)
-          row.cells.forEach((cell) => {
-            cell.background = '#aabbcc';
-          });
-        altIdx += 1;
-      }
-    });
-    options.sheets[0].columns = options.sheets[0].columns.map(({ width }) => ({
-      width: width + 40,
-      autoWidth: true,
-    }));
+    const excelColumns = TableUtils.getExcelColumns(
+      columns,
+      theme.palette.primary.main
+    );
+    const options = exportResult.workbookOptions(data, excelColumns);
+    options.sheets[0].columns = options.sheets[0].columns.map(
+      ({ ...rest }, index) => ({
+        ...rest,
+        autoWidth: !(index === 0 || index === 1),
+      })
+    );
     exportResult.save(options);
+    console.log('Excel Exported');
   };
 
   const exportTable = (e) => {
@@ -105,7 +116,7 @@ const Toolbar = ({
           <SimCardDownloadIcon color="inherit" />
         </Fab>
       </Box>
-      <Box sx={{ flexGrow: 1 }} display={{ xs: 'none', sm: 'block' }} />
+      <Box sx={{ flexGrow: 1 }} display={{ xs: 'none', sm: 'flex' }} />
       <Box sx={{ flexGrow: 1 }}>{pagination}</Box>
     </div>
   );
@@ -122,6 +133,6 @@ Toolbar.propTypes = {
   columns: PropTypes.array.isRequired,
   rows: PropTypes.array.isRequired,
   pagination: PropTypes.any,
-  otherMenuItems: PropTypes.array,
+  otherMenuItems: PropTypes.any,
 };
 export default Toolbar;

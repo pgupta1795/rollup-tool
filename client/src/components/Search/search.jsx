@@ -1,20 +1,20 @@
-import { Autocomplete, CircularProgress } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import { Autocomplete, CircularProgress } from '@mui/material';
+import _ from 'lodash';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import _ from 'lodash';
+import { useAuth } from '../../authentication/auth';
 import * as Api from '../../helper/Api';
+import Paths from '../../helper/Paths';
 import StorageConstants from '../../helper/StorageConstants';
-import * as Props from '../GridTable/props';
-import * as TableUtils from '../GridTable/tableUtils';
+import toast from '../../helper/toast';
 import { SearchDiv, SearchIconDiv } from '../../Styles/StyledDiv';
 import StyledInputBase from '../../Styles/StyledInputBase';
-import Paths from '../../helper/Paths';
-import Options from './options';
-import { debounce } from '../../utils/fetchUtils';
 import { authenticateTableData } from '../../utils/CommonUtils';
-import { useAuth } from '../../authentication/auth';
-import toast from '../../helper/toast';
+import { debounce } from '../../utils/fetchUtils';
+import * as Props from '../GridTable/props';
+import * as TableUtils from '../GridTable/tableUtils';
+import Options from './options';
 
 const type = 'VPMReference';
 
@@ -107,7 +107,7 @@ const TechniaSearch = () => {
       onChange={(event, newValue) => {
         event.preventDefault();
         setValue(null);
-        const path = `${Paths.HOME}/${type}/${newValue.id}`;
+        const path = `${Paths.TYPE}/${type}/${newValue.id}`;
         navigate(path);
         setLoading(false);
       }}

@@ -19,6 +19,10 @@ Router.post('/api/enovia/login', (req, res) => {
   enovia.login(req, res);
 });
 
+Router.post('/api/enovia/logout', (req, res) => {
+  enovia.logout(req, res);
+});
+
 Router.post('/api/enovia/searchobjects', (req, res) => {
   objects.searchobjects(req, res);
 });
@@ -40,5 +44,13 @@ Router.post('/api/store/createAction', (req, res) =>
 );
 
 Router.get('/api/store/getActions', (req, res) => store.getActions(req, res));
+
+Router.get('/api/store/getTypeObjectById', (req, res) =>
+  store.getTypeObjectById(req, res)
+);
+
+Router.get('/api/store/updateTypeObject', (req, res) =>
+  store.updateTypeObject(req, res)
+);
 
 module.exports = Router;

@@ -25,3 +25,23 @@
   display: grid;
   grid-template-columns: auto auto;
 }
+
+.no-display {
+  display: none !important;
+}
+
+.flex-column-box {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1em;
+}
+
+.logo_brand_small {
+  width: 48px;
+  height: 48px;
+}
+
+.MuiChip-label:empty:not(img, picture, svg, input, button) {
+  display: none;
+}

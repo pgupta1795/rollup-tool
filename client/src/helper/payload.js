@@ -1,6 +1,8 @@
-import StorageConstants from './StorageConstants';
-import * as ServiceUtils from '../utils/ServiceUtils';
 import * as Props from '../components/GridTable/props';
+import * as ServiceUtils from '../utils/ServiceUtils';
+import StorageConstants from './StorageConstants';
+
+const tenant = ServiceUtils.TENANT_ID;
 
 export const getSearchBody = (type, spaceUrl, top, skip, name) => {
   let data = null;
@@ -10,8 +12,9 @@ export const getSearchBody = (type, spaceUrl, top, skip, name) => {
     const splitted = SEARCH_ENDPOINT.split('?');
     const endpoint =
       splitted < 1
-        ? SEARCH_ENDPOINT
-        : SEARCH_ENDPOINT.replace('{}', name || '')
+        ? SEARCH_ENDPOINT.replace('{}', tenant)
+        : SEARCH_ENDPOINT.replace('{}', tenant)
+            .replace('{}', name || '')
             .replace('{}', top || '')
             .replace('{}', skip);
     data = {
@@ -36,6 +39,7 @@ export const getChildrenBody = (type, spaceUrl, id) => {
     data = {
       ID: id,
       BASE_URL: spaceUrl,
+      tenant,
       GET_ENDPOINT,
       CHILD_ENDPOINT,
       headers: {
@@ -77,7 +81,8 @@ export const getUpdateObjectBody = (type, { id, ...selectedRow }) => {
 
   if (POST_ENDPOINT && id && payload) {
     const BASE_URL = localStorage.getItem(StorageConstants.SPACE3d);
-    const url = BASE_URL + POST_ENDPOINT.replace('{}', id);
+    const url =
+      BASE_URL + POST_ENDPOINT.replace('{}', id).replace('{}', tenant);
     data = {
       URL: url,
       headers: {

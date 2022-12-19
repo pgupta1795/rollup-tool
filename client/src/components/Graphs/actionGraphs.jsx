@@ -1,11 +1,11 @@
 import React from 'react';
-import { indigo, deepPurple, purple } from '@mui/material/colors';
-import { Grid } from '@mui/material';
+import { Grid, useTheme } from '@mui/material';
 import GraphContainer from './graphContainer';
 import ActionsRangeChart from './chartActionsRange';
 import ActionsCountChart from './chartActionsCount';
 
 const ActionGraphs = () => {
+  const theme = useTheme();
   const render = (
     <Grid
       container
@@ -20,9 +20,10 @@ const ActionGraphs = () => {
       </Grid>
     </Grid>
   );
+  const { primary } = theme.palette;
 
   return (
-    <GraphContainer colors={[indigo[100], deepPurple[300], purple[300]]}>
+    <GraphContainer colors={[primary.main, primary.light]}>
       {render}
     </GraphContainer>
   );

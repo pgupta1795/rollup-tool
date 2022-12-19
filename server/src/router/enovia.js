@@ -1,4 +1,5 @@
 const https = require('https');
+const retryFetch = require('../helper/fetch');
 const axios = require('axios');
 
 const api = axios.create({
@@ -11,15 +12,20 @@ const api = axios.create({
 const fetchLoginTicket = async (body) => {
   try {
     const { passportUrl, loginTicketURL } = body;
-    const response = await api.get(passportUrl + loginTicketURL, {
+    const result = await retryFetch(passportUrl + loginTicketURL, {
+      method: 'GET',
       headers: {
         Accept: 'application/json',
       },
+      retry: true,
+      retryDelay: 2,
+      retries: 2,
     });
-    return response;
+    const response = await result.json();
+    console.log('Login Ticket Fetched');
+    return [response, result];
   } catch (error) {
-    console.error(error);
-    throw error;
+    throw new Error(error);
   }
 };
 
@@ -30,50 +36,66 @@ const casAuthentication = async (ltResponse, body, passportCookie) => {
       .replace('{}', ltResponse.lt)
       .replace('{}', username)
       .replace('{}', password);
+    const url = passportUrl + casAuthUrl.replace('{}', spaceUrl);
     const casResponse = await api({
-      url: passportUrl + casAuthUrl.replace('{}', spaceUrl),
+      url,
       method: 'post',
+      maxRedirects: 0,
+      followRedirects: false,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
         Cookie: passportCookie,
       },
       data: casAuthBody,
     });
+    console.log('Authenticated 3dspace with passport');
     return casResponse;
   } catch (error) {
-    console.error(error);
-    throw error;
+    if (error?.response?.status === 302) {
+      return error?.response;
+    }
+    throw new Error(error);
   }
 };
 
-const fetchCSRF = async (body, spaceCookie) => {
+const fetchCSRF = async (body, spaceCookie, ticket) => {
   try {
     console.log(`spaceCookie : ${spaceCookie}`);
     const { spaceUrl, csrfTokenUrl } = body;
-    const response = await api({
-      url: spaceUrl + csrfTokenUrl,
-      method: 'get',
+    const url = `${spaceUrl}${csrfTokenUrl}&ticket=${ticket}`;
+    const result = await retryFetch(url, {
+      method: 'GET',
       headers: {
         Cookie: spaceCookie,
       },
+      retry: true,
+      retryDelay: 2,
+      retries: 2,
     });
-    return response;
+    const response = await result.json();
+    console.log('Fetched CSRF Token');
+    return [response, result];
   } catch (error) {
-    console.error(error);
-    throw error;
+    throw new Error(error);
   }
 };
 
 const fetchCollabspaces = async (body, spaceCookie) => {
   try {
-    const response = await api({
-      url: body.spaceUrl + body.collabspaceUrl,
-      method: 'get',
+    const url = body.spaceUrl + body.collabspaceUrl;
+    const response = await retryFetch(url, {
+      method: 'GET',
       headers: {
         Cookie: spaceCookie,
+        Connection: 'keep-alive',
+        Accept: '*/*',
+        'Content-type': 'application/json; charset=UTF-8',
       },
+      retry: true,
+      retryDelay: 2,
+      retries: 2,
     });
-    const responseData = response.data;
+    const responseData = await response.json();
     if (!responseData?.firstname) {
       return {
         firstname: '',
@@ -105,7 +127,7 @@ const fetchCollabspaces = async (body, spaceCookie) => {
         }
       );
     });
-
+    console.log('Fetched Collabspaces');
     return {
       firstname,
       lastname,
@@ -113,8 +135,27 @@ const fetchCollabspaces = async (body, spaceCookie) => {
       securityContexts,
     };
   } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const logout = async (req, res) => {
+  try {
+    const { passportUrl, Cookies, logoutTicketURL } = req.body;
+    const response = await api.get(passportUrl + logoutTicketURL, {
+      headers: {
+        Accept: 'application/json',
+        Cookie: Cookies,
+      },
+    });
+    res.json({
+      status: response.status,
+      statusText: 'Logout successfull',
+      headers: response.headers,
+    });
+  } catch (error) {
     console.error(error);
-    throw error;
+    res.json({ status: 400, statusText: 'Unable to login' });
   }
 };
 
@@ -125,41 +166,60 @@ const fetchCollabspaces = async (body, spaceCookie) => {
  */
 const login = async (req, res) => {
   try {
-    const loginResponse = await fetchLoginTicket(req.body);
-    const ltResponse = loginResponse.data;
+    let [ltResponse, loginResponse] = await fetchLoginTicket(req.body);
+
     if (!ltResponse && !ltResponse?.lt) {
       const err = 'Unable to generate login ticket';
-      throw err;
+      throw new Error(err);
     }
-
-    const passportCookie = loginResponse.headers['set-cookie'];
+    const loginTicketCookie = loginResponse.headers.get('set-cookie');
     const casResponse = await casAuthentication(
       ltResponse,
       req.body,
-      passportCookie
+      loginTicketCookie
     );
+    let casAuthCookie = casResponse.headers['set-cookie'];
+    const ticket = casResponse.headers.location?.split('ticket=')[1];
+    const [csrfResponse, csrfResult] = await fetchCSRF(
+      req.body,
+      casAuthCookie,
+      ticket
+    );
+    console.log('fetched CSRF Response', csrfResponse);
 
-    const spaceCookie = casResponse.headers['set-cookie'];
-    const csrfResponse = await fetchCSRF(req.body, spaceCookie);
+    if (!csrfResponse || !csrfResponse?.csrf) {
+      res.json({ status: 500, statusText: 'CSRF Token Could not be fetched' });
+    }
+
+    let csrfCookie = csrfResult.headers.get('set-cookie');
+
+    let spaceCookie = casAuthCookie
+      .join(';')
+      .concat(';')
+      .concat(loginTicketCookie)
+      .concat(';')
+      .concat(csrfCookie);
 
     const { firstname, lastname, preferred, securityContexts } =
       await fetchCollabspaces(req.body, spaceCookie);
 
     res.json({
-      status: csrfResponse.status,
-      statusText: csrfResponse.statusText,
+      status: csrfResponse.statusCode,
+      statusText: true,
       headers: csrfResponse.headers,
-      data: csrfResponse.data,
+      data: csrfResponse,
       'set-cookie': spaceCookie,
       firstname,
       lastname,
       preferred,
       securityContexts,
+      ticket,
     });
   } catch (err) {
     console.error(err);
-    res.json({ status: 500 });
+    console.error('Error Performing login action');
+    res.json({ status: 500, statusText: 'Unable to login' });
   }
 };
 
-module.exports = { login };
+module.exports = { login, logout };

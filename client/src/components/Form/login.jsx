@@ -1,10 +1,11 @@
-import { AccountCircle, Link as Http, Send } from '@mui/icons-material';
+import { AccountCircle, Send } from '@mui/icons-material';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ColumnFlexBox from '../Common/ColumnFlexBox';
 import PasswordField from './Fields/passwordField';
 import TextField from './Fields/textField';
-import FlexBox from '../Common/FlexBox';
+import LoginHeader from './loginHeader';
 
 const Login = ({ userLogin, credentials, setCredentials }) => {
   const handleChange = (prop) => (event) => {
@@ -21,7 +22,8 @@ const Login = ({ userLogin, credentials, setCredentials }) => {
         width="100%"
         className="login-form"
       >
-        <FlexBox>
+        <ColumnFlexBox>
+          <LoginHeader />
           <Stack
             direction="column"
             sx={{
@@ -42,22 +44,6 @@ const Login = ({ userLogin, credentials, setCredentials }) => {
               credentials={credentials}
               handleChange={handleChange}
             />
-            <TextField
-              credentials={credentials}
-              handleChange={handleChange}
-              icon={<Http color="primary" />}
-              fieldName="3dspace"
-              placeholder="https://example.com/3dspace"
-              autoComplete=""
-            />
-            <TextField
-              credentials={credentials}
-              handleChange={handleChange}
-              icon={<Http color="primary" />}
-              fieldName="3dpassport"
-              placeholder="https://example.com/3dpassport"
-              autoComplete=""
-            />
             <Button
               type="submit"
               variant="contained"
@@ -73,7 +59,7 @@ const Login = ({ userLogin, credentials, setCredentials }) => {
               </Typography>
             </Button>
           </Stack>
-        </FlexBox>
+        </ColumnFlexBox>
       </Box>
     </>
   );

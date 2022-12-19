@@ -1,10 +1,10 @@
-import { Button, Tooltip, Avatar } from '@mui/material';
 import { ArrowRight } from '@mui/icons-material';
+import { Avatar, Button, Tooltip } from '@mui/material';
 import React from 'react';
 import { useAuth } from '../../authentication/auth';
 import StorageConstants from '../../helper/StorageConstants';
 import { stringAvatar } from '../../utils/CommonUtils';
-import AccountMenu from './profileMenu';
+import ProfileMenu from './profileMenu';
 
 const Profile = () => {
   const auth = useAuth();
@@ -43,9 +43,11 @@ const Profile = () => {
           <ArrowRight style={{ pointerEvents: 'auto' }} />
         </Button>
       </Tooltip>
-      <AccountMenu anchorEl={anchorEl} setAnchorEl={setAnchorEl} />
+      <ProfileMenu anchorEl={anchorEl} setAnchorEl={setAnchorEl} />
     </>
-  ) : null;
+  ) : (
+    'Cookies Error : Please Logout and Login'
+  );
 };
 
 export default Profile;

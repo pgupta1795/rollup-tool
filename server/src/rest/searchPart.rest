@@ -1,0 +1,18 @@
+#variables
+@TENANT = R123412341234
+
+###
+POST http://localhost:5001/api/enovia/searchobjects
+Content-Type: application/json
+
+{
+    "BASE_URL": "https://{{TENANT}}-eu1-space.3dexperience.3ds.com/enovia/",
+    "GET_ENDPOINT": "/resources/v1/modeler/dseng/dseng:EngItem/search?$mask=dsmveng:EngItemMask.Details&$searchStr=&$top=30&$skip=0&tenant={{TENANT}}",
+    "headers": {
+        "Accept": "application/json",
+        "Content-type":"application/json",
+        "Cookie":"afs=517e516e-a40f-4b0a-8890-e43586135496; Max-Age=311040000; Expires=Fri, 20-Aug-2032 08:00:58 GMT; Path=/; Secure; HttpOnly; SameSite=None,CASTGC=TGT-27531988-qbWsMfqCrGz7HHmMbRg55n0dZQMPW7BT5m9dneySXnNPCBuvKN-cas; Domain=iam.3dexperience.3ds.com; Path=/; Secure; HttpOnly; SameSite=None,CASTGC_{{TENANT}}=TGT-27531988-qbWsMfqCrGz7HHmMbRg55n0dZQMPW7BT5m9dneySXnNPCBuvKN-cas; Path=/; Secure; HttpOnly; SameSite=None",
+        "ENO_CSRF_TOKEN":"XNIB-EINZ-EHQ8-BTPU-0HYV-0D8S-TZN3-C67F",
+        "SecurityContext":"VPLMProjectLeader.Company Name.Generic Utilities"
+    }
+}

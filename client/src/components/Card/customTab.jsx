@@ -29,8 +29,6 @@ const CustomTab = ({ defaultTab, tabsArray }) => {
       <TabList
         value={value}
         onChange={(e, newValue) => setValue(newValue)}
-        textColor="secondary"
-        indicatorColor="secondary"
         aria-label="secondary tabs example"
         sx={{ paddingLeft: '24px', paddingRight: '24px' }}
       >

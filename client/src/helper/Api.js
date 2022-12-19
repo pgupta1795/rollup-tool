@@ -1,7 +1,7 @@
 import { fetchResponse } from '../utils/fetchUtils';
 import { BODY, ENDPOINT } from '../utils/ServiceUtils';
 import Constants from './Constants';
-import { getSearchBody, getChildrenBody, getUpdateObjectBody } from './payload';
+import { getChildrenBody, getSearchBody, getUpdateObjectBody } from './payload';
 import StorageConstants from './StorageConstants';
 import toast from './toast';
 
@@ -22,6 +22,30 @@ export const login = async (credentials) => {
 
   const loginUrl = `${baseURL}/enovia/login`;
   const result = await fetch(loginUrl, {
+    method: 'POST',
+    headers: {
+      'Content-type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+  const response = await result.json();
+  if (response.status !== 200) {
+    console.error(response.message, Constants.LOGIN_ERROR);
+    toast.error(Constants.LOGIN_ERROR);
+    throw response.message;
+  }
+  return response;
+};
+
+export const logout = async (passportUrl) => {
+  const data = {
+    logoutTicketURL: ENDPOINT.LOGOUT_TICKET,
+    Cookies: localStorage.getItem(StorageConstants.Cookies),
+    passportUrl,
+  };
+
+  const logoutUrl = `${baseURL}/enovia/logout`;
+  const result = await fetch(logoutUrl, {
     method: 'POST',
     headers: {
       'Content-type': 'application/json',
@@ -90,9 +114,8 @@ export const updateObject = async (type, object) => {
     });
 
     if (response.status !== 200) {
-      console.error(response.message, Constants.EDIT_OBJECT_ERROR);
-      toast.error(Constants.EDIT_OBJECT_ERROR);
-      return [];
+      toast.error(`${response.message}`);
+      throw new Error(`${response.message} \n ${Constants.EDIT_OBJECT_ERROR}`);
     }
     return response?.data;
   }

@@ -19,13 +19,11 @@ export default (sortField) => {
     inEdit: [],
     rollup: [],
   });
-  const [details, setDetails] = React.useState({});
   const [oldRows, setOldRows] = React.useState([]);
   const [reRender, setRerender] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
-  const setProps = (rows, columns, objDetails, pagination, menuItems) => {
-    setDetails(objDetails);
+  const setProps = (rows, columns, pagination, menuItems) => {
     setState({
       ...state,
       data: rows,
@@ -48,7 +46,6 @@ export default (sortField) => {
   return [
     toolbar,
     state,
-    details,
     oldRows,
     reRender,
     loading,

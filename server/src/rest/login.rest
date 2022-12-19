@@ -1,0 +1,18 @@
+#variables
+@TENANT = R123412341234
+
+###
+POST http://localhost:5001/api/enovia/login
+Content-Type: application/json
+
+{
+    "username": "rbrown",
+    "password": "CatiaV6a",
+    "passportUrl": "https://{{TENANT}}-eu1.iam.3dexperience.3ds.com/",
+    "spaceUrl": "https://{{TENANT}}-eu1-space.3dexperience.3ds.com/enovia",
+    "loginTicketURL": "/login?action=get_auth_params",
+    "casAuthUrl": "login?tenant={{TENANT}}&service={}",
+    "casAuthBody": "lt={}&username={}&password={}&rememberMe=YES",
+    "csrfTokenUrl": "/resources/v1/application/CSRF?&tenant={{TENANT}}",
+    "collabspaceUrl": "/resources/modeler/pno/person?current=true&select=preferredcredentials&select=collabspaces&select=firstname&select=lastname&tenant={{TENANT}}"
+}

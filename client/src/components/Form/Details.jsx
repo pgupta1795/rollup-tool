@@ -1,58 +1,136 @@
-import { Divider, Stack, Typography } from '@mui/material';
-import PropTypes from 'prop-types';
-import React from 'react';
+import { Divider, Skeleton, Stack, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
-// import Button from "@mui/material/Button";
 import Grid from '@mui/material/Grid';
+import React, { useCallback, useContext, useState } from 'react';
+import Constants from '../../helper/Constants';
+import { getTypeObjectById } from '../../helper/TypeObjectApi';
+import { ObjectContext } from '../../hooks/contexts';
+import { roundOff } from '../../utils/CommonUtils';
 import ExpandablePanel from '../Card/expandablePanel';
 import ChipField from '../Common/ChipField';
+import ActualMassField from './Fields/actualMassField';
+import CalculatedMassField from './Fields/CalculatedMassField';
+import EstimatedMassField from './Fields/EstimatedMassField';
 
-const Details = ({ data }) => {
+const Details = () => {
+  const object = useContext(ObjectContext);
+  const [objectDBData, setObjectDBData] = useState();
+
   const header = (
     <Box sx={{ mb: 1, mx: 2 }}>
       <Grid container alignItems="center">
         <Grid item xs>
           <Typography gutterBottom variant="h5" component="div">
-            {data?.name || ''}
+            {object.state?.data[0]?.title || ''}
+          </Typography>
+          <Typography gutterBottom variant="body2" component="div">
+            {object.state?.data[0]?.revision || ''}
           </Typography>
         </Grid>
         <Grid item>
-          <Typography gutterBottom variant="h6" component="div">
-            {data?.revision || ''}
-          </Typography>
+          <div>
+            <Typography
+              gutterBottom
+              variant="h6"
+              title={Constants.BEST_AVAILABLE}
+            >
+              Best Available Mass :{' '}
+              <Typography
+                component="span"
+                gutterBottom
+                variant="h5"
+                color="primary"
+              >
+                <strong>
+                  {roundOff(
+                    Number(objectDBData?.bestAvailable?.$numberDecimal)
+                  ) || ''}
+                </strong>
+              </Typography>
+            </Typography>
+          </div>
+          <div className="no-display">
+            <Typography
+              gutterBottom
+              variant="h5"
+              color="primary"
+              title={Constants.BEST_AVAILABLE_V2}
+            >
+              Best Available Mass V2 :{' '}
+              {objectDBData?.bestAvailableV2?.$numberDecimal || ''}
+            </Typography>
+          </div>
         </Grid>
       </Grid>
-      <Typography color="text.secondary" variant="body2">
-        {data?.type || ''}
-      </Typography>
     </Box>
   );
 
+  const fetchData = useCallback(async () => {
+    const id = object.state.data[0] && object.state.data[0].id;
+    if (!id) return;
+    const response = await getTypeObjectById(id);
+    if (!response) return;
+    setObjectDBData(response);
+  }, [object]);
+
+  React.useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
   return (
     <ExpandablePanel summary={<Typography color="primary">Details</Typography>}>
-      <>
-        {header}
-        <Divider variant="middle" />
-        <Box sx={{ mt: 1, mx: 2 }}>
-          <Typography gutterBottom variant="subtitle1">
-            {data?.title || ''}
-          </Typography>
-          <Stack direction="row" spacing={1}>
-            <ChipField label="Description" value={data?.description || ''} />
-            <ChipField label="Owner" value={data?.owner || ''} />
-            <ChipField label="Created" value={data?.created || ''} />
-            <ChipField label="Modified" value={data?.modified || ''} />
-          </Stack>
-        </Box>
-        {/* <BOX SX={{ MT: 3, ML: 1, MB: 1 }}>
-        <BUTTON>ADD TO CART</BUTTON>
-      </BOX> */}
-      </>
+      {object?.loading ? (
+        <>
+          <Skeleton height="10vh" />
+          <Divider variant="middle" />
+          <Skeleton height="10vh" />
+        </>
+      ) : (
+        <>
+          {header}
+          <Divider variant="middle" />
+          <Grid container sx={{ gridTemplateColumns: 'auto 10fr auto' }}>
+            <Box sx={{ mt: 1, mx: 2 }}>
+              <Typography gutterBottom variant="subtitle1">
+                {object.state?.data[0]?.name || ''}
+              </Typography>
+              <Typography gutterBottom variant="body2" color="text.secondary">
+                {object.state?.data[0]?.type || ''}
+              </Typography>
+              <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
+                <ChipField
+                  label="Description"
+                  value={object.state?.data[0]?.description || ''}
+                />
+                <ChipField
+                  label="Owner"
+                  value={object.state?.data[0]?.owner || ''}
+                />
+              </Stack>
+            </Box>
+            <Box sx={{ flexGrow: 1 }} />
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{
+                mt: 1,
+                mx: 2,
+                display: 'flex',
+                alignItems: 'flex-end',
+                justifyContent: 'flex-end',
+              }}
+            >
+              <ActualMassField objectDBData={objectDBData} />
+              <Divider orientation="vertical" flexItem />
+              <EstimatedMassField objectDBData={objectDBData} />
+              <Divider orientation="vertical" flexItem />
+              <CalculatedMassField objectDBData={objectDBData} />
+            </Stack>
+          </Grid>
+        </>
+      )}
     </ExpandablePanel>
   );
 };
 
-Details.propTypes = {
-  data: PropTypes.object.isRequired,
-};
 export default Details;

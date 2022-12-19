@@ -1,12 +1,14 @@
 import DetailCell from './Cell/DetailCell';
+import LinkCell from './Cell/LinkCell';
 
-export const DATE_FORMAT = 'dd MMM, yyyy hh:mm';
+export const DATE_FORMAT = 'dd MMM, yyyy';
 
 export const ACTION_COLUMNS = [
   {
     field: 'name',
     title: 'Object',
     width: '15%',
+    cell: LinkCell,
   },
   {
     field: 'objectOldDetails',

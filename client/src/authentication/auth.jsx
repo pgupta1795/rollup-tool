@@ -1,13 +1,14 @@
-import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
+import React, { useContext, useState } from 'react';
 import { useCookies } from 'react-cookie';
-import toast from '../helper/toast';
-import Paths from '../helper/Paths';
+import { Navigate } from 'react-router-dom';
 import * as Api from '../helper/Api';
+import Constants from '../helper/Constants';
+import Paths from '../helper/Paths';
+import toast from '../helper/toast';
+import { AuthContext } from '../hooks/contexts';
 import { removeStorage, setStorage } from '../utils/CommonUtils';
 import { COOKIE_OPTIONS, initialAuthDetail } from './props';
-import { AuthContext } from '../hooks/contexts';
-import Constants from '../helper/Constants';
 
 export const AuthProvider = ({ children }) => {
   const [progress, setProgress] = useState(false);
@@ -54,7 +55,7 @@ export const AuthProvider = ({ children }) => {
         Cookies,
         '3dpassport': credentials['3dpassport'],
       });
-      const path = Paths.HOME;
+      const path = Paths.DASHBOARD;
       navigate(location?.state?.path || path, { replace: true });
       toast.success(Constants.LOGIN_SUCESS);
     } catch (error) {
@@ -65,18 +66,26 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
-    setAuthDetails(initialAuthDetail);
-    handleCookie({
-      username: '',
-      password: '',
-      '3dspace': cookies['3dspace'],
-      CSRF_TOKEN: '',
-      Cookies: '',
-      '3dpassport': cookies['3dpassport'],
-    });
-    removeStorage();
-    toast.success(Constants.LOGOUT_SUCESS);
+  const logout = async (passportURL) => {
+    try {
+      setAuthDetails(initialAuthDetail);
+      handleCookie({
+        username: '',
+        password: '',
+        '3dspace': cookies['3dspace'],
+        CSRF_TOKEN: '',
+        Cookies: '',
+        '3dpassport': cookies['3dpassport'],
+      });
+      removeStorage();
+      const response = await Api.logout(passportURL);
+      console.log({ response });
+      toast.success(Constants.LOGOUT_SUCESS);
+    } catch (error) {
+      console.error(error);
+      toast.error(error);
+      <Navigate to={Paths.LOGIN} />;
+    }
   };
 
   return (

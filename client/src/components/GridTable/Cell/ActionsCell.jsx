@@ -7,13 +7,13 @@ import { IconButton, Skeleton } from '@mui/material';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { rowEditColor } from '../../../Styles/tableStyle';
 
-export default function MyCommandCell(
+const ActionsCell = (
   enterEdit,
   save,
   cancel,
   editField,
   uploadSpecification
-) {
+) => {
   const [editMode, setEditMode] = React.useState(false);
 
   return class extends React.Component {
@@ -88,4 +88,6 @@ export default function MyCommandCell(
       );
     }
   };
-}
+};
+
+export default ActionsCell;

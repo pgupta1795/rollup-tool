@@ -2,6 +2,7 @@ import {
   TreeListTextFilter,
   TreeListTextEditor,
   TreeListNumericEditor,
+  TreeListBooleanEditor,
 } from '@progress/kendo-react-treelist';
 import LinkCell from './Cell/LinkCell';
 import * as ServiceUtils from '../../utils/ServiceUtils';
@@ -21,10 +22,16 @@ export const DEFAULT_COLUMN_KEYS = [
 
 export const DEFAULT_COLUMNS = [
   {
+    field: 'type',
+    title: 'Type',
+    width: '7%',
+    show: false,
+  },
+  {
     field: 'name',
     title: 'Name',
     width: '15%',
-    expandable: true,
+    show: false,
   },
   {
     field: 'title',
@@ -33,11 +40,6 @@ export const DEFAULT_COLUMNS = [
     filter: TreeListTextFilter,
     editCell: TreeListTextEditor,
     cell: LinkCell,
-  },
-  {
-    field: 'type',
-    title: 'Type',
-    width: '7%',
   },
   {
     field: 'revision',
@@ -77,7 +79,7 @@ export const DEFAULT_COLUMNS = [
 
 export const KEY_IDENTIFIER = 'dseno:EnterpriseAttributes';
 export const OBJECT_COLUMNS = (type) => {
-  const customAttributes = ServiceUtils.getCustomAttributeKeys(type);
+  const customAttributes = ServiceUtils.getMassAttributeKeys(type);
   const customColumns = customAttributes.map((customAttribute) => {
     const displayTitle = customAttribute.Label;
     const attribute = customAttribute.Attribute;
@@ -89,9 +91,26 @@ export const OBJECT_COLUMNS = (type) => {
       cell: RollupCell,
     };
   });
+  const dbColumns = [
+    {
+      field: 'usage',
+      title: 'Usage',
+      width: '10%',
+      expandable: true,
+    },
+    {
+      field: 'endItem',
+      title: 'Is End Item',
+      width: '10%',
+      editCell: TreeListBooleanEditor,
+    },
+  ];
   return [
-    ...DEFAULT_COLUMNS.slice(0, 2),
+    ...dbColumns,
+    ...DEFAULT_COLUMNS.slice(0, 3),
     ...customColumns,
-    ...DEFAULT_COLUMNS.slice(2, -2),
+    ...DEFAULT_COLUMNS.slice(3, -2),
   ];
 };
+
+export const DB_COLUMN_KEYS = ['usage', 'endItem'];

@@ -18,7 +18,7 @@ import toast from '../../helper/toast';
 const TypesTableContainer = ({ type }) => {
   const auth = useAuth();
   const [current, setCurrent] = React.useState(1);
-  const [toolbar, state, , oldRows, reRender, loading, setters] = useTable();
+  const [toolbar, state, oldRows, reRender, loading, setters] = useTable();
   const [setLoading, setState, setProps] = setters;
 
   const fetchData = React.useCallback(async () => {

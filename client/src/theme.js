@@ -1,8 +1,8 @@
 import { createTheme } from '@mui/material/styles';
 
-const light = '#c5cae9';
-const main = '#9575cd';
-const dark = '#ba68c8';
+const light = '#73ddf6';
+const main = '#3EB1C8';
+const dark = '#005F83';
 
 const primary = {
   light,

@@ -1,32 +1,23 @@
-import { Box, IconButton, Toolbar, Typography } from '@mui/material';
+import { Box, Link, Toolbar, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
-import * as React from 'react';
-import { ReactComponent as TT } from '../../assets/TT.svg';
+import React, { lazy } from 'react';
+import logo from '../../assets/TECHNIA.png';
 import { useAuth } from '../../authentication/auth';
 import Paths from '../../helper/Paths';
-import StyledSwitch from '../../Styles/StyledSwitch';
-import * as TableStyle from '../../Styles/tableStyle';
-import Profile from '../Profile/profile';
-import TechniaSearch from '../Search/search';
-import { TopBar } from './customAppBar';
+import ThemeSwitch from '../Common/ThemeSwitch';
+
+const Profile = lazy(() => import('../Profile/profile'));
+const TechniaSearch = lazy(() => import('../Search/search'));
+const TopBar = lazy(() => import('./customAppBar'));
 
 const Header = ({ checked, setChecked }) => {
   const auth = useAuth();
   const hasCookies = auth.cookies?.Cookies;
-  TableStyle.setRowStyle(!checked);
 
   const myLogo = (
-    <IconButton
-      size="small"
-      edge="start"
-      color="inherit"
-      aria-label="open drawer"
-      sx={{ mr: 2 }}
-    >
-      <a href={Paths.LOGIN}>
-        <TT />
-      </a>
-    </IconButton>
+    <Link href={Paths.LOGIN} variant="body2">
+      <img src={logo} alt="Logo" className="logo_brand_small" />
+    </Link>
   );
   const myTool = (
     <Typography
@@ -44,13 +35,6 @@ const Header = ({ checked, setChecked }) => {
   );
   const mySearch = <TechniaSearch />;
 
-  const themeChange = () => {
-    setChecked((previous) => {
-      TableStyle.setRowStyle(previous);
-      return !previous;
-    });
-  };
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <TopBar>
@@ -65,11 +49,7 @@ const Header = ({ checked, setChecked }) => {
             justifyContent="space-around"
           >
             {!hasCookies ? myTool : <Profile />}
-            <StyledSwitch
-              checked={checked}
-              onChange={themeChange}
-              inputProps={{ 'aria-label': 'controlled' }}
-            />
+            <ThemeSwitch checked={checked} setChecked={setChecked} />
           </Box>
         </Toolbar>
       </TopBar>

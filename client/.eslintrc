@@ -20,6 +20,7 @@
         "semi": true
       }
     ],
+    "no-restricted-syntax": "off",
     "no-unused-vars": "warn",
     "no-bitwise": "off",
     "no-console": "off",

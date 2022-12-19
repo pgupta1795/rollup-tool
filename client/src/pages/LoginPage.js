@@ -6,6 +6,7 @@ import CustomBackdrop from '../components/Card/backdrop';
 import Footer from '../components/Footer/footer';
 import Login from '../components/Form/login';
 import '../Styles/css/Login.css';
+import { URL } from '../utils/ServiceUtils';
 
 const LoginPage = () => {
   const auth = useAuth();
@@ -15,10 +16,10 @@ const LoginPage = () => {
   const [credentials, setCredentials] = React.useState({
     username: '',
     password: '',
-    '3dspace': auth.cookies['3dspace'] || '',
+    '3dspace': URL.SPACE_URL || auth.cookies['3dspace'],
     CSRF_TOKEN: '',
     Cookies: '',
-    '3dpassport': auth.cookies['3dpassport'] || '',
+    '3dpassport': URL.PASSPORT_URL || auth.cookies['3dpassport'],
   });
 
   return (

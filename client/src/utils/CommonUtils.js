@@ -65,3 +65,6 @@ export const authenticateTableData = (response) => {
     (response && response.data && response.children)
   );
 };
+
+export const roundOff = (number) =>
+  Math.round((number + Number.EPSILON) * 1000) / 1000;
