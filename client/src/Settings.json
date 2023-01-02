@@ -1,7 +1,7 @@
 {
   "Tenant": "OnPremise",
-  "SPACE_URL": "https://21xdemo.technia.net/3dspace",
-  "PASSPORT_URL": "https://21xdemo.technia.net/3dpassport",
+  "SPACE_URL": "https://{}-eu1-space.3dexperience.3ds.com/enovia",
+  "PASSPORT_URL": "https://{}-eu1.iam.3dexperience.3ds.com",
   "LOGIN_TICKET_ENDPOINT": "/login?action=get_auth_params",
   "LOGOUT_TICKET_ENDPOINT": "/logout",
   "CAS_AUTH_ENDPOINT": "/login?tenant={}&service={}",
@@ -13,7 +13,7 @@
       "Type": "VPMReference",
       "MASS_COLUMNS": [
         {
-          "Attribute": "Actual_Weight",
+          "Attribute": "Mass",
           "Label": "Actual Mass",
           "DB_Name": "sumActualMass",
           "Tolerance": {
@@ -22,7 +22,7 @@
           }
         },
         {
-          "Attribute": "Estimated_Weight",
+          "Attribute": "Estimated_Mass",
           "Label": "Estimated Mass",
           "DB_Name": "sumEstimatedMass",
           "Tolerance": {
