@@ -1,5 +1,3 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
 import {
   Button,
   Dialog,
@@ -10,18 +8,20 @@ import {
   FormControl,
   NativeSelect,
 } from '@mui/material';
+import Box from '@mui/material/Box';
 import PropTypes from 'prop-types';
-import StorageConstants from '../../helper/StorageConstants';
+import * as React from 'react';
+import {
+  getPreferredCtx,
+  getSecurityContexts,
+  setPreferredCtx,
+} from '../../services/AuthService';
 
 const SecurityContextModal = ({ open, setOpen }) => {
-  const [preferred, setPreferred] = React.useState(
-    localStorage.getItem(StorageConstants.Preferred)
-  );
-  const securityContexts = localStorage.getItem(
-    StorageConstants.SecurityContexts
-  );
+  const [preferred, setPreferred] = React.useState(getPreferredCtx());
+  const securityContexts = getSecurityContexts();
   const allmenuContexts = [];
-  securityContexts?.split(',').forEach((securityContext) => {
+  securityContexts?.forEach((securityContext) => {
     allmenuContexts.push(
       <option key={securityContext} value={securityContext}>
         {securityContext}
@@ -30,7 +30,7 @@ const SecurityContextModal = ({ open, setOpen }) => {
   });
 
   const handleChange = (event) => {
-    localStorage.setItem(StorageConstants.Preferred, event.target.value);
+    setPreferredCtx(event.target.value);
     setPreferred(event.target.value);
     setOpen(false);
   };

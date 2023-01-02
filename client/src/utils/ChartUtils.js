@@ -1,14 +1,14 @@
-import _ from 'lodash';
-import * as TableUtils from '../components/GridTable/tableUtils';
 import toast from '../helper/toast';
-import { getCustomAttributeNames, getAttributeLabel } from './ServiceUtils';
+import { getObjectAttributes } from './ActionsUtils';
+import { flatten } from './ArrayUtils';
+import { getMassAttributeLabels, getMassAttributeNames } from './ServiceUtils';
 
 const getAttributePreviousValues = (data, attribute) => {
   try {
     const attributeRanges = {};
     data.forEach(({ name, objectOldDetails, objectNewDetails }) => {
-      const oldAttributes = TableUtils.getObjectAttributes(objectOldDetails);
-      const newAttributes = TableUtils.getObjectAttributes(objectNewDetails);
+      const oldAttributes = getObjectAttributes(objectOldDetails);
+      const newAttributes = getObjectAttributes(objectNewDetails);
       const attrValues = Object.prototype.hasOwnProperty.call(
         attributeRanges,
         name
@@ -62,11 +62,11 @@ const getAttributesCurrentValue = (data, attributeName) => {
 
 export const getAttributeRangeSeries = (data, type) => {
   try {
-    const attributes = getCustomAttributeNames(type);
+    const attributes = getMassAttributeNames(type);
     const series = [];
     attributes.forEach((attribute) => {
       const serie = {
-        name: getAttributeLabel(attribute, type),
+        name: getMassAttributeLabels(attribute, type),
         data: [],
       };
       const attributeRanges = getAttributePreviousValues(data, attribute);
@@ -120,10 +120,7 @@ export const getStateSeriesAndLabels = (rows) => {
   try {
     const series = [];
     const labels = [];
-    const data = [];
-    rows.forEach((row) => {
-      TableUtils.flatten(row, data);
-    });
+    const data = flatten(rows);
     const statesCount = getStatesCount(data);
 
     Object.keys(statesCount).forEach((key) => {
@@ -141,17 +138,14 @@ export const getStateSeriesAndLabels = (rows) => {
 
 export const getAttributeSeries = (rows, type) => {
   try {
-    const attributes = getCustomAttributeNames(type);
+    const attributes = getMassAttributeNames(type);
     const labels = new Set();
     const series = [];
-    const data = [];
-    rows.forEach((row) => {
-      TableUtils.flatten(row, data);
-    });
+    const data = flatten(rows);
 
     attributes.forEach((attribute) => {
       const serie = {
-        name: getAttributeLabel(attribute, type),
+        name: getMassAttributeLabels(attribute, type),
         type: 'line',
         data: [],
       };
@@ -178,17 +172,17 @@ export const getAttributeSeries = (rows, type) => {
 
 export const getMassSeriesAndLabels = (data, type) => {
   try {
-    const attributes = getCustomAttributeNames(type);
+    const attributes = getMassAttributeNames(type);
     const series = [];
     const labels = [];
 
     attributes?.forEach((attribute) => {
-      const attrLabel = getAttributeLabel(attribute, type);
+      const attrLabel = getMassAttributeLabels(attribute, type);
       if (attrLabel.includes('Mass')) {
         const attributeVals = getAttributesCurrentValue(data, attribute);
         Object.keys(attributeVals).forEach((key) => {
           const val = attributeVals[key];
-          series.push(_.isNull(val) ? 0 : val);
+          series.push(val || 0);
           labels.push(attrLabel);
         });
       }
@@ -203,7 +197,7 @@ export const getMassSeriesAndLabels = (data, type) => {
 
 export const getAttributesBarSeries = (data, type) => {
   try {
-    const attributes = getCustomAttributeNames(type);
+    const attributes = getMassAttributeNames(type);
     const series = [
       {
         data: [],
@@ -215,8 +209,8 @@ export const getAttributesBarSeries = (data, type) => {
       const attributeVals = getAttributesCurrentValue(data, attribute);
       Object.keys(attributeVals).forEach((key) => {
         const val = attributeVals[key];
-        series[0].data.push(_.isNull(val) ? 0 : val);
-        labels.push(getAttributeLabel(attribute, type));
+        series[0].data.push(val || 0);
+        labels.push(getMassAttributeLabels(attribute, type));
       });
     });
     return [series, labels];

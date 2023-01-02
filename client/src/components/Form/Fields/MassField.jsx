@@ -7,10 +7,12 @@ import { getAttributeTolerance } from '../../../utils/ServiceUtils';
 
 const MassField = ({ attribute, children, value }) => {
   const tolerance = getAttributeTolerance(attribute);
-  const upperLimitValue =
-    Number(value) + Number((value * tolerance.Upper) / 100);
-  const lowerLimitValue =
-    Number(value) + Number((value * tolerance.Lower) / 100);
+  const upperLimitValue = value
+    ? Number(value) + Number((value * tolerance.Upper) / 100)
+    : null;
+  const lowerLimitValue = value
+    ? Number(value) + Number((value * tolerance.Lower) / 100)
+    : null;
 
   return (
     <Stack direction="column">

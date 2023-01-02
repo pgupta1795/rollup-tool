@@ -4,6 +4,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../authentication/auth';
 import Paths from '../../helper/Paths';
+import { getUserName } from '../../services/CookieService';
+import { URL } from '../../utils/ServiceUtils';
 import PaperMenu from '../Common/PaperMenu';
 import BrandItem from '../MenuItems/BrandItem';
 import Dashboard from '../MenuItems/Dashboard';
@@ -51,7 +53,7 @@ const ProfileMenu = ({ anchorEl, setAnchorEl }) => {
         <Settings />
         <Logout
           onClick={() => {
-            auth.logout(auth.cookies['3dpassport']);
+            auth.logout(URL.PASSPORT_URL, getUserName());
             const path = Paths.LOGIN;
             navigate(path);
           }}

@@ -1,27 +1,26 @@
 import SearchIcon from '@mui/icons-material/Search';
 import { Autocomplete, CircularProgress } from '@mui/material';
 import _ from 'lodash';
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../authentication/auth';
-import * as Api from '../../helper/Api';
+import * as EnoviaApi from '../../api/EnoviaApi';
 import Paths from '../../helper/Paths';
-import StorageConstants from '../../helper/StorageConstants';
 import toast from '../../helper/toast';
 import { SearchDiv, SearchIconDiv } from '../../Styles/StyledDiv';
 import StyledInputBase from '../../Styles/StyledInputBase';
 import { authenticateTableData } from '../../utils/CommonUtils';
 import { debounce } from '../../utils/fetchUtils';
-import * as Props from '../GridTable/props';
-import * as TableUtils from '../GridTable/tableUtils';
+import { TYPES } from '../../utils/ServiceUtils';
+import { formatRows } from '../../utils/TableUtils';
+import { DEFAULT_COLUMNS } from '../Table/Columns/DefaultColumns';
 import Options from './options';
 
-const type = 'VPMReference';
+const type = TYPES[0];
 
 const TechniaSearch = () => {
-  const headerKeys = Props.DEFAULT_COLUMN_KEYS;
-  const [loading, setLoading] = React.useState(false);
-  const [options, setOptions] = React.useState([
+  const columns = DEFAULT_COLUMNS;
+  const [loading, setLoading] = useState(false);
+  const [options, setOptions] = useState([
     {
       id: '',
       type: '',
@@ -33,32 +32,24 @@ const TechniaSearch = () => {
       owner: '',
     },
   ]);
-  const [value, setValue] = React.useState(null);
-  const [inputValue, setInputValue] = React.useState('');
+  const [value, setValue] = useState(null);
+  const [inputValue, setInputValue] = useState('');
   const navigate = useNavigate();
-  const auth = useAuth();
 
-  const fetch = React.useMemo(
+  const fetch = useMemo(
     () =>
       debounce(
-        _.throttle(async ({ spaceUrl, input }, callback) => {
+        _.throttle(async ({ input }, callback) => {
           try {
             setLoading(true);
-            const response = await Api.searchObjects(
-              type,
-              spaceUrl,
-              30,
-              0,
-              input
-            );
+            const response = await EnoviaApi.searchObjects(type, 30, 0, input);
             callback(response);
             setLoading(false);
             return response;
           } catch (error) {
+            setLoading(false);
             console.error(error);
-            toast.error(error);
-            auth.logout();
-            navigate(Paths.LOGIN);
+            toast.error(`Error: ${error}`);
           }
           return null;
         }, 800),
@@ -67,17 +58,15 @@ const TechniaSearch = () => {
     []
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     let active = true;
     if (inputValue === '') {
       setOptions(value ? [value] : []);
       return undefined;
     }
-    const spaceUrl = localStorage.getItem(StorageConstants.SPACE3d);
-
-    fetch({ spaceUrl, input: inputValue }, (response) => {
+    fetch({ input: inputValue }, (response) => {
       if (active && authenticateTableData(response)) {
-        const allRows = TableUtils.getRows(response, headerKeys);
+        const allRows = formatRows(response, columns);
         setOptions(allRows);
       }
     });
@@ -86,7 +75,7 @@ const TechniaSearch = () => {
       active = false;
       setLoading(false);
     };
-  }, [value, inputValue, fetch, headerKeys]);
+  }, [value, inputValue, fetch, columns]);
 
   return (
     <Autocomplete

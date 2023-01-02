@@ -1,7 +1,7 @@
 {
   "Tenant": "OnPremise",
-  "SPACE_URL": "https://{}-eu1-space.3dexperience.3ds.com/enovia",
-  "PASSPORT_URL": "https://{}-eu1.iam.3dexperience.3ds.com",
+  "SPACE_URL": "https://21xdemo.technia.net/3dspace",
+  "PASSPORT_URL": "https://21xdemo.technia.net/3dpassport",
   "LOGIN_TICKET_ENDPOINT": "/login?action=get_auth_params",
   "LOGOUT_TICKET_ENDPOINT": "/logout",
   "CAS_AUTH_ENDPOINT": "/login?tenant={}&service={}",
@@ -15,6 +15,7 @@
         {
           "Attribute": "Actual_Weight",
           "Label": "Actual Mass",
+          "DB_Name": "sumActualMass",
           "Tolerance": {
             "Upper": "0.5",
             "Lower": "-0.5"
@@ -23,6 +24,7 @@
         {
           "Attribute": "Estimated_Weight",
           "Label": "Estimated Mass",
+          "DB_Name": "sumEstimatedMass",
           "Tolerance": {
             "Upper": "1",
             "Lower": "-1"
@@ -31,6 +33,7 @@
         {
           "Attribute": "Weight",
           "Label": "Calculated Mass",
+          "DB_Name": "sumCalculatedMass",
           "Tolerance": {
             "Upper": "5",
             "Lower": "-5"
@@ -47,7 +50,6 @@
           }
         }
       ],
-      "ROLLUP_ORDER": "Actual_Weight>Estimated_Weight>Weight",
       "Attribute_PREFIX": "XP_VPMReference_Ext",
       "GET_ENDPOINT": "/resources/v1/modeler/dseng/dseng:EngItem/{}?$mask=dsmveng:EngItemMask.Details&tenant={}",
       "CHILD_ENDPOINT": "/resources/v1/modeler/dseng/dseng:EngItem/{}/dseng:EngInstance?$mask=dsmveng:EngInstanceMask.Details&tenant={}",

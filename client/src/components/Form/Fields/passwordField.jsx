@@ -1,6 +1,6 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import PropTypes from 'prop-types';
 import { IconButton, Input, InputAdornment, InputLabel } from '@mui/material';
+import PropTypes from 'prop-types';
 import React from 'react';
 import FormControl from '../FormControl';
 
@@ -31,6 +31,8 @@ const PasswordField = ({ credentials, handleChange }) => {
               aria-label="toggle password visibility"
               onClick={handleClickShowPassword}
               onMouseDown={(event) => event.preventDefault()}
+              id="login-field-icon"
+              className="icon-2"
             >
               {showPassword ? (
                 <VisibilityOff color="primary" />

@@ -1,18 +1,25 @@
 import { Box, Link, Toolbar, Typography } from '@mui/material';
-import PropTypes from 'prop-types';
-import React, { lazy } from 'react';
+import React, { lazy, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/TECHNIA.png';
-import { useAuth } from '../../authentication/auth';
 import Paths from '../../helper/Paths';
+import { getUserName } from '../../services/CookieService';
 import ThemeSwitch from '../Common/ThemeSwitch';
 
 const Profile = lazy(() => import('../Profile/profile'));
 const TechniaSearch = lazy(() => import('../Search/search'));
 const TopBar = lazy(() => import('./customAppBar'));
 
-const Header = ({ checked, setChecked }) => {
-  const auth = useAuth();
-  const hasCookies = auth.cookies?.Cookies;
+const Header = () => {
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setUser(getUserName());
+    return () => {
+      setUser(null);
+    };
+  }, [navigate]);
 
   const myLogo = (
     <Link href={Paths.LOGIN} variant="body2">
@@ -41,15 +48,15 @@ const Header = ({ checked, setChecked }) => {
         <Toolbar variant="dense">
           {myLogo}
           <Box sx={{ flexGrow: 1 }} />
-          {hasCookies ? mySearch : ''}
+          {user ? mySearch : ''}
           <Box sx={{ flexGrow: 1 }} />
           <Box
             sx={{ display: { xs: 'flex', md: 'flex' } }}
             alignItems="center"
             justifyContent="space-around"
           >
-            {!hasCookies ? myTool : <Profile />}
-            <ThemeSwitch checked={checked} setChecked={setChecked} />
+            {!user ? myTool : <Profile />}
+            <ThemeSwitch />
           </Box>
         </Toolbar>
       </TopBar>
@@ -57,8 +64,4 @@ const Header = ({ checked, setChecked }) => {
   );
 };
 
-Header.propTypes = {
-  checked: PropTypes.bool.isRequired,
-  setChecked: PropTypes.func.isRequired,
-};
 export default Header;

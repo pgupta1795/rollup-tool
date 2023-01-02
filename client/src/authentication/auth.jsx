@@ -1,60 +1,22 @@
 import PropTypes from 'prop-types';
 import React, { useContext, useState } from 'react';
-import { useCookies } from 'react-cookie';
 import { Navigate } from 'react-router-dom';
-import * as Api from '../helper/Api';
+import { toast as reactToast } from 'react-toastify';
+import { loginUser, logoutUser } from '../api/AuthApi';
 import Constants from '../helper/Constants';
 import Paths from '../helper/Paths';
 import toast from '../helper/toast';
 import { AuthContext } from '../hooks/contexts';
-import { removeStorage, setStorage } from '../utils/CommonUtils';
-import { COOKIE_OPTIONS, initialAuthDetail } from './props';
+import { removeToken, setToken } from '../services/TokenService';
 
 export const AuthProvider = ({ children }) => {
   const [progress, setProgress] = useState(false);
-  const [cookies, setCookie] = useCookies([
-    'username',
-    'Cookies',
-    'CSRF_TOKEN',
-    '3dspace',
-    '3dpassport',
-  ]);
-  const [authDetails, setAuthDetails] = useState(initialAuthDetail);
-
-  const handleCookie = (credentials, storageItems) => {
-    setCookie('username', credentials.username, COOKIE_OPTIONS);
-    setCookie('Cookies', credentials.Cookies, COOKIE_OPTIONS);
-    setCookie('CSRF_TOKEN', credentials.CSRF_TOKEN, COOKIE_OPTIONS);
-    setCookie('3dspace', credentials['3dspace'], COOKIE_OPTIONS);
-    setCookie('3dpassport', credentials['3dpassport'], COOKIE_OPTIONS);
-    if (storageItems) setStorage(storageItems);
-  };
-
   const login = async (credentials, location, navigate) => {
     try {
       setProgress(true);
-      const response = await Api.login(credentials);
-      credentials.CSRF_TOKEN = response?.data?.csrf?.value;
-      credentials.Cookies = response['set-cookie'];
-      const { firstname, lastname, preferred, securityContexts } = response;
-      const { username, password, CSRF_TOKEN, Cookies } = credentials;
-      handleCookie(credentials, {
-        firstname,
-        lastname,
-        preferred,
-        securityContexts,
-        CSRF_TOKEN,
-        Cookies,
-        '3dspace': credentials['3dspace'],
-      });
-      setAuthDetails({
-        username,
-        password,
-        '3dspace': credentials['3dspace'],
-        CSRF_TOKEN,
-        Cookies,
-        '3dpassport': credentials['3dpassport'],
-      });
+      const response = await loginUser(credentials);
+      const accessToken = response.data?.accessToken;
+      setToken(accessToken);
       const path = Paths.HOME;
       navigate(location?.state?.path || path, { replace: true });
       toast.success(Constants.LOGIN_SUCESS);
@@ -66,36 +28,30 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = async (passportURL) => {
+  const logout = async (passportURL, username) => {
     try {
-      setAuthDetails(initialAuthDetail);
-      handleCookie({
-        username: '',
-        password: '',
-        '3dspace': cookies['3dspace'],
-        CSRF_TOKEN: '',
-        Cookies: '',
-        '3dpassport': cookies['3dpassport'],
+      await reactToast.promise(logoutUser(passportURL, username), {
+        pending: Constants.START_LOGOUT,
+        success: Constants.LOGOUT_SUCESS,
+        error: 'Error 🤯',
       });
-      removeStorage();
-      const response = await Api.logout(passportURL);
-      console.log({ response });
-      toast.success(Constants.LOGOUT_SUCESS);
-    } catch (error) {
-      console.error(error);
-      toast.error(error);
       <Navigate to={Paths.LOGIN} />;
+      toast.info(Constants.LOGOUT_SUCESS);
+    } catch (error) {
+      <Navigate to={Paths.LOGIN} />;
+      console.error(error);
+      toast.error(error.message);
+    } finally {
+      removeToken();
+      window.location.reload();
     }
   };
 
   return (
     <AuthContext.Provider
       value={{
-        authDetails,
         login,
         logout,
-        cookies,
-        handleCookie,
         progress,
       }}
     >

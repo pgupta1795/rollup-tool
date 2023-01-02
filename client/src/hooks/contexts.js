@@ -1,7 +1,4 @@
 import { createContext } from 'react';
 
-export const ActionsContext = createContext(null);
-
+// eslint-disable-next-line import/prefer-default-export
 export const AuthContext = createContext(null);
-
-export const ObjectContext = createContext(null);

@@ -1,14 +1,12 @@
 import { ArrowRight } from '@mui/icons-material';
 import { Avatar, Button, Tooltip } from '@mui/material';
-import React from 'react';
-import { useAuth } from '../../authentication/auth';
-import StorageConstants from '../../helper/StorageConstants';
+import React, { useState } from 'react';
+import { getUserFullName } from '../../services/AuthService';
 import { stringAvatar } from '../../utils/CommonUtils';
 import ProfileMenu from './profileMenu';
 
 const Profile = () => {
-  const auth = useAuth();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
     if (
@@ -20,7 +18,7 @@ const Profile = () => {
     setAnchorEl(event.currentTarget);
   };
 
-  return auth.cookies.Cookies ? (
+  return getUserFullName() ? (
     <>
       <Tooltip title="Person Details">
         <Button
@@ -33,13 +31,7 @@ const Profile = () => {
           aria-haspopup="true"
           sx={{ pointerEvents: 'auto', cursor: 'not-allowed' }}
         >
-          <Avatar
-            {...stringAvatar(
-              `${localStorage.getItem(
-                StorageConstants.FirstName
-              )} ${localStorage.getItem(StorageConstants.LastName)}`
-            )}
-          />
+          <Avatar {...stringAvatar(getUserFullName())} />
           <ArrowRight style={{ pointerEvents: 'auto' }} />
         </Button>
       </Tooltip>

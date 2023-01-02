@@ -3,7 +3,7 @@
     "browser": true,
     "es2021": true
   },
-  "extends": ["airbnb", "prettier"],
+  "extends": ["plugin:react/recommended", "airbnb", "prettier"],
   "plugins": ["react", "prettier"],
   "parserOptions": {
     "ecmaFeatures": {
@@ -13,6 +13,10 @@
     "sourceType": "module"
   },
   "rules": {
+    "import/no-extraneous-dependencies": [
+      "error",
+      { "devDependencies": ["**/*vite.config.js"] }
+    ],
     "prettier/prettier": [
       "error",
       {

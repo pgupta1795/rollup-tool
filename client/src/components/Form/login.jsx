@@ -3,9 +3,9 @@ import { Box, Button, Stack, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ColumnFlexBox from '../Common/ColumnFlexBox';
-import PasswordField from './Fields/passwordField';
-import TextField from './Fields/textField';
-import LoginHeader from './loginHeader';
+import PasswordField from './Fields/PasswordField';
+import TextField from './Fields/TextField';
+import LoginHeader from './LoginHeader';
 
 const Login = ({ userLogin, credentials, setCredentials }) => {
   const handleChange = (prop) => (event) => {
@@ -23,13 +23,14 @@ const Login = ({ userLogin, credentials, setCredentials }) => {
         className="login-form"
       >
         <ColumnFlexBox>
-          <LoginHeader />
+          <LoginHeader id="login-header" />
           <Stack
             direction="column"
             sx={{
               width: '100%',
               padding: '5px',
             }}
+            id="login-fields-container"
           >
             <TextField
               credentials={credentials}

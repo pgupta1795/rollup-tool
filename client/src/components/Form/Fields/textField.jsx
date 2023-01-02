@@ -27,7 +27,9 @@ const TextField = ({
       placeholder={placeholder}
       endAdornment={
         <InputAdornment position="end">
-          <IconButton>{icon}</IconButton>
+          <IconButton id="login-field-icon" className="icon-1">
+            {icon}
+          </IconButton>
         </InputAdornment>
       }
     />

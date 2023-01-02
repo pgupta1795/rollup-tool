@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
 import { useTheme } from '@mui/material/styles';
+import { useEffect, useState } from 'react';
 
-export default (action, options, fn) => {
+export default (actions, options, fn) => {
   const theme = useTheme();
   const [state, setState] = useState({
     ...options,
@@ -13,7 +13,7 @@ export default (action, options, fn) => {
   const executeFunction = fn.bind(this);
 
   useEffect(() => {
-    const series = executeFunction(action?.state.data, 'VPMReference');
+    const series = executeFunction(actions, 'VPMReference');
     setState({
       ...state,
       series,
@@ -24,7 +24,7 @@ export default (action, options, fn) => {
         },
       },
     });
-  }, [action, theme]);
+  }, [actions, theme]);
 
   return state;
 };

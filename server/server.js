@@ -2,17 +2,23 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
+const cookieparser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
-const EnoviaRoutes = require('./src/routes');
+const myRoutes = require('./src/app/routes');
 
 const app = express();
 
-app.use(logger('dev'));
+app.use(
+  logger(
+    ':date[web] ---- :method :url :status :res[content-length] - :response-time ms'
+  )
+);
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
-app.use('/', EnoviaRoutes);
+app.use(cookieparser());
+app.use('/', myRoutes);
 
 // render client
 app.use(express.static(path.join(__dirname, '../client/build')));

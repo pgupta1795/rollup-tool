@@ -1,33 +1,3 @@
-import StorageConstants from '../helper/StorageConstants';
-
-export const setStorage = (storageItems) => {
-  const {
-    firstname,
-    lastname,
-    Cookies,
-    securityContexts,
-    preferred,
-    CSRF_TOKEN,
-  } = storageItems;
-  localStorage.setItem(StorageConstants.FirstName, firstname);
-  localStorage.setItem(StorageConstants.LastName, lastname);
-  localStorage.setItem(StorageConstants.Cookies, Cookies);
-  localStorage.setItem(StorageConstants.SecurityContexts, securityContexts);
-  localStorage.setItem(StorageConstants.Preferred, preferred);
-  localStorage.setItem(StorageConstants.CSRF_TOKEN, CSRF_TOKEN);
-  localStorage.setItem(StorageConstants.SPACE3d, storageItems['3dspace']);
-};
-
-export const removeStorage = () => {
-  localStorage.removeItem(StorageConstants.FirstName);
-  localStorage.removeItem(StorageConstants.LastName);
-  localStorage.removeItem(StorageConstants.Cookies);
-  localStorage.removeItem(StorageConstants.SecurityContexts);
-  localStorage.removeItem(StorageConstants.Preferred);
-  localStorage.removeItem(StorageConstants.CSRF_TOKEN);
-  localStorage.removeItem(StorageConstants.SPACE3d);
-};
-
 export const isEqual = (o1, o2) => JSON.stringify(o1) === JSON.stringify(o2);
 
 export const stringToColor = (string) => {
@@ -68,3 +38,34 @@ export const authenticateTableData = (response) => {
 
 export const roundOff = (number) =>
   Math.round((number + Number.EPSILON) * 1000) / 1000;
+
+/**
+ * accepts a color starting with # or not, with 6 characters or 3 characters
+ * ex : shadeColor('#54b946', 40) will give lighter tone color
+ * @param {*} col
+ * @param {amount is a multiple of 40 here} amt
+ * @returns
+ */
+export const shadeColor = (col, amt) => {
+  if (!col) return 'inherit';
+  col = col.replace(/^#/, '');
+  if (col.length === 3)
+    col = col[0] + col[0] + col[1] + col[1] + col[2] + col[2];
+
+  let [r, g, b] = col.match(/.{2}/g);
+  [r, g, b] = [
+    parseInt(r, 16) + amt,
+    parseInt(g, 16) + amt,
+    parseInt(b, 16) + amt,
+  ];
+
+  r = Math.max(Math.min(255, r), 0).toString(16);
+  g = Math.max(Math.min(255, g), 0).toString(16);
+  b = Math.max(Math.min(255, b), 0).toString(16);
+
+  const rr = (r.length < 2 ? '0' : '') + r;
+  const gg = (g.length < 2 ? '0' : '') + g;
+  const bb = (b.length < 2 ? '0' : '') + b;
+
+  return `#${rr}${gg}${bb}`;
+};

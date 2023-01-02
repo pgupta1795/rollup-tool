@@ -1,23 +1,28 @@
-import PropTypes from 'prop-types';
-import React, { lazy, useEffect } from 'react';
-import { setRowStyle } from '../../Styles/tableStyle';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { changeTheme } from '../../features/theme/themeSlice';
+import useMode from '../../hooks/useMode';
+import { getStoreTheme, setStoreTheme } from '../../services/AuthService';
+import StyledSwitch from '../../Styles/StyledSwitch';
 
-const StyledSwitch = lazy(() => import('../../Styles/StyledSwitch'));
-
-const ThemeSwitch = ({ checked, setChecked }) => {
-  useEffect(() => {
-    setRowStyle(!checked);
-    return () => {
-      setRowStyle(checked);
-    };
-  }, [checked]);
+const ThemeSwitch = () => {
+  const dispatch = useDispatch();
+  const systemTheme = useMode();
+  const storeTheme = getStoreTheme();
+  const [checked, setChecked] = useState(
+    storeTheme ? storeTheme === 'dark' : systemTheme === 'dark'
+  );
 
   const themeChange = () => {
     setChecked((previous) => {
-      setRowStyle(previous);
+      setStoreTheme(!previous ? 'dark' : 'light');
       return !previous;
     });
   };
+
+  useEffect(() => {
+    dispatch(changeTheme(checked ? 'dark' : 'light'));
+  }, [checked]);
 
   return (
     <StyledSwitch
@@ -28,8 +33,4 @@ const ThemeSwitch = ({ checked, setChecked }) => {
   );
 };
 
-ThemeSwitch.propTypes = {
-  checked: PropTypes.bool.isRequired,
-  setChecked: PropTypes.func.isRequired,
-};
 export default ThemeSwitch;

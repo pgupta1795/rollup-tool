@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars, import/no-extraneous-dependencies
 import process from 'process';
 import toast from '../helper/toast';
 import data from '../Settings.json';
@@ -34,22 +33,49 @@ export const getTypeSettings = (type) =>
 export const getAttributeInterface = (type) =>
   getTypeSettings(type)?.Attribute_PREFIX || DEFAULT_ATTRIBUTE_PREFIX;
 
-export const getMassAttributeKeys = (type) =>
+// MASS Attribute functions
+export const getMassAttributeDetails = (type) =>
   type
     ? getTypeSettings(type)?.MASS_COLUMNS
     : getTypeSettings(DEFAULT_TYPE)?.MASS_COLUMNS;
 
-export const getCustomAttributeNames = (type) => {
+export const getMassAttributeNames = (type) => {
   if (!type) type = DEFAULT_TYPE;
-  const customAttributes = getMassAttributeKeys(type);
+  const customAttributes = getMassAttributeDetails(type);
   return customAttributes.map((customAttribute) => customAttribute.Attribute);
 };
 
-export const getAttributeLabel = (attribute, type) => {
+export const getMassAttributeLabels = (attribute, type) => {
   try {
     if (!attribute) return null;
     if (!type) type = DEFAULT_TYPE;
-    const customAttributes = getMassAttributeKeys(type);
+    const customAttributes = getMassAttributeDetails(type);
+    return customAttributes?.find((attr) => attr?.Attribute === attribute)
+      ?.Label;
+  } catch (error) {
+    console.error(error);
+    toast.error(error);
+    throw error;
+  }
+};
+
+// COST Attribute functions
+export const getCostAttributeDetails = (type) =>
+  type
+    ? getTypeSettings(type)?.COST_COLUMNS
+    : getTypeSettings(DEFAULT_TYPE)?.COST_COLUMNS;
+
+export const getCostAttributeNames = (type) => {
+  if (!type) type = DEFAULT_TYPE;
+  const customAttributes = getCostAttributeDetails(type);
+  return customAttributes.map((customAttribute) => customAttribute.Attribute);
+};
+
+export const getCostAttributeLabels = (attribute, type) => {
+  try {
+    if (!attribute) return null;
+    if (!type) type = DEFAULT_TYPE;
+    const customAttributes = getCostAttributeDetails(type);
     return customAttributes?.find((attr) => attr?.Attribute === attribute)
       ?.Label;
   } catch (error) {
@@ -63,7 +89,7 @@ export const getAttributeTolerance = (attribute, type) => {
   try {
     if (!attribute) return null;
     if (!type) type = DEFAULT_TYPE;
-    const customAttributes = getMassAttributeKeys(type);
+    const customAttributes = getMassAttributeDetails(type);
     return customAttributes?.find((attr) => attr?.Attribute === attribute)
       ?.Tolerance;
   } catch (error) {
@@ -75,3 +101,17 @@ export const getAttributeTolerance = (attribute, type) => {
 
 export const getCustomAttributeDBName = (type, name) =>
   `${getAttributeInterface(type)}.${name}`;
+
+export const getAttributeLocalDBName = (attribute, type) => {
+  try {
+    if (!attribute) return null;
+    if (!type) type = DEFAULT_TYPE;
+    const customAttributes = getMassAttributeDetails(type);
+    return customAttributes?.find((attr) => attr?.Attribute === attribute)
+      ?.DB_Name;
+  } catch (error) {
+    console.error(error);
+    toast.error(error);
+    throw error;
+  }
+};

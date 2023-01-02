@@ -1,9 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Tab } from '@mui/material';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
+import { Tab } from '@mui/material';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 const CustomTab = ({ defaultTab, tabsArray }) => {
   const [value, setValue] = React.useState(defaultTab);
@@ -15,6 +15,7 @@ const CustomTab = ({ defaultTab, tabsArray }) => {
       key={label}
       icon={icon}
       iconPosition="start"
+      sx={{ mb: -2 }}
     />
   ));
 
@@ -30,7 +31,7 @@ const CustomTab = ({ defaultTab, tabsArray }) => {
         value={value}
         onChange={(e, newValue) => setValue(newValue)}
         aria-label="secondary tabs example"
-        sx={{ paddingLeft: '24px', paddingRight: '24px' }}
+        sx={{ pl: '24px', pr: '24px' }}
       >
         {tabs}
       </TabList>

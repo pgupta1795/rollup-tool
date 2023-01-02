@@ -1,5 +1,6 @@
 import { Typography } from '@mui/material';
 import React from 'react';
+import { getUserFullName } from '../../services/AuthService';
 
 const Welcome = () => (
   <Typography
@@ -9,9 +10,7 @@ const Welcome = () => (
   >
     WELCOME,
     <br />
-    <strong>{`${localStorage.getItem('firstname')} ${localStorage.getItem(
-      'lastname'
-    )}`}</strong>
+    <strong>{getUserFullName()}</strong>
   </Typography>
 );
 

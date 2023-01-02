@@ -1,5 +1,4 @@
 @import './Constants.css';
-@import '~@progress/kendo-theme-default/dist/all.css';
 @import '~react-toastify/dist/ReactToastify.css';
 @import './Table.css';
 @import './Charts.css';

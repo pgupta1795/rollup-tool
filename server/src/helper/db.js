@@ -24,39 +24,35 @@ const createOrFetchTypeObject = async (id, objectData, BASE_URL) => {
   const usageValue = objectData?.children?.length > 0 ? 'Assembly' : '3DPart';
   const object = await TypeObject.findById(id).exec();
   const exists = object != null || object ? true : false;
-  if (exists) {
-    const endItemValue =
-      object?.endItem !== undefined ? object?.endItem : usageValue === '3DPart';
-    const data = {
-      usage: usageValue,
-      endItem: endItemValue,
-    };
-    typeObject = await TypeObject.findByIdAndUpdate(
-      id,
-      { $set: data },
-      {
-        new: true,
-        upsert: true,
-      },
-      errorCallback
-    )
-      .clone()
-      .exec();
-    console.log('UPDATED TYPE OBJECT : ', typeObject);
-  } else {
-    const endItemValue = usageValue === '3DPart';
-    const data = {
-      usage: usageValue,
-      endItem: endItemValue,
-      spaceUrl: BASE_URL,
-      objectTitle: objectData?.data?.member[0]?.title,
-      objectDescription: objectData?.data?.member[0]?.description,
-    };
-    typeObject = new TypeObject(data);
-    typeObject._id = id;
-    typeObject = await typeObject.save();
-    console.log('CREATED TYPE OBJECT : ', typeObject);
-  }
+  const data = exists
+    ? {
+        usage: usageValue,
+        endItem:
+          object?.endItem !== undefined
+            ? object?.endItem
+            : usageValue === '3DPart',
+      }
+    : {
+        usage: usageValue,
+        endItem: usageValue === '3DPart',
+        spaceUrl: BASE_URL,
+        objectTitle: objectData?.data?.member[0]?.title,
+        objectDescription: objectData?.data?.member[0]?.description,
+        _id: id,
+      };
+
+  typeObject = await TypeObject.findByIdAndUpdate(
+    id,
+    { $set: data },
+    {
+      new: true,
+      upsert: true,
+    },
+    errorCallback
+  )
+    .clone()
+    .exec();
+
   return typeObject;
 };
 
