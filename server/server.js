@@ -18,7 +18,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(cookieparser());
-app.use('/', myRoutes);
+app.use('/api', myRoutes);
 
 // render client
 app.use(express.static(path.join(__dirname, '../client/build')));
