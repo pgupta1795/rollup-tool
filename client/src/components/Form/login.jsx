@@ -3,9 +3,9 @@ import { Box, Button, Stack, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ColumnFlexBox from '../Common/ColumnFlexBox';
-import PasswordField from './Fields/PasswordField';
-import TextField from './Fields/TextField';
-import LoginHeader from './LoginHeader';
+import PasswordField from './Fields/passwordField';
+import TextField from './Fields/textField';
+import LoginHeader from './loginHeader';
 
 const Login = ({ userLogin, credentials, setCredentials }) => {
   const handleChange = (prop) => (event) => {
@@ -50,7 +50,12 @@ const Login = ({ userLogin, credentials, setCredentials }) => {
               variant="contained"
               color="primary"
               size="large"
-              endIcon={<Send />}
+              endIcon={
+                <Send
+                  className="login-field-icon"
+                  style={{ '--delay': '500ms' }}
+                />
+              }
               sx={{
                 mt: 3,
               }}

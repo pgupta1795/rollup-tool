@@ -29,14 +29,19 @@ axiosPrivate.interceptors.response.use(
   async (error) => {
     const prevRequest = error?.config;
     if (error?.response?.status === 403 && !prevRequest?.sent) {
-      prevRequest.sent = true;
-      const response = await axiosLib.get(`${baseURL}/refreshToken`, {
-        withCredentials: true,
-      });
-      const newAccessToken = response.data?.accessToken;
-      setToken(newAccessToken);
-      prevRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-      return axiosPrivate(prevRequest);
+      try {
+        prevRequest.sent = true;
+        const response = await axiosLib.get(`${baseURL}/refreshToken`, {
+          withCredentials: true,
+        });
+        const newAccessToken = response.data?.accessToken;
+        setToken(newAccessToken);
+        prevRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        return axiosPrivate(prevRequest);
+      } catch (e) {
+        const err = `${e.message} : ${e.response.data.message}`;
+        throw err;
+      }
     }
     toast.error(`Error : Please logout & login again`);
     return Promise.reject(error);

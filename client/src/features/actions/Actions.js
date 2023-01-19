@@ -2,14 +2,11 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { getActions } from '../../api/ActionsApi';
 import { formatActions } from '../../utils/ActionsUtils';
 import { handleLoading, handleRejected } from '../../utils/StoreUtils';
-import { PAGE_SIZE } from './initialState';
 
 export const fetchActions = createAsyncThunk(
   'actions/fetchActions',
-  async (__, { getState }) => {
-    const state = getState();
-    const { currentPage } = state.actions;
-    const data = await getActions(PAGE_SIZE, (currentPage - 1) * PAGE_SIZE);
+  async () => {
+    const data = await getActions();
     return data;
   }
 );

@@ -1,53 +1,38 @@
 {
-  "Tenant": "OnPremise",
   "SPACE_URL": "https://{}-eu1-space.3dexperience.3ds.com/enovia",
   "PASSPORT_URL": "https://{}-eu1.iam.3dexperience.3ds.com",
-  "LOGIN_TICKET_ENDPOINT": "/login?action=get_auth_params",
-  "LOGOUT_TICKET_ENDPOINT": "/logout",
-  "CAS_AUTH_ENDPOINT": "/login?tenant={}&service={}",
-  "CAS_AUTHENICATION_BODY": "lt={}&username={}&password={}&rememberMe=YES",
-  "CSRF_ENDPOINT": "/resources/v1/application/CSRF?&tenant={}",
-  "COLLABSPACE_ENDPOINT": "/resources/modeler/pno/person?current=true&select=preferredcredentials&select=collabspaces&select=firstname&select=lastname&tenant={}",
   "TYPES_INFO": [
     {
       "Type": "VPMReference",
       "MASS_COLUMNS": [
         {
-          "Attribute": "Mass",
+          "Attribute": "Actual_Weight",
           "Label": "Actual Mass",
           "DB_Name": "sumActualMass",
-          "Tolerance": {
-            "Upper": "0.5",
-            "Lower": "-0.5"
-          }
+          "Tolerance": { "Upper": "0.5", "Lower": "-0.5" },
+          "description": "A produced part that has been weighed on a physical scale"
         },
         {
-          "Attribute": "Estimated_Mass",
+          "Attribute": "Estimated_Weight",
           "Label": "Estimated Mass",
           "DB_Name": "sumEstimatedMass",
-          "Tolerance": {
-            "Upper": "1",
-            "Lower": "-1"
-          }
+          "Tolerance": { "Upper": "1", "Lower": "-1" },
+          "description": "Manually entered value that may account for additional material, such as oil or other fluids"
         },
         {
           "Attribute": "Weight",
           "Label": "Calculated Mass",
           "DB_Name": "sumCalculatedMass",
-          "Tolerance": {
-            "Upper": "5",
-            "Lower": "-5"
-          }
+          "Tolerance": { "Upper": "5", "Lower": "-5" },
+          "description": "A mass calculated for the product within a PLM system"
         }
       ],
       "COST_COLUMNS": [
         {
           "Attribute": "Cost",
           "Label": "Total Cost",
-          "Tolerance": {
-            "Upper": "5",
-            "Lower": "-5"
-          }
+          "Tolerance": { "Upper": "5", "Lower": "-5" },
+          "description": "Manually entered value that may account for additional material, such as oil or other fluids"
         }
       ],
       "Attribute_PREFIX": "XP_VPMReference_Ext",
@@ -56,5 +41,11 @@
       "SEARCH_ENDPOINT": "/resources/v1/modeler/dseng/dseng:EngItem/search?tenant={}&$mask=dsmveng:EngItemMask.Details&$searchStr={}&$top={}&$skip={}",
       "POST_ENDPOINT": "/resources/v1/modeler/dseng/dseng:EngItem/{}?&tenant={}&$mask=dsmveng:EngItemMask.Details"
     }
-  ]
+  ],
+  "LOGIN_TICKET_ENDPOINT": "/login?action=get_auth_params",
+  "LOGOUT_TICKET_ENDPOINT": "/logout",
+  "CAS_AUTH_ENDPOINT": "/login?tenant={}&service={}",
+  "CAS_AUTHENICATION_BODY": "lt={}&username={}&password={}&rememberMe=YES",
+  "CSRF_ENDPOINT": "/resources/v1/application/CSRF?&tenant={}",
+  "COLLABSPACE_ENDPOINT": "/resources/modeler/pno/person?current=true&select=preferredcredentials&select=collabspaces&select=firstname&select=lastname&tenant={}"
 }

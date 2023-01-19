@@ -7,6 +7,7 @@ import Constants from '../helper/Constants';
 import Paths from '../helper/Paths';
 import toast from '../helper/toast';
 import { AuthContext } from '../hooks/contexts';
+import { removeCookies } from '../services/CookieService';
 import { removeToken, setToken } from '../services/TokenService';
 
 export const AuthProvider = ({ children }) => {
@@ -43,6 +44,7 @@ export const AuthProvider = ({ children }) => {
       toast.error(error.message);
     } finally {
       removeToken();
+      removeCookies();
       window.location.reload();
     }
   };

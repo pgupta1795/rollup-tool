@@ -52,7 +52,7 @@ export const formatChildRows = (children, columns, parentId) => {
   try {
     return children?.map((grandChildrenData) => {
       const { data } = grandChildrenData;
-      const grandChildren = grandChildrenData[subItemsField];
+      const grandChildren = grandChildrenData.children;
       const rowsData = formatRows(data, columns);
       if (!rowsData) return null;
       const childData = rowsData[0];

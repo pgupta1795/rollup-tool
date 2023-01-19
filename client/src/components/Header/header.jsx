@@ -1,4 +1,4 @@
-import { Box, Link, Toolbar, Typography } from '@mui/material';
+import { Box, Link, Toolbar } from '@mui/material';
 import React, { lazy, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/TECHNIA.png';
@@ -26,20 +26,6 @@ const Header = () => {
       <img src={logo} alt="Logo" className="logo_brand_small" />
     </Link>
   );
-  const myTool = (
-    <Typography
-      variant="h5"
-      color="white"
-      sx={{
-        display: {
-          xs: 'none',
-          sm: 'block',
-        },
-      }}
-    >
-      {document.title}
-    </Typography>
-  );
   const mySearch = <TechniaSearch />;
 
   return (
@@ -55,7 +41,7 @@ const Header = () => {
             alignItems="center"
             justifyContent="space-around"
           >
-            {!user ? myTool : <Profile />}
+            {!user ? null : <Profile />}
             <ThemeSwitch />
           </Box>
         </Toolbar>

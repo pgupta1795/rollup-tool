@@ -27,7 +27,7 @@ const DashboardPage = () => {
     }
   }, [status, dispatch]);
 
-  if (status === 'failed') return { error };
+  if (status === 'failed') return error;
   return (
     <Box m={1}>
       <ExpandablePanel summary={<DashboardIcon color="primary" />}>

@@ -15,56 +15,197 @@
   animation: fadeInUp 3s;
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(40%);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 #login-header {
   animation: fadeInRight 2s;
 }
 
-@keyframes fadeInRight {
-  from {
-    opacity: 0;
-    transform: translateX(-100%);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-#login-field-icon {
+.login-field-icon {
+  opacity: 0;
   animation: dropIn 5s !important;
   animation-timing-function: ease !important;
   animation-fill-mode: forwards !important;
+  transition-duration: 500ms;
+  animation-delay: calc(var(--delay)) !important;
 }
 
-.icon-1 {
-  animation-delay: 200ms !important;
+/* *********** LOGIN PAGE SVG CSS **************** */
+
+/* circle-container */
+#rollup-u-inside_tr {
+  animation: rollup-u-inside_tr__tr 3000ms linear 1 normal forwards;
 }
 
-.icon-2 {
-  animation-delay: 200ms !important;
-}
-
-@keyframes dropIn {
+@keyframes rollup-u-inside_tr__tr {
   0% {
-    opacity: 0;
-    transform: translateY(-20%);
+    transform: translate(362.397995px, 289.2715px) rotate(-180deg);
+  }
+  100% {
+    transform: translate(362.397995px, 289.2715px) rotate(0deg);
+  }
+}
+
+#rollup-u-outside_tr {
+  /* duration | easing-function | delay | iteration | direction | fill-mode | play-state | name */
+  animation: rollup-u-outside_tr__tr 3s infinite linear;
+}
+
+@keyframes rollup-u-outside_tr__tr {
+  0% {
+    transform: translate(367.771996px, 289.334503px) rotate(-350deg);
   }
 
   100% {
-    opacity: 1;
-    transform: translateY(0);
+    transform: translate(367.771996px, 289.334503px) rotate(0deg);
+  }
+}
+
+/* rounds */
+
+#rollup-u-round-4_to {
+  /* animation: rollup-u-round-4_to__to 3000ms linear 1 normal forwards; */
+  animation: bounce-round-4_to 2s infinite linear;
+}
+
+@keyframes bounce-round-4_to {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translate(845.53299px, 623.51px);
+  }
+  40% {
+    transform: translate(845.53299px, 597px);
+  }
+  60% {
+    transform: translate(845.53299px, 608px);
+  }
+}
+
+#rollup-u-round-3_to {
+  animation: bounce-round-3_to 2s infinite linear;
+}
+@keyframes bounce-round-3_to {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translate(845.53299px, 417.216003px);
+  }
+  40% {
+    transform: translate(845.53299px, 391.216003px);
+  }
+  60% {
+    transform: translate(845.53299px, 402.216003px);
+  }
+}
+
+#rollup-u-round-2_to {
+  animation: bounce-round-2_to 2s infinite linear;
+}
+@keyframes bounce-round-2_to {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translate(845.53299px, 251.230995px);
+  }
+  40% {
+    transform: translate(845.53299px, 225.230995px);
+  }
+  60% {
+    transform: translate(845.53299px, 236.230995px);
+  }
+}
+
+#rollup-u-round-1_to {
+  animation: bounce-round-1_to 2s infinite linear;
+}
+@keyframes bounce-round-1_to {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translate(845.53299px, 152.825996px);
+  }
+  40% {
+    transform: translate(845.53299px, 127.825996px);
+  }
+  60% {
+    transform: translate(845.53299px, 140.825996px);
+  }
+}
+
+/* percent-container */
+
+#rollup-u-platform_to {
+  animation-duration: 1.5s;
+  animation-iteration-count: infinite;
+  animation-name: slide;
+  animation-play-state: running;
+  animation-timing-function: ease-in;
+  animation-direction: alternate;
+}
+
+@keyframes slide {
+  from {
+    transform: translate(250px, 740.502106px);
+  }
+  to {
+    transform: translate(355px, 740.502106px);
+  }
+}
+
+@keyframes rollup-u-platform_to__to {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translate(355px, 740.502106px);
+  }
+  40% {
+    transform: translate(319px, 740.502106px);
+  }
+  60% {
+    transform: translate(330px, 740.502106px);
+  }
+}
+
+#rollup-u-plus_ts {
+  animation: scale 10000ms linear infinite normal forwards;
+  animation-direction: alternate;
+}
+
+#rollup-u-minus_3_to {
+  animation: rollup-u-minus_3_to__to 3000ms linear 1 normal forwards;
+}
+
+@keyframes rollup-u-minus_3_to__to {
+  0% {
+    offset-distance: 0%;
+  }
+  100% {
+    offset-distance: 100%;
+  }
+}
+
+#rollup-u-percent_ts {
+  animation: rollup-u-percent_ts__ts 10000ms linear infinite normal forwards;
+  animation-direction: alternate;
+}
+
+@keyframes rollup-u-percent_ts__ts {
+  0% {
+    transform: translate(453.844986px, 622.750015px) scale(0.25, 0.25);
+  }
+  50% {
+    transform: translate(453.844986px, 622.750015px) scale(0.5, 0.5);
+  }
+  100% {
+    transform: translate(453.844986px, 622.750015px) scale(1, 1);
   }
 }

@@ -118,10 +118,26 @@ const updateTypeObject = async (req, res) => {
   }
 };
 
+const getTypeObjects = async (req, res) => {
+  try {
+    const { limit, skip, spaceUrl } = req.query;
+    const typeObject = await TypeObject.find({ spaceUrl })
+      .sort({ updatedAt: 'desc', createdAt: 'desc' })
+      .limit(limit)
+      .skip(skip)
+      .exec();
+    res.status(200).json(typeObject);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: err });
+  }
+};
+
 module.exports = {
   createTypeObject,
   createAction,
   getActions,
   getTypeObjectById,
   updateTypeObject,
+  getTypeObjects,
 };

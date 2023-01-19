@@ -4,6 +4,7 @@ import cacheReducer from '../features/cache/cacheSlice';
 import rollupReducer from '../features/rollup/rollupSlice';
 import structureTableReducer from '../features/table/structureTableSlice';
 import themeReducer from '../features/theme/themeSlice';
+import typeObjectsReducer from '../features/typeObjects/typeObjectsSlice';
 import typesReducer from '../features/types/typesSlice';
 
 const store = configureStore({
@@ -14,6 +15,7 @@ const store = configureStore({
     rollup: rollupReducer,
     actions: actionsReducer,
     types: typesReducer,
+    typeObjects: typeObjectsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

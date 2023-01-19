@@ -3,6 +3,7 @@ const Paths = Object.freeze({
   DASHBOARD: 'dashboard',
   TYPE: 'type',
   HOME: 'home',
+  SETTINGS: 'settings',
   ERROR: '*',
 });
 

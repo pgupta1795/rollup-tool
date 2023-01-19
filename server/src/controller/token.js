@@ -12,7 +12,7 @@ const getRefreshToken = async (req, res) => {
   if (!refreshToken) {
     const { username } = cookies;
     const exisitingObject = await findTokenByUserId(username);
-    refreshToken = exisitingObject.token;
+    refreshToken = exisitingObject?.token;
     if (refreshToken) addRefreshTokenCookie(res, refreshToken);
   }
   return refreshToken;
@@ -22,7 +22,9 @@ const refreshToken = async (req, res) => {
   try {
     const refreshToken = await getRefreshToken(req, res);
     if (!refreshToken) {
-      res.status(403).json({ message: err });
+      res
+        .status(403)
+        .json({ message: 'Refresh Token Expired, Please login again' });
       return;
     }
     jwt.verify(

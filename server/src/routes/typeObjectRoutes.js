@@ -8,4 +8,6 @@ router.get('/getTypeObjectById', storeController.getTypeObjectById);
 
 router.get('/updateTypeObject', storeController.updateTypeObject);
 
+router.get('/getTypeObjects', storeController.getTypeObjects);
+
 module.exports = router;

@@ -31,8 +31,8 @@ const PasswordField = ({ credentials, handleChange }) => {
               aria-label="toggle password visibility"
               onClick={handleClickShowPassword}
               onMouseDown={(event) => event.preventDefault()}
-              id="login-field-icon"
-              className="icon-2"
+              className="login-field-icon"
+              style={{ '--delay': '1000ms' }}
             >
               {showPassword ? (
                 <VisibilityOff color="primary" />

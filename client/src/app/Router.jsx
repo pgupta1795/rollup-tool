@@ -4,13 +4,14 @@ import IsLogin from '../components/Auth/IsLogin';
 import RequireAuth from '../components/Auth/RequireAuth';
 import ScrollToTop from '../components/Common/ScrollToTop';
 import Paths from '../helper/Paths';
-import DashboardPage from '../pages/DashboardPage';
 
 const LoginPage = lazy(() => import('../pages/LoginPage'));
 const ErrorPage = lazy(() => import('../pages/ErrorPage'));
 const HomePage = lazy(() => import('../pages/HomePage'));
 const ObjectPage = lazy(() => import('../pages/ObjectPage'));
 const TypesPage = lazy(() => import('../pages/TypesPage'));
+const DashboardPage = lazy(() => import('../pages/DashboardPage'));
+const SettingsPage = lazy(() => import('../pages/SettingsPage'));
 
 const Router = () => (
   <ScrollToTop>
@@ -62,6 +63,16 @@ const Router = () => (
           <RequireAuth>
             <Suspense fallback={<>...</>}>
               <ObjectPage />
+            </Suspense>
+          </RequireAuth>
+        }
+      />
+      <Route
+        path={Paths.SETTINGS}
+        element={
+          <RequireAuth>
+            <Suspense fallback={<>...</>}>
+              <SettingsPage />
             </Suspense>
           </RequireAuth>
         }

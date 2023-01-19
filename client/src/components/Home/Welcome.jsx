@@ -3,14 +3,10 @@ import React from 'react';
 import { getUserFullName } from '../../services/AuthService';
 
 const Welcome = () => (
-  <Typography
-    variant="h4"
-    sx={{ textDecoration: 'underline' }}
-    display="inline"
-  >
+  <Typography variant="h4" sx={{ lineHeight: 1.5 }}>
     WELCOME,
     <br />
-    <strong>{getUserFullName()}</strong>
+    <strong className="app-title">{getUserFullName()}</strong>
   </Typography>
 );
 

@@ -15,6 +15,7 @@ router.get('/', (req, res) => {
 router.use('/enovia', require('../routes/authRoutes'));
 router.use('/refreshToken', require('../routes/tokenRoute'));
 router.use(verifyJWT);
+router.use('/settings', require('../routes/settingsRoute'));
 router.use('/enovia', require('../routes/enoviaRoutes'));
 router.use('/store', require('../routes/typeObjectRoutes'));
 router.use('/store', require('../routes/actionRoutes'));

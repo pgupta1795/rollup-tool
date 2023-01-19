@@ -27,7 +27,10 @@ const TextField = ({
       placeholder={placeholder}
       endAdornment={
         <InputAdornment position="end">
-          <IconButton id="login-field-icon" className="icon-1">
+          <IconButton
+            className="login-field-icon"
+            style={{ '--delay': '500ms' }}
+          >
             {icon}
           </IconButton>
         </InputAdornment>

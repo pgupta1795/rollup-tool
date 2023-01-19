@@ -94,7 +94,7 @@ const logout = async (req, res) => {
     removeCookie(res, 'username');
     res.status(200).json({
       message: 'Logout successfull',
-      headers: response.headers,
+      headers: response?.headers,
     });
   } catch (error) {
     // delete token

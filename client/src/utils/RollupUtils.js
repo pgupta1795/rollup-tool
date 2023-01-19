@@ -24,12 +24,13 @@ export const getRollupOrder = () => getMassAttributeNames();
  * @returns
  */
 const sumChildRows = (row, field) => {
-  if (row && row[Constants.ENDITEM]) return row[field];
+  if (row && row[Constants.ENDITEM]) return Number(row[field]) || row[field];
   let newValueParent = 0;
   row[subItemsField].forEach((children) => {
     let childVal = 0;
     if (hasChildren(children)) childVal = sumChildRows(children, field);
-    if (children[Constants.ENDITEM]) childVal = children[field];
+    if (children[Constants.ENDITEM])
+      childVal = Number(children[field]) || children[field];
     newValueParent += Number.isNaN(childVal) ? 0 : childVal;
   });
   return newValueParent;
@@ -78,12 +79,16 @@ export const getRollupField = (row) => {
  * @returns
  */
 const sumMultiFieldChildRows = (row) => {
-  let newValueParent = row[Constants.ENDITEM] ? row[getRollupField(row)] : 0;
+  const parentField = getRollupField(row);
+  let newValueParent = row[Constants.ENDITEM]
+    ? Number(row[parentField]) || row[parentField]
+    : 0;
   row[subItemsField].forEach((children) => {
     const field = getRollupField(children);
     let childVal = 0;
     if (hasChildren(children)) childVal = sumMultiFieldChildRows(children);
-    if (children[Constants.ENDITEM]) childVal = children[field];
+    if (children[Constants.ENDITEM])
+      childVal = Number(children[field]) || children[field];
     newValueParent += Number.isNaN(childVal) ? 0 : childVal;
   });
   return newValueParent;
@@ -103,7 +108,9 @@ export const rollupBestAvailable = (id, newRows) => {
   try {
     let bestRollUp = 0;
     const row = findRowById(newRows, id);
-    if (row && row[Constants.ENDITEM]) bestRollUp = row[getRollupField(row)];
+    const parentField = getRollupField(row);
+    if (row && row[Constants.ENDITEM])
+      bestRollUp = Number(row[parentField]) || row[parentField];
     if (row && hasChildren(row)) bestRollUp = sumMultiFieldChildRows(row);
     return bestRollUp;
   } catch (error) {

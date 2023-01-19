@@ -9,7 +9,8 @@ const getDetails = () => {
     return jwt(getToken());
   } catch (error) {
     console.error(error);
-    return <Navigate to={Paths.LOGIN} />;
+    <Navigate to={Paths.LOGIN} />;
+    return null;
   }
 };
 
