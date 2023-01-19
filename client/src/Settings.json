@@ -6,14 +6,14 @@
       "Type": "VPMReference",
       "MASS_COLUMNS": [
         {
-          "Attribute": "Actual_Weight",
+          "Attribute": "Mass",
           "Label": "Actual Mass",
           "DB_Name": "sumActualMass",
           "Tolerance": { "Upper": "0.5", "Lower": "-0.5" },
           "description": "A produced part that has been weighed on a physical scale"
         },
         {
-          "Attribute": "Estimated_Weight",
+          "Attribute": "Estimated_Mass",
           "Label": "Estimated Mass",
           "DB_Name": "sumEstimatedMass",
           "Tolerance": { "Upper": "1", "Lower": "-1" },
