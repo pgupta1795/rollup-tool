@@ -242,7 +242,6 @@ export const updateRelatedEndItem = (newRows, id, field, rowEndItem) => {
         updateRelatedEndItem(newRows, childId, field, false);
       }
     });
-    return;
   } catch (error) {
     console.error(error);
     toast.error(error);
