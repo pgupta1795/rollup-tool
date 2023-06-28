@@ -8,17 +8,19 @@ import {
   getTableData,
 } from '../../../features/table/structureTableSlice';
 import toast from '../../../helper/toast';
+import { getCostAttributeDetails } from '../../../utils/ServiceUtils';
+import Export from '../../Button/Export';
+import Refresh from '../../Button/Refresh';
 import ExpandablePanel from '../../Card/expandablePanel';
 import useCustomColumns from '../Columns/useCustomColumns';
-import MassTableHeader from '../Header/MassTableHeader';
-import TopToolbar from '../Toolbars/TopToolbar';
+import CostTableHeader from '../Header/CostTableHeader';
 
 const ObjectDetails = lazy(() => import('../../Form/ObjectDetails'));
 const MaterialTable = lazy(() => import('../MaterialTable'));
 
-const MassTable = memo(() => {
+const CostTable = memo(() => {
   const { id, type } = useParams();
-  const columns = [...useCustomColumns(type)];
+  const columns = [...useCustomColumns(type, getCostAttributeDetails)];
   const tableData = useSelector(getTableData);
   const status = useSelector(getObjectsStatus);
   const dispatch = useDispatch();
@@ -51,9 +53,9 @@ const MassTable = memo(() => {
   return (
     <>
       <Suspense fallback={<>LOADING...</>}>
-        <ObjectDetails />
+        <ObjectDetails fn={getCostAttributeDetails} />
       </Suspense>
-      <ExpandablePanel summary={<MassTableHeader />}>
+      <ExpandablePanel summary={<CostTableHeader />}>
         <Suspense fallback={<>LOADING...</>}>
           <MaterialTable
             loading={status === 'loading'}
@@ -61,7 +63,16 @@ const MassTable = memo(() => {
             isSaving={status === 'saving'}
             tableData={tableData}
             columns={columns}
-            toolbar={({ table }) => <TopToolbar table={table} />}
+            toolbar={({ table }) => (
+              <div className="flex-column-box">
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Refresh table={table} />
+                </Suspense>
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Export table={table} />
+                </Suspense>
+              </div>
+            )}
             save={save}
             initialState={initialState}
           />
@@ -71,4 +82,4 @@ const MassTable = memo(() => {
   );
 });
 
-export default MassTable;
+export default CostTable;

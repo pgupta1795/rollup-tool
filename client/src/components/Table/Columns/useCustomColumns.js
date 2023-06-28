@@ -7,9 +7,10 @@ import CustomAttribute from '../Header/CustomAttribute';
 import { DEFAULT_COLUMNS } from './DefaultColumns';
 import UsageEndItemColumns from './UsageEndItemColumns';
 
-export default (type) => {
+export default (type, fn = getMassAttributeDetails) => {
+  const executeFunction = fn.bind(this);
   const cellColors = useSelector(getCacheCellColors);
-  const customColumns = getMassAttributeDetails(type).map(
+  const customColumns = executeFunction(type).map(
     ({ Attribute: attribute, Label: label }) => ({
       accessorKey: attribute,
       id: attribute, // id is still required when using accessorFn instead of accessorKey
@@ -38,12 +39,7 @@ export default (type) => {
         const rowObj = cellColors.find((cColor) => cColor.id === oid);
         const color = rowObj ? rowObj[column.id]?.color : null;
         const show = rowObj ? rowObj[column.id]?.show : false;
-        if (!show)
-          return {
-            sx: {
-              fontWeight: '600',
-            },
-          };
+        if (!show) return { sx: { fontWeight: '600' } };
         return {
           sx: {
             color,

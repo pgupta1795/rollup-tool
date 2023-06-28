@@ -29,8 +29,9 @@
       ],
       "COST_COLUMNS": [
         {
-          "Attribute": "Cost",
+          "Attribute": "Estimated_Mass",
           "Label": "Total Cost",
+          "DB_Name": "totalCost",
           "Tolerance": { "Upper": "5", "Lower": "-5" },
           "description": "Manually entered value that may account for additional material, such as oil or other fluids"
         }

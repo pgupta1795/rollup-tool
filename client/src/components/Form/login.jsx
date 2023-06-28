@@ -5,7 +5,7 @@ import React from 'react';
 import ColumnFlexBox from '../Common/ColumnFlexBox';
 import PasswordField from './Fields/passwordField';
 import TextField from './Fields/textField';
-import LoginHeader from './loginHeader';
+import LoginHeader from './LoginHeader';
 
 const Login = ({ userLogin, credentials, setCredentials }) => {
   const handleChange = (prop) => (event) => {

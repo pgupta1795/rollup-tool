@@ -1,10 +1,11 @@
-import { Dashboard, Info } from '@mui/icons-material';
+import { CurrencyPound, Dashboard, Info } from '@mui/icons-material';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import CustomTab from '../components/Card/customTab';
 import ObjectGraphsContainer from '../components/Graphs/Container/ObjectGraphsContainer';
-import useMassColumns from '../components/Table/Columns/useMassColumns';
+import useCustomColumns from '../components/Table/Columns/useCustomColumns';
+import CostTable from '../components/Table/Container/CostTable';
 import MassTable from '../components/Table/Container/MassTable';
 import { fetchObjects } from '../features/table/Actions';
 import {
@@ -17,7 +18,7 @@ const ObjectPage = () => {
   const dispatch = useDispatch();
   const status = useSelector(getObjectsStatus);
   const error = useSelector(getObjectsError);
-  const columns = [...useMassColumns(type)];
+  const columns = [...useCustomColumns(type)];
 
   useEffect(() => {
     if (status === 'idle') {
@@ -35,6 +36,11 @@ const ObjectPage = () => {
           label: 'MASS',
           element: <MassTable />,
           icon: <Info />,
+        },
+        {
+          label: 'COST',
+          element: <CostTable />,
+          icon: <CurrencyPound />,
         },
         {
           label: 'Dashboard',

@@ -15,6 +15,7 @@ const typesSchema = new Schema(
     sumActualMass: { type: Schema.Types.Decimal128, default: 0.0 },
     sumCalculatedMass: { type: Schema.Types.Decimal128, default: 0.0 },
     sumEstimatedMass: { type: Schema.Types.Decimal128, default: 0.0 },
+    totalCost: { type: Schema.Types.Decimal128, default: 0.0 },
     bestAvailable: { type: Schema.Types.Decimal128, default: 0.0 },
     bestAvailableV2: { type: Schema.Types.Decimal128, default: 0.0 },
     usage: { type: String },

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import useTypeObjectById from '../../hooks/useTypeObjectById';
 import { roundOff } from '../../utils/CommonUtils';
@@ -6,12 +7,14 @@ import ChipField from '../Common/ChipField';
 import DetailsContainer from './Container/DetailsContainer';
 import MassField from './Fields/MassField';
 
-const MassDetails = () => {
+const ObjectDetails = ({ fn }) => {
   const { objectDBData, isLoading } = useTypeObjectById();
+  // eslint-disable-next-line react/destructuring-assignment
+  const executeFunction = fn.bind(this);
 
   return (
     <DetailsContainer objectDBData={objectDBData} isLoading={isLoading}>
-      {getMassAttributeDetails().map(
+      {executeFunction().map(
         ({ Attribute: attr, Label: label, DB_Name: dbName }) => {
           const attrVal = objectDBData && objectDBData[dbName]?.$numberDecimal;
           return (
@@ -33,4 +36,12 @@ const MassDetails = () => {
   );
 };
 
-export default MassDetails;
+ObjectDetails.defaultProps = {
+  fn: getMassAttributeDetails,
+};
+
+ObjectDetails.propTypes = {
+  fn: PropTypes.any,
+};
+
+export default ObjectDetails;
