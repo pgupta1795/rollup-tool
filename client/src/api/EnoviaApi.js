@@ -41,9 +41,14 @@ export const updateObject = async (type, object) => {
     url: `/enovia/updateObject`,
     data,
   });
-  if (response.status === 200) return response?.data;
-  toast.error(`${response.message}`);
-  throw new Error(`${response.message} \n ${Constants.EDIT_OBJECT_ERROR}`);
+  if (
+    response.status !== 200 ||
+    (response.data.status && response.data.status !== 200)
+  ) {
+    toast.error(`${response.data.message}`);
+    throw new Error(`${response.data.message}`);
+  }
+  return response?.data;
 };
 
 export const getAllChildren = async (type, id) => {

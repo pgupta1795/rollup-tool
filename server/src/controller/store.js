@@ -5,8 +5,6 @@ const db = require('../helper/db');
 const errorCallback = (err, docs) => {
   if (err) {
     console.log(err);
-  } else {
-    console.log('Updated : ', docs);
   }
 };
 

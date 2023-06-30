@@ -75,23 +75,15 @@ export const formatChildRows = (children, columns, parentId) => {
  * @returns
  */
 export const findRowById = (rows, id) => {
-  try {
-    let validRow;
-    for (let index = 0; index < rows?.length; index += 1) {
-      const row = rows[index];
-      if (row?.id === id) {
-        validRow = row;
-        return validRow;
-      }
-      if (row && row[subItemsField])
-        validRow = findRowById(row[subItemsField], id);
+  for (const obj of rows) {
+    if (obj.id === id) return obj;
+
+    if (obj[subItemsField] && obj[subItemsField].length > 0) {
+      const nestedResult = findRowById(obj[subItemsField], id);
+      if (nestedResult) return nestedResult;
     }
-    return validRow;
-  } catch (error) {
-    console.error(error);
-    toast.error(error);
-    throw error;
   }
+  return null;
 };
 
 export const createAction = async (newRow, oldRows) => {
@@ -186,26 +178,21 @@ export const saveRelatedEndItem = async (newRows, id, field) => {
   try {
     if (!id) return;
     const row = findRowById(newRows, id);
+    if (!row) return;
     if (!hasChildren(row)) {
       if (!row.parent) return;
-      const parentResponse = await updateTypeObjectById(
-        row.parent,
-        Constants.ENDITEM,
-        false
-      );
-      console.log({ parentResponse });
+      await updateTypeObjectById(row.parent, Constants.ENDITEM, false);
       return;
     }
 
     await Promise.all(
       row &&
         row[subItemsField]?.map(async (children) => {
-          const response = await updateTypeObjectById(
+          await updateTypeObjectById(
             children.id,
             Constants.ENDITEM,
             children[Constants.ENDITEM]
           );
-          console.log({ response });
           saveRelatedEndItem(newRows, children.id, field);
         })
     );
@@ -231,6 +218,7 @@ export const updateRelatedEndItem = (newRows, id, field, rowEndItem) => {
   try {
     if (!id) return;
     const row = findRowById(newRows, id);
+    if (!row) return;
     if (!hasChildren(row)) {
       if (!rowEndItem) return;
       updateTableCell(newRows, row?.parent, field, false);

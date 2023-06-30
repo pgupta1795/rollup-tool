@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import React from 'react';
 
-const LoginHeader = (props) => (
+const loginHeader = (props) => (
   <Stack
     direction="row"
     spacing={1}
@@ -23,4 +23,4 @@ const LoginHeader = (props) => (
   </Stack>
 );
 
-export default LoginHeader;
+export default loginHeader;

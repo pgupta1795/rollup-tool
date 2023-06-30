@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import _ from 'lodash';
+import toast from '../../helper/toast';
 import {
   modifyAttributeCellColors,
   modifyBestAvailableCellColors,
@@ -52,32 +53,41 @@ export const setCheckedForMassField = createAsyncThunk(
   async (payload, { dispatch, getState }) => {
     const state = getState();
     const { attribute, isChecked } = payload;
-    const newMassChecked = {
-      ...state.rollup.massChecked,
-      [attribute]: isChecked,
-    };
-    if (!isChecked) return newMassChecked;
-    const { tableData, cellColors } = getTempStructureTableState(state);
-    const cache = getTempCache(state);
-    const hasNoCache = noCellColorsCache(cache);
-    // add the state into cache state only if no cache found
-    if (hasNoCache) {
-      const { cellColors: cColors } = getTempStructureTableState(state);
-      dispatch(setCacheCellColors(cColors));
-    }
+    try {
+      const newMassChecked = {
+        ...state.rollup.massChecked,
+        [attribute]: isChecked,
+      };
+      if (!isChecked) return newMassChecked;
+      const { tableData, cellColors } = getTempStructureTableState(state);
+      const cache = getTempCache(state);
+      const hasNoCache = noCellColorsCache(cache);
+      // add the state into cache state only if no cache found
+      if (hasNoCache) {
+        const { cellColors: cColors } = getTempStructureTableState(state);
+        dispatch(setCacheCellColors(cColors));
+      }
 
-    // modify tableData in redux store temporarily
-    const newRows = [...tableData];
-    rollUpFromParent(newRows, attribute);
-    dispatch(setTableData(newRows));
-    // modify cellColors in redux store temporarily
-    const newCellColors = modifyAttributeCellColors(
-      newRows,
-      hasNoCache ? cellColors : cache.cellColors,
-      attribute
-    );
-    dispatch(setCacheCellColors(newCellColors));
-    return newMassChecked;
+      // modify tableData in redux store temporarily
+      const newRows = [...tableData];
+      rollUpFromParent(newRows, attribute);
+      dispatch(setTableData(newRows));
+      // modify cellColors in redux store temporarily
+      const newCellColors = modifyAttributeCellColors(
+        newRows,
+        hasNoCache ? cellColors : cache.cellColors,
+        attribute
+      );
+      dispatch(setCacheCellColors(newCellColors));
+      return newMassChecked;
+    } catch (error) {
+      toast.error(error);
+      console.error(error);
+      return {
+        ...state.rollup.massChecked,
+        [attribute]: isChecked,
+      };
+    }
   }
 );
 
