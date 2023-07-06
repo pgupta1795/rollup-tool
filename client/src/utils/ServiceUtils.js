@@ -89,7 +89,10 @@ export const getAttributeTolerance = (attribute, type) => {
   try {
     if (!attribute) return null;
     if (!type) type = DEFAULT_TYPE;
-    const customAttributes = getMassAttributeDetails(type);
+    const customAttributes = [
+      ...getMassAttributeDetails(type),
+      ...getCostAttributeDetails(type),
+    ];
     return customAttributes?.find((attr) => attr?.Attribute === attribute)
       ?.Tolerance;
   } catch (error) {

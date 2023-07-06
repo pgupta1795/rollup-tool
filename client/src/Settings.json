@@ -30,10 +30,24 @@
       "COST_COLUMNS": [
         {
           "Attribute": "Estimated_Mass",
-          "Label": "Total Cost",
+          "Label": "Design and R&D Cost",
+          "DB_Name": "designCost",
+          "Tolerance": { "Upper": "0.5", "Lower": "-0.5" },
+          "description": "Manually entered value that may account for additional Design and R&D Cost"
+        },
+        {
+          "Attribute": "Weight",
+          "Label": "Tooling Cost",
+          "DB_Name": "toolingCost",
+          "Tolerance": { "Upper": "1", "Lower": "-1" },
+          "description": "Manually entered value that may account for additional Tooling Cost"
+        },
+        {
+          "Attribute": "Supplier",
+          "Label": "Total Piece Cost",
           "DB_Name": "totalCost",
           "Tolerance": { "Upper": "5", "Lower": "-5" },
-          "description": "Manually entered value that may account for additional material, such as oil or other fluids"
+          "description": "Total Piece Cost which is sum of 'Design and R&D Cost' and 'Tooling cost'"
         }
       ],
       "Attribute_PREFIX": "XP_VPMReference_Ext",

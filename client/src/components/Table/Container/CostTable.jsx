@@ -1,9 +1,10 @@
 /* eslint-disable react/prop-types */
-import React, { lazy, memo, Suspense } from 'react';
+import React, { lazy, memo, Suspense, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { handleRowEdit } from '../../../features/table/Actions';
+import { fetchObjects, handleRowEdit } from '../../../features/table/Actions';
 import {
+  getObjectsError,
   getObjectsStatus,
   getTableData,
 } from '../../../features/table/structureTableSlice';
@@ -24,6 +25,14 @@ const CostTable = memo(() => {
   const tableData = useSelector(getTableData);
   const status = useSelector(getObjectsStatus);
   const dispatch = useDispatch();
+  const error = useSelector(getObjectsError);
+
+  useEffect(() => {
+    dispatch(fetchObjects({ type, id, columns }));
+  }, [id, type]);
+
+  if (status === 'failed') return error;
+
   const initialState = {
     showColumnFilters: false,
     density: 'compact',
@@ -44,9 +53,9 @@ const CostTable = memo(() => {
       };
       dispatch(handleRowEdit(dataItem));
       props.exitEditingMode();
-    } catch (error) {
-      console.error(error);
-      toast.error(error);
+    } catch (e) {
+      console.error(e);
+      toast.error(e);
     }
   };
 

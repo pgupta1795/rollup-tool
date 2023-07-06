@@ -57,6 +57,12 @@ const getVPMReferencePayload = (type, selectedRow) => {
     const attrName = ServiceUtils.getCustomAttributeDBName(type, attr);
     customAttributes[customAttributesIdentifier][attrName] = selectedRow[attr];
   });
+
+  ServiceUtils.getCostAttributeNames(type)?.forEach((attr) => {
+    const attrName = ServiceUtils.getCustomAttributeDBName(type, attr);
+    customAttributes[customAttributesIdentifier][attrName] = selectedRow[attr];
+  });
+
   return {
     cestamp,
     title,
