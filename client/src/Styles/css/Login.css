@@ -31,9 +31,9 @@
 /* *********** LOGIN PAGE SVG CSS **************** */
 
 /* circle-container */
-#rollup-u-inside_tr {
+/* #rollup-u-inside_tr {
   animation: rollup-u-inside_tr__tr 3000ms linear 1 normal forwards;
-}
+} */
 
 @keyframes rollup-u-inside_tr__tr {
   0% {
@@ -46,7 +46,7 @@
 
 #rollup-u-outside_tr {
   /* duration | easing-function | delay | iteration | direction | fill-mode | play-state | name */
-  animation: rollup-u-outside_tr__tr 3s infinite linear;
+  animation: rollup-u-outside_tr__tr 10s infinite linear;
 }
 
 @keyframes rollup-u-outside_tr__tr {
@@ -62,8 +62,7 @@
 /* rounds */
 
 #rollup-u-round-4_to {
-  /* animation: rollup-u-round-4_to__to 3000ms linear 1 normal forwards; */
-  animation: bounce-round-4_to 2s infinite linear;
+  animation: bounce-round-4_to 4s infinite linear;
 }
 
 @keyframes bounce-round-4_to {
@@ -83,7 +82,7 @@
 }
 
 #rollup-u-round-3_to {
-  animation: bounce-round-3_to 2s infinite linear;
+  animation: bounce-round-3_to 4s infinite linear;
 }
 @keyframes bounce-round-3_to {
   0%,
@@ -102,7 +101,7 @@
 }
 
 #rollup-u-round-2_to {
-  animation: bounce-round-2_to 2s infinite linear;
+  animation: bounce-round-2_to 4s infinite linear;
 }
 @keyframes bounce-round-2_to {
   0%,
@@ -121,7 +120,7 @@
 }
 
 #rollup-u-round-1_to {
-  animation: bounce-round-1_to 2s infinite linear;
+  animation: bounce-round-1_to 4s infinite linear;
 }
 @keyframes bounce-round-1_to {
   0%,
@@ -142,7 +141,7 @@
 /* percent-container */
 
 #rollup-u-platform_to {
-  animation-duration: 1.5s;
+  animation-duration: 5s;
   animation-iteration-count: infinite;
   animation-name: slide;
   animation-play-state: running;
@@ -176,12 +175,12 @@
 }
 
 #rollup-u-plus_ts {
-  animation: scale 10000ms linear infinite normal forwards;
+  animation: scale 1000ms linear 1 normal forwards;
   animation-direction: alternate;
 }
 
 #rollup-u-minus_3_to {
-  animation: rollup-u-minus_3_to__to 3000ms linear 1 normal forwards;
+  animation: rollup-u-minus_3_to__to 1000ms linear 1 normal forwards;
 }
 
 @keyframes rollup-u-minus_3_to__to {
@@ -194,7 +193,7 @@
 }
 
 #rollup-u-percent_ts {
-  animation: rollup-u-percent_ts__ts 10000ms linear infinite normal forwards;
+  animation: rollup-u-percent_ts__ts 1000ms linear normal forwards;
   animation-direction: alternate;
 }
 
@@ -206,6 +205,6 @@
     transform: translate(453.844986px, 622.750015px) scale(0.5, 0.5);
   }
   100% {
-    transform: translate(453.844986px, 622.750015px) scale(1, 1);
+    transform: translate(453.844986px, 622.750015px) scale(0.6, 0.6);
   }
 }

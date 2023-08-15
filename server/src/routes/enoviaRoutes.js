@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const enoviaObjectsController = require('../controller/objects');
+const zoneQueryController = require('../controller/zoneQuery');
 const addEnoviaHeaders = require('../middleware/addEnoviaHeaders');
 
 router.post(
@@ -13,6 +14,12 @@ router.post(
   '/getAllChildren',
   addEnoviaHeaders,
   enoviaObjectsController.getAllChildren
+);
+
+router.post(
+  '/getAllChildrenByZoneQuery',
+  addEnoviaHeaders,
+  zoneQueryController.getAllChildrenByZoneQuery
 );
 
 router.post(

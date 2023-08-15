@@ -34,14 +34,15 @@ export const getSearchBody = (type, top, skip, name) => {
 };
 
 export const getChildrenBody = (type, id) => {
-  const { GET_ENDPOINT, CHILD_ENDPOINT } = ServiceUtils.getTypeSettings(type);
-  if (!GET_ENDPOINT || !CHILD_ENDPOINT || !id) return null;
+  const { CHILD_ENDPOINT, ZONE_QUERY_PAYLOAD } =
+    ServiceUtils.getTypeSettings(type);
+  if (!CHILD_ENDPOINT || !id || !ZONE_QUERY_PAYLOAD) return null;
   return {
     ID: id,
     BASE_URL: spaceUrl,
     tenant,
-    GET_ENDPOINT,
     CHILD_ENDPOINT,
+    ZONE_QUERY_PAYLOAD,
     headers: {
       ...getCommonHeaders(),
     },

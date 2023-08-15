@@ -52,9 +52,44 @@
       ],
       "Attribute_PREFIX": "XP_VPMReference_Ext",
       "GET_ENDPOINT": "/resources/v1/modeler/dseng/dseng:EngItem/{}?$mask=dsmveng:EngItemMask.Details&tenant={}",
-      "CHILD_ENDPOINT": "/resources/v1/modeler/dseng/dseng:EngItem/{}/dseng:EngInstance?$mask=dsmveng:EngInstanceMask.Details&tenant={}",
+      "CHILD_ENDPOINT": "/cvservlet/zonequeries?tenant={}",
+      "CHILD_ENDPOINT_OLD": "/resources/v1/modeler/dseng/dseng:EngItem/{}/dseng:EngInstance?$mask=dsmveng:EngInstanceMask.Details&tenant={}",
       "SEARCH_ENDPOINT": "/resources/v1/modeler/dseng/dseng:EngItem/search?tenant={}&$mask=dsmveng:EngItemMask.Details&$searchStr={}&$top={}&$skip={}",
-      "POST_ENDPOINT": "/resources/v1/modeler/dseng/dseng:EngItem/{}?&tenant={}&$mask=dsmveng:EngItemMask.Details"
+      "POST_ENDPOINT": "/resources/v1/modeler/dseng/dseng:EngItem/{}?&tenant={}&$mask=dsmveng:EngItemMask.Details",
+      "ZONE_QUERY_PAYLOAD": {
+        "select_bo": [
+          "type",
+          "physicalId",
+          "name",
+          "ds6w:label",
+          "ds6w:description",
+          "ds6w:modified",
+          "ds6w:created",
+          "revision",
+          "current",
+          "owner",
+          "cestamp",
+          "ds6w:manufacturable",
+          "project",
+          "organization",
+          "ds6w:kind",
+          "ds6w:reserved",
+          "ds6wg:XP_VPMReference_Ext.Object_Intent",
+          "ds6wg:XP_VPMReference_Ext.Weight",
+          "ds6wg:XP_VPMReference_Ext.Estimated_Mass",
+          "ds6wg:XP_VPMReference_Ext.Mass",
+          "ds6wg:XP_VPMReference_Ext.Supplier"
+        ],
+        "label": "RollupZoneQuery",
+        "expand_iter": "-1",
+        "select_rel": [
+          "type",
+          "physicalId",
+          "ds6w:label",
+          "ds6w:modified",
+          "ds6w:created"
+        ]
+      }
     }
   ],
   "LOGIN_TICKET_ENDPOINT": "/login?action=get_auth_params",

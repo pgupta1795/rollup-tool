@@ -56,7 +56,7 @@ export const getAllChildren = async (type, id) => {
   if (!data) return [];
   const response = await axiosPrivate({
     method: 'POST',
-    url: `/enovia/getAllChildren`,
+    url: `/enovia/getAllChildrenByZoneQuery`,
     data,
   });
   if (response.status === 200) return response?.data;
