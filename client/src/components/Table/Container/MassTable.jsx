@@ -7,7 +7,6 @@ import {
   getObjectsStatus,
   getTableData,
 } from '../../../features/table/structureTableSlice';
-import toast from '../../../helper/toast';
 import ExpandablePanel from '../../Card/expandablePanel';
 import useCustomColumns from '../Columns/useCustomColumns';
 import MassTableHeader from '../Header/MassTableHeader';
@@ -44,7 +43,6 @@ const MassTable = memo(() => {
       props.exitEditingMode();
     } catch (error) {
       console.error(error);
-      toast.error(error);
     }
   };
 

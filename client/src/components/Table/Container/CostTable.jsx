@@ -8,7 +8,6 @@ import {
   getObjectsStatus,
   getTableData,
 } from '../../../features/table/structureTableSlice';
-import toast from '../../../helper/toast';
 import { getCostAttributeDetails } from '../../../utils/ServiceUtils';
 import Export from '../../Button/Export';
 import Refresh from '../../Button/Refresh';
@@ -55,7 +54,6 @@ const CostTable = memo(() => {
       props.exitEditingMode();
     } catch (e) {
       console.error(e);
-      toast.error(e);
     }
   };
 

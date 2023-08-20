@@ -9,7 +9,7 @@ import CostTable from '../components/Table/Container/CostTable';
 import MassTable from '../components/Table/Container/MassTable';
 import { fetchObjects } from '../features/table/Actions';
 import {
-  getObjectsError,
+  // getObjectsError,
   getObjectsStatus,
 } from '../features/table/structureTableSlice';
 
@@ -17,7 +17,7 @@ const ObjectPage = () => {
   const { id, type } = useParams();
   const dispatch = useDispatch();
   const status = useSelector(getObjectsStatus);
-  const error = useSelector(getObjectsError);
+  // const error = useSelector(getObjectsError);
   const columns = [...useCustomColumns(type)];
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const ObjectPage = () => {
     }
   }, [status, dispatch, id, type]);
 
-  if (status === 'failed') return error;
+  // if (status === 'failed') return error;
 
   return (
     <CustomTab

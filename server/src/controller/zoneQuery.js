@@ -29,39 +29,41 @@ const getEngItem = (attributes) => {
 };
 
 function buildTree(didEngItems, paths, currentDid, visited = new Set()) {
-  const currentNode = didEngItems[currentDid];
-  if (!currentNode || visited.has(currentDid)) {
-    return null;
-  }
+  if (visited.has(currentDid)) return null;
   visited.add(currentDid);
 
-  const children = paths
-    .filter((path) => path.dids.includes(currentDid))
-    .flatMap((path) => {
-      const currentIndex = path.dids.indexOf(currentDid);
-      const childDids = path.dids.slice(currentIndex + 1);
-      return childDids;
-    })
-    .map((childDid) => buildTree(didEngItems, paths, childDid, visited));
+  const children = paths.reduce((acc, path) => {
+    const currentIndex = path.dids.indexOf(currentDid);
+    if (currentIndex !== -1 && currentIndex < path.dids.length - 1) {
+      const childDid = path.dids[currentIndex + 1];
+      const childTree = buildTree(didEngItems, paths, childDid, visited);
+      if (childTree !== null)
+        acc.push(childTree instanceof Array ? childTree[0] : childTree);
+    }
+    return acc;
+  }, []);
 
+  const currentNode = didEngItems[currentDid];
+  if (!currentNode) return children.length ? children : null;
   return {
-    data: { member: [{ ...currentNode }] },
-    children: children.filter((child) => child !== null)
+    data: { member: [currentNode] },
+    children: children?.length ? [...children] : null
   };
 }
 
 const getStructure = (didEngItems, paths) => {
-  const rootDids = paths.map((path) => path.dids[0]);
   const uniqueTrees = new Map();
-  rootDids.forEach((rootDid) => {
-    const tree = buildTree(didEngItems, paths, rootDid);
-    if (tree !== null && !uniqueTrees.has(tree.did))
-      uniqueTrees.set(tree.did, tree);
+
+  paths.forEach((path) => {
+    const rootDid = path.dids[0];
+    if (!uniqueTrees.has(rootDid)) {
+      const tree = buildTree(didEngItems, paths, rootDid);
+      if (tree !== null) uniqueTrees.set(rootDid, tree);
+    }
   });
-  const uniqueTreeArray = Array.from(uniqueTrees.values());
-  if (uniqueTreeArray.length !== 1)
+  if (uniqueTrees.size !== 1)
     throw new Error('Unable to get the structure of object');
-  return uniqueTreeArray[0];
+  return uniqueTrees.values().next().value;
 };
 
 async function addExtraProperties(obj, BASE_URL) {
@@ -166,7 +168,9 @@ const getAllChildrenByZoneQuery = async (req, res) => {
     // objectData.data = {
     //   member: [getStructure(didEngItems, paths)]
     // };
+
     objectData = getStructure(didEngItems, paths);
+
     //add/create an object using the same information fetched in local DB
     await addExtraProperties(objectData, BASE_URL);
     res.status(200).json(objectData);

@@ -45,7 +45,7 @@ export const updateObject = async (type, object) => {
     response.status !== 200 ||
     (response.data.status && response.data.status !== 200)
   ) {
-    toast.error(`${response.data.message}`);
+    // toast.error(`${response.data.message}`);
     throw new Error(`${response.data.message}`);
   }
   return response?.data;

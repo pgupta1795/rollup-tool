@@ -2,10 +2,11 @@ const TypeObject = require('../models/Types');
 
 const errorCallback = (err, docs) => {
   if (err) {
-    console.log(err);
-  } else {
-    console.log('Updated : ', docs);
+    console.error(err);
   }
+  // else {
+  //   console.log('Updated : ', docs);
+  // }
 };
 
 const isTypeObjectExists = async (id) => {
@@ -30,7 +31,7 @@ const createOrFetchTypeObject = async (id, objectData, BASE_URL) => {
         endItem:
           object?.endItem !== undefined
             ? object?.endItem
-            : usageValue === '3DPart',
+            : usageValue === '3DPart'
       }
     : {
         usage: usageValue,
@@ -38,7 +39,7 @@ const createOrFetchTypeObject = async (id, objectData, BASE_URL) => {
         spaceUrl: BASE_URL,
         objectTitle: objectData?.data?.member[0]?.title,
         objectDescription: objectData?.data?.member[0]?.description,
-        _id: id,
+        _id: id
       };
 
   typeObject = await TypeObject.findByIdAndUpdate(
@@ -46,7 +47,7 @@ const createOrFetchTypeObject = async (id, objectData, BASE_URL) => {
     { $set: data },
     {
       new: true,
-      upsert: true,
+      upsert: true
     },
     errorCallback
   )
