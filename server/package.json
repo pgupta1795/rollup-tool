@@ -15,18 +15,19 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.27.2",
-    "body-parser": "^1.20.0",
+    "axios": "^1.7.7",
+    "body-parser": "^1.20.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
-    "express": "^4.18.1",
+    "express": "^4.21.0",
     "jsonwebtoken": "^9.0.0",
-    "mongodb": "^4.7.0",
+    "mongodb": "^4.17.2",
     "mongoose": "^6.4.0",
     "morgan": "^1.10.0",
-    "node-fetch": "^2.6.1",
-    "request": "^2.88.2"
+    "node-fetch": "^2.7.0",
+    "request": "^2.88.2",
+    "rollup-tool": "file:"
   },
   "devDependencies": {
     "eslint": "^8.2.0",

@@ -85,6 +85,32 @@ export const getCostAttributeLabels = (attribute, type) => {
   }
 };
 
+// COST Attribute functions
+export const getETRSAttributeDetails = (type) =>
+  type
+    ? getTypeSettings(type)?.ETRS_COLUMNS
+    : getTypeSettings(DEFAULT_TYPE)?.ETRS_COLUMNS;
+
+export const getETRSAttributeNames = (type) => {
+  if (!type) type = DEFAULT_TYPE;
+  const customAttributes = getETRSAttributeDetails(type);
+  return customAttributes.map((customAttribute) => customAttribute.Attribute);
+};
+
+export const getETRSAttributeLabels = (attribute, type) => {
+  try {
+    if (!attribute) return null;
+    if (!type) type = DEFAULT_TYPE;
+    const customAttributes = getETRSAttributeDetails(type);
+    return customAttributes?.find((attr) => attr?.Attribute === attribute)
+      ?.Label;
+  } catch (error) {
+    console.error(error);
+    toast.error(error);
+    throw error;
+  }
+};
+
 export const getAttributeTolerance = (attribute, type) => {
   try {
     if (!attribute) return null;

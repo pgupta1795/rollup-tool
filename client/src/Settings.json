@@ -50,6 +50,36 @@
           "description": "Total Piece Cost which is sum of 'Design and R&D Cost' and 'Tooling cost'"
         }
       ],
+      "ETRS_COLUMNS": [
+        {
+          "Attribute": "Estimated_Mass",
+          "Label": "Qty Ordered",
+          "DB_Name": "qtyOrdered",
+          "Tolerance": { "Upper": "0.5", "Lower": "-0.5" },
+          "description": "Quantity Ordered"
+        },
+        {
+          "Attribute": "Weight",
+          "Label": "Lead Time",
+          "DB_Name": "LeadTime",
+          "Tolerance": { "Upper": "1", "Lower": "-1" },
+          "description": "Lead Time"
+        },
+        {
+          "Attribute": "Supplier",
+          "Label": "Order Date",
+          "DB_Name": "orderDate",
+          "Tolerance": { "Upper": "5", "Lower": "-5" },
+          "description": "Order Date"
+        },
+        {
+          "Attribute": "Supplier",
+          "Label": "PO#",
+          "DB_Name": "po",
+          "Tolerance": { "Upper": "5", "Lower": "-5" },
+          "description": "Purchase Order Number"
+        }
+      ],
       "Attribute_PREFIX": "XP_VPMReference_Ext",
       "GET_ENDPOINT": "/resources/v1/modeler/dseng/dseng:EngItem/{}?$mask=dsmveng:EngItemMask.Details&tenant={}",
       "CHILD_ENDPOINT": "/cvservlet/zonequeries?tenant={}",

@@ -1,4 +1,5 @@
 import { CurrencyPound, Dashboard, Info } from '@mui/icons-material';
+import TableViewIcon from '@mui/icons-material/TableView';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -6,6 +7,7 @@ import CustomTab from '../components/Card/customTab';
 import ObjectGraphsContainer from '../components/Graphs/Container/ObjectGraphsContainer';
 import useCustomColumns from '../components/Table/Columns/useCustomColumns';
 import CostTable from '../components/Table/Container/CostTable';
+import ETRSTable from '../components/Table/Container/ETRSTable';
 import MassTable from '../components/Table/Container/MassTable';
 import { fetchObjects } from '../features/table/Actions';
 import {
@@ -41,6 +43,11 @@ const ObjectPage = () => {
           label: 'COST',
           element: <CostTable />,
           icon: <CurrencyPound />,
+        },
+        {
+          label: 'ETRS',
+          element: <ETRSTable />,
+          icon: <TableViewIcon />,
         },
         {
           label: 'Dashboard',

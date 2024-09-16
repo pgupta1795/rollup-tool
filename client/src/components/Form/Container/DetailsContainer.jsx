@@ -24,19 +24,21 @@ const DetailsContainer = ({ objectDBData, isLoading, children }) => (
             <TNRField />
           </Box>
           <Box sx={{ flexGrow: 1 }} />
-          <Stack
-            direction="row"
-            spacing={1}
-            sx={{
-              mt: 1,
-              mx: 2,
-              display: 'flex',
-              alignItems: 'flex-end',
-              justifyContent: 'flex-end',
-            }}
-          >
-            {children}
-          </Stack>
+          {children && (
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{
+                mt: 1,
+                mx: 2,
+                display: 'flex',
+                alignItems: 'flex-end',
+                justifyContent: 'flex-end',
+              }}
+            >
+              {children}
+            </Stack>
+          )}
         </Grid>
       </>
     )}
