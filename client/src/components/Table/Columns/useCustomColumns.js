@@ -13,6 +13,7 @@ export default (type, fn = getMassAttributeDetails) => {
   const customColumns = executeFunction(type).map(
     ({ Attribute: attribute, Label: label }) => ({
       accessorKey: attribute,
+      accessorFn: (row) => row[attribute],
       id: attribute, // id is still required when using accessorFn instead of accessorKey
       header: label,
       attributeType: 'dseno:EnterpriseAttributes',
@@ -22,7 +23,7 @@ export default (type, fn = getMassAttributeDetails) => {
         const rowObj = cellColors.find((cColor) => cColor.id === oid);
         const editColor = rowObj ? rowObj[column.id]?.color : null;
         return {
-          type: 'number',
+          type: 'string',
           InputProps: {
             inputProps: {
               style: {

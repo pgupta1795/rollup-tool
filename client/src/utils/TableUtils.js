@@ -36,7 +36,7 @@ export const formatRows = (response, columns) => {
           customAttrDetails &&
           Object.prototype.hasOwnProperty.call(customAttrDetails, columnKey)
         ) {
-          singleRow[columnKey] = Number(customAttrDetails[columnKey]) || 0;
+          singleRow[columnKey] = customAttrDetails[columnKey] || 0;
         }
       }
       if (Object.prototype.hasOwnProperty.call(detail, columnKey)) {

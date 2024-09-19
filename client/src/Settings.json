@@ -59,14 +59,14 @@
           "description": "Quantity Ordered"
         },
         {
-          "Attribute": "Weight",
+          "Attribute": "Surface_Treatment",
           "Label": "Lead Time",
           "DB_Name": "LeadTime",
           "Tolerance": { "Upper": "1", "Lower": "-1" },
           "description": "Lead Time"
         },
         {
-          "Attribute": "Supplier",
+          "Attribute": "OrderDate",
           "Label": "Order Date",
           "DB_Name": "orderDate",
           "Tolerance": { "Upper": "5", "Lower": "-5" },
@@ -108,7 +108,9 @@
           "ds6wg:XP_VPMReference_Ext.Weight",
           "ds6wg:XP_VPMReference_Ext.Estimated_Mass",
           "ds6wg:XP_VPMReference_Ext.Mass",
-          "ds6wg:XP_VPMReference_Ext.Supplier"
+          "ds6wg:XP_VPMReference_Ext.Supplier",
+          "ds6wg:XP_VPMReference_Ext.OrderDate",
+          "ds6wg:XP_VPMReference_Ext.Surface_Treatment"
         ],
         "label": "RollupZoneQuery",
         "expand_iter": "-1",
